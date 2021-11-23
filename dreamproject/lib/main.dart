@@ -1,3 +1,4 @@
+import 'package:dreamproject/home_page.dart';
 import 'package:flutter/material.dart';
 import 'screens/pages/feed.dart';
 import 'screens/starts/login_page.dart';
@@ -8,7 +9,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => LoginPage(),
-    Feed.tag: (context) => Feed(),
+    HomePage.tag: (context) => HomePage(),
   };
 
   @override
@@ -21,6 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       routes: routes,
+      
     );
   }
 }
+

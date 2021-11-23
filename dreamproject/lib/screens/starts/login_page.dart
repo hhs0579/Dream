@@ -1,4 +1,5 @@
-import 'package:dreamproject/screens/pages/feed.dart';
+import 'package:dreamproject/home_page.dart';
+
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(Feed.tag);
+          Navigator.of(context).pushNamed(HomePage.tag);
         },
         child: Text('로그인', style: TextStyle(color: Colors.white)),
       ),
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(Feed.tag);
+          Navigator.of(context).pushNamed(HomePage.tag);
         },
         child: Text('회원가입', style: TextStyle(color: Colors.white)),
       ),

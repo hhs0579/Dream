@@ -1,54 +1,55 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  static String tag = 'home-page';
+import 'screens/pages/current.dart';
+import 'screens/pages/donate.dart';
+import 'screens/pages/empathy.dart';
+import 'screens/pages/feed.dart';
+import 'screens/pages/my_info.dart';
 
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+  static String tag = 'HomePage';
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  void _navigateBottomNavBar(int index){
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  //버튼 눌렀을때 다른 페이지로 넘어가는지
+  final List<Widget> _children=[
+    Feed(),
+    CurrentPage(),
+    DonatePage(),
+    EmpathyPage(),
+    MyInfoPage(),
+
+  ];
   @override
   Widget build(BuildContext context) {
-    final alucard = Hero(
-      tag: 'hero',
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: CircleAvatar(
-          radius: 72.0,
-          backgroundColor: Colors.transparent,
-          backgroundImage: AssetImage('assets/imgs/cloud.png'),
-        ),
-      ),
-    );
-
-    final welcome = Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        'Welcome Alucard',
-        style: TextStyle(fontSize: 28.0, color: Colors.white),
-      ),
-    );
-
-    final lorem = Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit condimentum mauris id tempor. Praesent eu commodo lacus. Praesent eget mi sed libero eleifend tempor. Sed at fringilla ipsum. Duis malesuada feugiat urna vitae convallis. Aliquam eu libero arcu.',
-        style: TextStyle(fontSize: 16.0, color: Colors.white),
-      ),
-    );
-
-    final body = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(28.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [
-          Colors.blue,
-          Colors.lightBlueAccent,
-        ]),
-      ),
-      child: Column(
-        children: <Widget>[alucard, welcome, lorem],
-      ),
-    );
-
     return Scaffold(
-      body: body,
+      body: _children[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.blue[300],
+        currentIndex: _selectedIndex,
+        onTap:_navigateBottomNavBar,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.view_list), label: '피드'),
+          BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: '현황'),
+          BottomNavigationBarItem(icon: Icon(Icons.cloud), label: '후원하기'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '공감'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: '내정보'),
+        ],
+
+       
+      ),
     );
   }
 }
