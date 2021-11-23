@@ -1,9 +1,6 @@
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 
-
-
-
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
   @override
@@ -25,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
     final id = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-
       decoration: InputDecoration(
         hintText: '아이디',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -35,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = TextFormField(
       autofocus: false,
-
       obscureText: true,
       decoration: InputDecoration(
         hintText: '비밀번호',
@@ -48,46 +43,41 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.symmetric(vertical: 4.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-        primary: Colors.lightBlueAccent,
-          shape:RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          primary: Colors.lightBlueAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: EdgeInsets.all(12),
         ),
-         padding: EdgeInsets.all(12),
-        ),
-
         onPressed: () {
           Navigator.of(context).pushNamed(Feed.tag);
         },
-       
         child: Text('로그인', style: TextStyle(color: Colors.white)),
       ),
     );
-     final joinButton = Padding(
+    final joinButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-        primary: Colors.lightBlueAccent,
-          shape:RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
+          primary: Colors.lightBlueAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: EdgeInsets.all(12),
         ),
-         padding: EdgeInsets.all(12),
-        ),
-
         onPressed: () {
           Navigator.of(context).pushNamed(Feed.tag);
         },
-       
         child: Text('회원가입', style: TextStyle(color: Colors.white)),
       ),
     );
     final forgot = TextButton(
       child: Text(
-        '아이디 찾기/비밀번호 찾기',
+        '아이디 찾기/비밀번호 찾기sex',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
     );
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
             loginButton,
             joinButton,
             forgot,
-
           ],
         ),
       ),
