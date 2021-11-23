@@ -1,6 +1,7 @@
+import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
+
 
 
 class LoginPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final email = TextFormField(
+    final id = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
 
@@ -55,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
 
         onPressed: () {
-          Navigator.of(context).pushNamed(HomePage.tag);
+          Navigator.of(context).pushNamed(Feed.tag);
         },
        
         child: Text('로그인', style: TextStyle(color: Colors.white)),
@@ -73,20 +74,20 @@ class _LoginPageState extends State<LoginPage> {
         ),
 
         onPressed: () {
-          Navigator.of(context).pushNamed(HomePage.tag);
+          Navigator.of(context).pushNamed(Feed.tag);
         },
        
         child: Text('회원가입', style: TextStyle(color: Colors.white)),
       ),
     );
-
-    final forgotLabel = TextButton(
+    final forgot = TextButton(
       child: Text(
-        '비밀번호 찾기',
+        '아이디 찾기/비밀번호 찾기',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
     );
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -96,14 +97,15 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.only(left: 24.0, right: 24.0),
           children: <Widget>[
             logo,
-            SizedBox(height: 48.0),
-            email,
-            SizedBox(height: 8.0),
+            SizedBox(height: 50.0),
+            id,
+            SizedBox(height: 10.0),
             password,
-            SizedBox(height: 24.0),
+            SizedBox(height: 25.0),
             loginButton,
             joinButton,
-            forgotLabel
+            forgot,
+
           ],
         ),
       ),
