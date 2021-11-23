@@ -17,16 +17,16 @@ class _LoginPageState extends State<LoginPage> {
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
         radius: 48.0,
-        child: Image.asset('assets/imgs/a.png'),
+        child: Image.asset('assets/imgs/cloud.png'),
       ),
     );
 
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: 'alucard@gmail.com',
+
       decoration: InputDecoration(
-        hintText: 'Email',
+        hintText: '아이디',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
@@ -34,33 +34,55 @@ class _LoginPageState extends State<LoginPage> {
 
     final password = TextFormField(
       autofocus: false,
-      initialValue: 'some password',
+
       obscureText: true,
       decoration: InputDecoration(
-        hintText: 'Password',
+        hintText: '비밀번호',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
 
     final loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
+      padding: EdgeInsets.symmetric(vertical: 4.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+        primary: Colors.lightBlueAccent,
+          shape:RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
+         padding: EdgeInsets.all(12),
+        ),
+
         onPressed: () {
           Navigator.of(context).pushNamed(HomePage.tag);
         },
-        padding: EdgeInsets.all(12),
-        color: Colors.lightBlueAccent,
-        child: Text('Log In', style: TextStyle(color: Colors.white)),
+       
+        child: Text('로그인', style: TextStyle(color: Colors.white)),
+      ),
+    );
+     final joinButton = Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+        primary: Colors.lightBlueAccent,
+          shape:RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+         padding: EdgeInsets.all(12),
+        ),
+
+        onPressed: () {
+          Navigator.of(context).pushNamed(HomePage.tag);
+        },
+       
+        child: Text('회원가입', style: TextStyle(color: Colors.white)),
       ),
     );
 
-    final forgotLabel = FlatButton(
+    final forgotLabel = TextButton(
       child: Text(
-        'Forgot password?',
+        '비밀번호 찾기',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
@@ -80,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
             password,
             SizedBox(height: 24.0),
             loginButton,
+            joinButton,
             forgotLabel
           ],
         ),
