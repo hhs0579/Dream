@@ -2,10 +2,12 @@ import 'package:dreamproject/home_page.dart';
 
 import 'package:flutter/material.dart';
 
+import 'join_page.dart';
+
 class LoginPage extends StatefulWidget {
-  static String tag = 'login-page';
+  static String tag = 'loginPage';
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -67,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(HomePage.tag);
+          Navigator.of(context).pushNamed(JoinPage.tag);
         },
         child: Text('회원가입', style: TextStyle(color: Colors.white)),
       ),
