@@ -394,6 +394,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  simple_drawer:
+    dependency: "direct main"
+    description:
+      name: simple_drawer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.11"
   sky_engine:
     dependency: transitive
     description: flutter

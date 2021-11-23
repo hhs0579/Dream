@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_drawer/simple_drawer.dart';
 
 class Feed extends StatelessWidget {
   const Feed({ Key? key }) : super(key: key);
@@ -6,6 +7,7 @@ class Feed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
         title:Text(
             'FEED',
@@ -22,9 +24,9 @@ class Feed extends StatelessWidget {
         actions:<Widget> [
           IconButton(
             icon:Icon(Icons.more_vert,color:Colors.blue[300]),
-            onPressed: (){
+            onPressed: ()=> Scaffold.of(context).openDrawer( 
 
-            },
+            )
           )
         ],
       ),
