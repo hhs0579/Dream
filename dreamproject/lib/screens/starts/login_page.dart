@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
     );
     final forgot = TextButton(
       child: Text(
-        '아이디 찾기/비sdafsfdasfda밀번호 찾기',
+        '아이디 찾기/비밀번호 찾기',
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {},
