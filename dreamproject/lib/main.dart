@@ -1,5 +1,6 @@
 import 'package:dreamproject/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'screens/pages/feed.dart';
 import 'screens/starts/login_page.dart';
 import 'screens/starts/join_page.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: '드림기부앱',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -23,7 +24,6 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       routes: routes,
-      
     );
   }
 }

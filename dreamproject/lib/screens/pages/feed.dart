@@ -13,9 +13,7 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final List<Widget> _children = [
-    Legal(),
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,11 +49,11 @@ class _FeedState extends State<Feed> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         leading: IconButton(
-            icon: Icon(Icons.receipt_long, color: Colors.blue[300]),
+            icon: Icon(Icons.receipt_long, color: Color(0xff3AAFFC), size: 30),
             onPressed: () {}),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.more_vert, color: Colors.blue[300]),
+              icon: Icon(Icons.more_vert, color: Color(0xff3AAFFC), size: 30),
               onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
         ],
       ),
