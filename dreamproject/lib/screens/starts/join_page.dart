@@ -17,23 +17,20 @@ class _JoinPageState extends State<JoinPage> {
             FocusScope.of(context).unfocus();
           },
           child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(30.0),
+            child: Center(
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "회원가입",
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.only(top: 30),
+                    child: Text(
+                      "회원가입",
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 30.0),
                   Container(
-                    margin: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
                     child: Form(
                       child: Column(children: [
                         TextFormField(
@@ -50,19 +47,19 @@ class _JoinPageState extends State<JoinPage> {
                               borderSide:
                                   BorderSide(color: Colors.grey.shade300),
                             ),
-                            suffixIcon: Container(
-                              width: 20.0,
-                              child: ElevatedButton(
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.only(right: 20.0),
+                              child: TextButton(
+                                child: Text("확인"),
                                 onPressed: () {},
-                                child: Text(
-                                  "확인",
-                                  style: TextStyle(
-                                    fontSize: 10.0,
-                                  ),
-                                ),
                                 style: TextButton.styleFrom(
                                   primary: Colors.white,
                                   backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 1),
                                 ),
                               ),
                             ),
@@ -80,7 +77,7 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                   SizedBox(height: 50.0),
                   Container(
-                    margin: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
                     child: Form(
                       child: Column(children: [
                         TextFormField(
@@ -108,14 +105,72 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                   SizedBox(height: 50.0),
                   Container(
-                    margin: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
                     child: Form(
-                      child: Column(children: []),
+                      child: Column(children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.male,
+                              color: Colors.blue,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            hintText: '성별',
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                            suffixIcon: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                MaterialButton(
+                                  height: 60,
+                                  minWidth: 50,
+                                  color: Colors.white,
+                                  onPressed: () {},
+                                  child: Text(
+                                    "남",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  shape: CircleBorder(
+                                    side: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                MaterialButton(
+                                  height: 60,
+                                  minWidth: 50,
+                                  color: Colors.white,
+                                  onPressed: () {},
+                                  child: Text(
+                                    "여",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  shape: CircleBorder(
+                                    side: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                          readOnly: true,
+                        ),
+                      ]),
                     ),
                   ),
                   SizedBox(height: 50.0),
                   Container(
-                    margin: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
                     child: Form(
                       child: Column(children: [
                         TextFormField(
@@ -144,7 +199,7 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                   SizedBox(height: 50.0),
                   Container(
-                    margin: EdgeInsets.only(left: 20, right: 20),
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
                     child: Form(
                       child: Column(children: [
                         TextFormField(
@@ -170,7 +225,34 @@ class _JoinPageState extends State<JoinPage> {
                         ),
                       ]),
                     ),
-                  )
+                  ),
+                  SizedBox(height: 50.0),
+                  Container(
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                    child: Form(
+                      child: Column(children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.create_rounded,
+                              color: Colors.blue,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            hintText: '이름',
+                            hintStyle: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
                 ],
               ),
             ),
