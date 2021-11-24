@@ -48,8 +48,8 @@ class _JoinPageState extends State<JoinPage> {
                                 Radius.circular(20.0),
                               ),
                             ),
-                            hintText: 'ID',
-                            hintStyle: TextStyle(
+                            labelText: 'ID',
+                            labelStyle: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
