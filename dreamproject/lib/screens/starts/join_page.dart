@@ -18,7 +18,7 @@ class _JoinPageState extends State<JoinPage> {
           },
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.all(30.0),
               child: Column(
                 children: [
                   Row(
@@ -37,20 +37,38 @@ class _JoinPageState extends State<JoinPage> {
                     child: Form(
                       child: Column(children: [
                         TextFormField(
+                          enabled: true,
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.account_circle,
                               color: Colors.blue,
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
+                            ),
+                            suffixIcon: Container(
+                              width: 20.0,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "확인",
+                                  style: TextStyle(
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                                style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.blue,
+                                ),
                               ),
                             ),
-                            labelText: 'ID',
-                            labelStyle: TextStyle(
-                              fontSize: 15,
+                            prefixText: 'ID',
+                            prefixStyle: TextStyle(
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
@@ -66,20 +84,20 @@ class _JoinPageState extends State<JoinPage> {
                     child: Form(
                       child: Column(children: [
                         TextFormField(
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.create_rounded,
                               color: Colors.blue,
                             ),
-                            enabledBorder: OutlineInputBorder(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
                               borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
                             ),
-                            hintText: '이름',
-                            hintStyle: TextStyle(
-                              fontSize: 15,
+                            prefixText: '이름',
+                            prefixStyle: TextStyle(
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
@@ -101,20 +119,20 @@ class _JoinPageState extends State<JoinPage> {
                     child: Form(
                       child: Column(children: [
                         TextFormField(
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.lock,
                               color: Colors.blue,
                             ),
-                            enabledBorder: OutlineInputBorder(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
                               borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
                             ),
-                            hintText: '비밀번호',
-                            hintStyle: TextStyle(
-                              fontSize: 15,
+                            prefixText: '비밀번호',
+                            prefixStyle: TextStyle(
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
@@ -130,20 +148,20 @@ class _JoinPageState extends State<JoinPage> {
                     child: Form(
                       child: Column(children: [
                         TextFormField(
+                          textAlign: TextAlign.right,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.lock,
                               color: Colors.blue,
                             ),
-                            enabledBorder: OutlineInputBorder(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
                               borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
                             ),
-                            hintText: '비밀번호 확인',
-                            hintStyle: TextStyle(
-                              fontSize: 15,
+                            prefixText: '비밀번호 확인',
+                            prefixStyle: TextStyle(
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
                             ),
