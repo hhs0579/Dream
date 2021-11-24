@@ -1,3 +1,4 @@
+import 'package:dreamproject/classes/circle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_drawer/simple_drawer.dart';
 
@@ -52,6 +53,20 @@ class _FeedState extends State<Feed> {
               icon: Icon(Icons.more_vert, color: Colors.blue[300]),
               onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
         ],
+      ),
+      body: Align(
+        alignment: Alignment.bottomRight,
+        child: Container(
+          width: 60,
+          height: 60,
+          margin: EdgeInsets.all(30),
+          child: OutlineCircleButton(
+            child: Icon(Icons.cloud),
+            radius: 50.0,
+            borderSize: 0.5,
+            onTap: () async {},
+          ),
+        ),
       ),
     );
   }
