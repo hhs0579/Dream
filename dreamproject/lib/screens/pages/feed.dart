@@ -6,6 +6,7 @@ class Feed extends StatefulWidget {
   @override
   State<Feed> createState() => _FeedState();
 }
+
 class _FeedState extends State<Feed> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -15,7 +16,25 @@ class _FeedState extends State<Feed> {
       key: _scaffoldKey,
       endDrawer: Container(
         width: MediaQuery.of(context).size.width / 2,
-         child: Drawer(),
+        child: Drawer(
+          child: ListView(
+            children: <Widget>[
+              ListTile(
+                title: Text('드림소개', textAlign: TextAlign.center),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('이용방법', textAlign: TextAlign.center),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('''카카오톡 플친
+전화 010-0000-0000''', textAlign: TextAlign.center),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
       ),
       appBar: AppBar(
         title: Text(
@@ -31,8 +50,7 @@ class _FeedState extends State<Feed> {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.more_vert, color: Colors.blue[300]),
-              onPressed: () => _scaffoldKey.currentState!.openEndDrawer(
-              )),
+              onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
         ],
       ),
     );
