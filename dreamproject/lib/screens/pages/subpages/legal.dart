@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Legal extends StatelessWidget {
+class Legal extends StatefulWidget {
   Legal({Key? key}) : super(key: key);
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   static String tag = 'legal';
+
+  @override
+  State<Legal> createState() => _LegalState();
+}
+
+class _LegalState extends State<Legal> {
+  var check = false;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: Align(
+        alignment: Alignment.bottomRight,
+        child: Checkbox(
+            activeColor: Colors.blue,
+            checkColor: Colors.blue,
+            value: check,
+            onChanged: (value) {
+              setState(() {
+                check = value!;
+              });
+            }),
+      ),
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       endDrawer: Container(
         width: MediaQuery.of(context).size.width / 2,
@@ -52,13 +72,12 @@ class Legal extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              alignment: Alignment.center,
               margin: EdgeInsets.only(top: 60, left: 40, right: 40, bottom: 60),
               child: TextFormField(
+                textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.only(left: 30, top: 100, bottom: 200),
-                  labelText: '법적동의 내용',
+                  contentPadding: EdgeInsets.only(top: 100, bottom: 200),
+                  hintText: '법적동의 내용',
                   border: OutlineInputBorder(),
                 ),
               ),
