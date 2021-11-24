@@ -25,7 +25,7 @@ class OutlineCircleButton extends StatelessWidget {
         height: radius,
         decoration: BoxDecoration(
           border: Border.all(color: borderColor, width: borderSize),
-          color: Colors.blue[300],
+          color: Color(0xff3AAFFC),
           shape: BoxShape.circle,
         ),
         child: Material(
