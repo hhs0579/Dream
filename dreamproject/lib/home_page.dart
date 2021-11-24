@@ -5,6 +5,7 @@ import 'screens/pages/donate.dart';
 import 'screens/pages/empathy.dart';
 import 'screens/pages/feed.dart';
 import 'screens/pages/my_info.dart';
+import 'screens/pages/subpages/legal.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -32,6 +33,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.grey,

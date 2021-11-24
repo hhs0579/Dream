@@ -1,5 +1,4 @@
 import 'package:dreamproject/classes/circle_button.dart';
-import 'package:dreamproject/data/address_model.dart';
 import 'package:dreamproject/screens/pages/subpages/legal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

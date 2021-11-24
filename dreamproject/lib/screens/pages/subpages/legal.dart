@@ -48,19 +48,23 @@ class Legal extends StatelessWidget {
               onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            child: TextField(
-              decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.only(left: 30, top: 100, bottom: 100),
-                labelText: '법적동의 내용',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 60, left: 40, right: 40, bottom: 60),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.only(left: 30, top: 100, bottom: 200),
+                  labelText: '법적동의 내용',
+                  border: OutlineInputBorder(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
