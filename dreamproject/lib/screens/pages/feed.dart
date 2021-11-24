@@ -3,11 +3,9 @@ import 'package:simple_drawer/simple_drawer.dart';
 
 class Feed extends StatefulWidget {
   Feed({Key? key}) : super(key: key);
-
   @override
   State<Feed> createState() => _FeedState();
 }
-
 class _FeedState extends State<Feed> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -15,12 +13,10 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      
       endDrawer: Container(
         width: MediaQuery.of(context).size.width / 2,
          child: Drawer(),
       ),
-
       appBar: AppBar(
         title: Text(
           'FEED',
