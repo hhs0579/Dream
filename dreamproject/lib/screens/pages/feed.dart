@@ -62,11 +62,16 @@ class _FeedState extends State<Feed> {
             ],
           ),
           body: Container(
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return PostCard();
-              },
-            ),
+            child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return PostCard();
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 20,
+                  );
+                },
+                itemCount: 30),
           ),
         ),
         Align(

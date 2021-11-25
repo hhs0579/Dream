@@ -160,7 +160,7 @@ class _PostCardState extends State<PostCard> {
               ])),
           Container(
               padding: EdgeInsets.only(left: 40),
-              height: 1200,
+              height: 180,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
               child: Column(
@@ -240,9 +240,10 @@ class _PostCardState extends State<PostCard> {
                           ],
                         ),
                       ),
-                      Text(
-                        '저도 돕고싶어요~',
-                        style: TextStyle(fontSize: 13, height: 1.0),
+                      Container(
+                        padding: EdgeInsets.only(right: 200),
+                        child: Text('저도 돕고싶어요~',
+                            style: TextStyle(fontSize: 13, height: 1.0)),
                       ),
                     ],
                   )
