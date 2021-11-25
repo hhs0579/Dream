@@ -49,6 +49,7 @@ class _PostCardState extends State<PostCard> {
               color: Colors.white,
               child: Center(child: Image.asset('assets/imgs/winter.jpg'))),
           Container(
+              padding: EdgeInsets.only(top: 10),
               height: 50,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
@@ -68,20 +69,49 @@ class _PostCardState extends State<PostCard> {
                     )),
               ])),
           Container(
-              height: 150,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.red,
-              child: Center(child: Text('설명 칸'))),
+            padding: EdgeInsets.only(left: 50, bottom: 10),
+            height: 100,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Row(
+              children: [
+                //작성하기 글 가져오기
+                Text('''강림면 노인인구가 41% 로 이중 독거노인이 32%
+를 차지하는 초고령사회에 해당하고, 독거노인 
+중 거동이 불편하거나 관절 등의 문제로
+좌식 식사가 어려운 어르신들에게 입식 식탁을'''),
+                Container(
+                    padding: EdgeInsets.only(top: 57, right: 15),
+                    child: TextButton(
+                        onPressed: () {
+                          //게시글 전체 보기 글을 늘리기
+                        },
+                        child: Text('더보기..')))
+              ],
+            ),
+          ),
           Container(
+              padding: EdgeInsets.only(left: 50, bottom: 10),
               height: 35,
               width: MediaQuery.of(context).size.width,
-              color: Colors.amber,
-              child: Center(child: Text('게시기간 칸'))),
+              color: Colors.white,
+              child: Row(children: [
+                Text('게시기간: 2021.05.27~2021.06.27',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+              ])),
           Container(
               height: 40,
+              padding: EdgeInsets.only(left: 50),
               width: MediaQuery.of(context).size.width,
-              color: Colors.pink,
-              child: Center(child: Text('공감 칸'))),
+              color: Colors.white,
+              child: Row(children: [
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.favorite,
+                      color: Colors.blue,
+                    ))
+              ])),
           Container(
               height: 100,
               width: MediaQuery.of(context).size.width,
