@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/subpages/write.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,19 +16,8 @@ class _LegalState extends State<Legal> {
 
   @override
   Widget build(BuildContext context) {
+    var value = Get.arguments;
     return Scaffold(
-      body: Align(
-        alignment: Alignment.bottomRight,
-        child: Checkbox(
-            activeColor: Colors.blue,
-            checkColor: Colors.blue,
-            value: check,
-            onChanged: (value) {
-              setState(() {
-                check = value!;
-              });
-            }),
-      ),
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       endDrawer: Container(
@@ -72,16 +62,42 @@ class _LegalState extends State<Legal> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(top: 60, left: 40, right: 40, bottom: 60),
+              margin: EdgeInsets.only(top: 50, left: 40, right: 40),
               child: TextFormField(
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(top: 100, bottom: 200),
+                  contentPadding: EdgeInsets.only(top: 140, bottom: 140),
                   hintText: '법적동의 내용',
                   border: OutlineInputBorder(),
                 ),
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(left: 270),
+              child: Row(
+                children: [
+                  Text('법적동의'),
+                  Checkbox(
+                      activeColor: Colors.blue,
+                      checkColor: Colors.blue,
+                      value: check,
+                      onChanged: (value) {
+                        setState(() {
+                          check = value!;
+                        });
+                      }),
+                ],
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(336, 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25))),
+                onPressed: () {
+                  Get.to(Write());
+                },
+                child: Text('확인')),
           ],
         ),
       ),
