@@ -8,6 +8,42 @@ class JoinPage extends StatefulWidget {
 }
 
 class _JoinPageState extends State<JoinPage> {
+  Color _maleButtonColor = Colors.white;
+  Color _femaleButtonColor = Colors.white;
+  Color _maleTextColor = Colors.blue;
+  Color _femaleTextColor = Colors.blue;
+  bool _maleswitchState = false;
+  bool _femaleswitchState = false;
+
+  TextEditingController idController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController passwordOkController = new TextEditingController();
+
+  void setMaleStateOn() {
+    _maleButtonColor = Colors.blue;
+    _maleTextColor = Colors.white;
+    _maleswitchState = true;
+  }
+
+  void setMaleStateOff() {
+    _maleButtonColor = Colors.white;
+    _maleTextColor = Colors.blue;
+    _maleswitchState = false;
+  }
+
+  void setFemaleStateOn() {
+    _femaleButtonColor = Colors.blue;
+    _femaleTextColor = Colors.white;
+    _femaleswitchState = true;
+  }
+
+  void setFemaleStateOff() {
+    _femaleButtonColor = Colors.white;
+    _femaleTextColor = Colors.blue;
+    _femaleswitchState = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +89,7 @@ class _JoinPageState extends State<JoinPage> {
                     ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: EdgeInsets.only(right: 10),
                         child: TextField(
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.black),
@@ -105,7 +141,7 @@ class _JoinPageState extends State<JoinPage> {
                     ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: EdgeInsets.only(right: 10),
                         child: TextField(
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.black),
@@ -122,7 +158,7 @@ class _JoinPageState extends State<JoinPage> {
                 alignment: Alignment(0, 0),
                 height: 70,
                 margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -143,37 +179,68 @@ class _JoinPageState extends State<JoinPage> {
                           )),
                     ),
                     SizedBox(
-                      width: 90,
+                      width: 75,
                     ),
                     Row(
                       children: [
-                        MaterialButton(
-                          height: 60,
-                          minWidth: 50,
-                          color: Colors.white,
-                          onPressed: () {},
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_maleswitchState == false) {
+                              if (_femaleswitchState == true) {
+                                setState(() {
+                                  setMaleStateOn();
+                                  setFemaleStateOff();
+                                });
+                              } else {
+                                setState(() {
+                                  setMaleStateOn();
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                setMaleStateOff();
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(
+                                side: BorderSide(color: Colors.blue)),
+                            primary: _maleButtonColor,
+                            minimumSize: Size(60, 50),
+                          ),
                           child: Text(
                             "남",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          shape: CircleBorder(
-                            side: BorderSide(color: Colors.blue),
+                            style: TextStyle(color: _maleTextColor),
                           ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        MaterialButton(
-                          height: 60,
-                          minWidth: 50,
-                          color: Colors.white,
-                          onPressed: () {},
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_femaleswitchState == false) {
+                              if (_maleswitchState == true) {
+                                setState(() {
+                                  setFemaleStateOn();
+                                  setMaleStateOff();
+                                });
+                              }
+                              setState(() {
+                                setFemaleStateOn();
+                              });
+                            } else {
+                              setState(() {
+                                setFemaleStateOff();
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(
+                                side: BorderSide(color: Colors.blue)),
+                            primary: _femaleButtonColor,
+                            minimumSize: Size(60, 50),
+                          ),
                           child: Text(
                             "여",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          shape: CircleBorder(
-                            side: BorderSide(color: Colors.blue),
+                            style: TextStyle(color: _femaleTextColor),
                           ),
                         ),
                       ],
@@ -208,7 +275,7 @@ class _JoinPageState extends State<JoinPage> {
                     ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: EdgeInsets.only(right: 10),
                         child: TextField(
                           textAlign: TextAlign.right,
                           style: TextStyle(color: Colors.black),
@@ -249,7 +316,7 @@ class _JoinPageState extends State<JoinPage> {
                     ),
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(right: 20),
+                        margin: EdgeInsets.only(right: 10),
                         child: TextField(
                           textAlign: TextAlign.right,
                           style: TextStyle(color: Colors.black),
