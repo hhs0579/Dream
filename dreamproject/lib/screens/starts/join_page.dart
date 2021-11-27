@@ -331,7 +331,7 @@ class _JoinPageState extends State<JoinPage> {
               SizedBox(height: 30),
               Container(
                 alignment: Alignment(0, 0),
-                height: 160,
+                height: 150,
                 margin: EdgeInsets.only(left: 30, right: 30),
                 padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                 decoration: BoxDecoration(
@@ -364,6 +364,7 @@ class _JoinPageState extends State<JoinPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                               ),
+                              readOnly: true,
                             ),
                           ),
                         ),
@@ -407,6 +408,7 @@ class _JoinPageState extends State<JoinPage> {
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                               ),
+                              readOnly: true,
                             ),
                           ),
                         ),
@@ -415,7 +417,7 @@ class _JoinPageState extends State<JoinPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 30.0),
+              SizedBox(height: 10.0),
               Container(
                 alignment: Alignment(0, 0),
                 height: 70,
@@ -468,6 +470,50 @@ class _JoinPageState extends State<JoinPage> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  top: 30,
+                ),
+                width: 330,
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "가입하기",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  top: 15,
+                  bottom: 30,
+                ),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "뒤로가기",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    minimumSize: Size(330, 45),
+                    side: BorderSide(color: Colors.blue),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                  ),
                 ),
               ),
             ],
