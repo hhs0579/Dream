@@ -60,15 +60,15 @@ class _WriteState extends State<Write> {
                 onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
           ],
         ),
-        body: Container(
-          margin: EdgeInsets.only(right: 20),
-          child: Column(
+        body: SingleChildScrollView(
+          child: Container(
+              child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(left: 40),
                     child: Row(
                       children: [
                         Checkbox(
@@ -85,7 +85,6 @@ class _WriteState extends State<Write> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20),
                     child: Row(
                       children: [
                         Checkbox(
@@ -102,7 +101,9 @@ class _WriteState extends State<Write> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(
+                      right: 40,
+                    ),
                     child: Row(
                       children: [
                         Checkbox(
@@ -121,13 +122,11 @@ class _WriteState extends State<Write> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(left: 15, bottom: 40),
-                        margin: EdgeInsets.only(left: 12),
+                        margin: EdgeInsets.only(left: 67.6),
                         child: Row(
                           children: [
                             Checkbox(
@@ -144,8 +143,7 @@ class _WriteState extends State<Write> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.only(left: 28, bottom: 40),
-                        margin: EdgeInsets.only(left: 1),
+                        margin: EdgeInsets.only(left: 14),
                         child: Row(
                           children: [
                             Checkbox(
@@ -164,8 +162,7 @@ class _WriteState extends State<Write> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.only(right: 19, bottom: 40),
-                    margin: EdgeInsets.only(right: 7),
+                    margin: EdgeInsets.only(left: 1.6),
                     child: Row(
                       children: [
                         Checkbox(
@@ -182,9 +179,20 @@ class _WriteState extends State<Write> {
                     ),
                   ),
                 ],
-              )
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20, left: 40, right: 40),
+                child: TextFormField(
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(top: 140, bottom: 200),
+                    hintText: '내용작성',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
             ],
-          ),
+          )),
         ));
   }
 }

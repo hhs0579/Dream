@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class JoinPage extends StatefulWidget {
-  static String tag = 'JoinPage';
-
   @override
   _JoinPageState createState() => _JoinPageState();
 }

@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/pages/subpages/write.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,7 @@ class _LegalState extends State<Legal> {
         leading: IconButton(
             icon: Icon(Icons.close, color: Color(0xff3AAFFC), size: 30),
             onPressed: () {
-              Get.back();
+              Get.to(Feed());
             }),
         actions: <Widget>[
           IconButton(
@@ -58,47 +59,50 @@ class _LegalState extends State<Legal> {
               onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 50, left: 40, right: 40),
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(top: 140, bottom: 140),
-                  hintText: '법적동의 내용',
-                  border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 50, left: 40, right: 40),
+                child: TextFormField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(top: 140, bottom: 140),
+                    hintText: '법적동의 내용',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 270),
-              child: Row(
-                children: [
-                  Text('법적동의'),
-                  Checkbox(
-                      activeColor: Colors.blue,
-                      checkColor: Colors.blue,
-                      value: check,
-                      onChanged: (value) {
-                        setState(() {
-                          check = value!;
-                        });
-                      }),
-                ],
+              Container(
+                margin: EdgeInsets.only(left: 270),
+                child: Row(
+                  children: [
+                    Text('법적동의'),
+                    Checkbox(
+                        activeColor: Colors.blue,
+                        checkColor: Colors.blue,
+                        value: check,
+                        onChanged: (value) {
+                          setState(() {
+                            check = value!;
+                          });
+                        }),
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(336, 50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25))),
-                onPressed: () {
-                  Get.to(Write());
-                },
-                child: Text('확인')),
-          ],
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(336, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25))),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Write()));
+                  },
+                  child: Text('확인')),
+            ],
+          ),
         ),
       ),
     );

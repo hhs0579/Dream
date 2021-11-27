@@ -1,4 +1,5 @@
 import 'package:dreamproject/classes/circle_button.dart';
+import 'package:dreamproject/controller/homepage_controller.dart';
 import 'package:dreamproject/screens/pages/subpages/legal.dart';
 import 'package:dreamproject/screens/pages/subpages/postcard.dart';
 import 'package:flutter/material.dart';
@@ -88,8 +89,9 @@ class _FeedState extends State<Feed> {
               ),
               radius: 50.0,
               borderSize: 0.5,
-              onTap: () async {
-                Get.to(() => Legal(), arguments: BottomNavigationBar);
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Legal()));
               },
             ),
           ),
