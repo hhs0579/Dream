@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'login_page.dart';
 
 class JoinPage extends StatefulWidget {
   @override
@@ -446,11 +449,13 @@ class _JoinPageState extends State<JoinPage> {
                       child: Container(
                         margin: EdgeInsets.only(right: 10),
                         child: TextField(
-                            textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            )),
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          keyboardType: TextInputType.phone,
+                        ),
                       ),
                     ),
                     Container(
@@ -499,7 +504,9 @@ class _JoinPageState extends State<JoinPage> {
                   bottom: 30,
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(LoginPage());
+                  },
                   child: Text(
                     "뒤로가기",
                     style: TextStyle(
