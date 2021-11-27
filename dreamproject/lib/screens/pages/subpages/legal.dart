@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/pages/subpages/write.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,7 @@ class _LegalState extends State<Legal> {
         leading: IconButton(
             icon: Icon(Icons.close, color: Color(0xff3AAFFC), size: 30),
             onPressed: () {
-              Get.back();
+              Get.to(Feed());
             }),
         actions: <Widget>[
           IconButton(
@@ -95,7 +96,8 @@ class _LegalState extends State<Legal> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25))),
                 onPressed: () {
-                  Get.to(Write());
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Write()));
                 },
                 child: Text('확인')),
           ],
