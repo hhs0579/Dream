@@ -330,6 +330,148 @@ class _JoinPageState extends State<JoinPage> {
                   ],
                 ),
               ),
+              SizedBox(height: 30),
+              Container(
+                alignment: Alignment(0, 0),
+                height: 160,
+                margin: EdgeInsets.only(left: 30, right: 30),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(width: 1.0, color: Colors.black12),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 20),
+                          child: Icon(Icons.place, color: Colors.blue),
+                        ),
+                        Container(
+                          width: 90,
+                          child: Text("주소",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: TextField(
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 80,
+                          height: 35,
+                          child: TextButton(
+                            child: Text(
+                              "우편번호 검색",
+                              style: TextStyle(
+                                fontSize: 11,
+                              ),
+                            ),
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 43),
+                          width: 90,
+                          child: Text("상세주소",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: TextField(
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30.0),
+              Container(
+                alignment: Alignment(0, 0),
+                height: 70,
+                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(width: 1.0, color: Colors.black12),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.call, color: Colors.blue),
+                    ),
+                    Container(
+                      width: 60,
+                      child: Text("핸드폰",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: TextField(
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            )),
+                      ),
+                    ),
+                    Container(
+                      width: 85,
+                      height: 30,
+                      child: TextButton(
+                        child: Text(
+                          "인증번호 보내기",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
