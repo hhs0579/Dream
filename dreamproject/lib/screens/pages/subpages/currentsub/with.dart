@@ -1,19 +1,18 @@
-import 'package:dreamproject/screens/pages/subpages/area.dart';
-import 'package:dreamproject/screens/pages/subpages/clublist.dart';
-import 'package:dreamproject/screens/pages/subpages/with.dart';
 import 'package:flutter/material.dart';
 
-class Category extends StatefulWidget {
-  const Category({Key? key}) : super(key: key);
+class WithPage extends StatefulWidget {
+  WithPage({Key? key}) : super(key: key);
 
-  @override
-  _CategoryState createState() => _CategoryState();
-}
-
-class _CategoryState extends State<Category> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, true, false, false];
+  @override
+  State<WithPage> createState() => _WithPageState();
+}
+
+final isSelected = <bool>[true, false, false, false];
+GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+class _WithPageState extends State<WithPage> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -87,22 +86,6 @@ class _CategoryState extends State<Category> {
                               MaterialPageRoute(
                                   builder: (context) => WithPage()));
                         }
-                        if (index == 1) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Category()));
-                        }
-                        if (index == 2) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Area()));
-                        }
-                        if (index == 3) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ClubList()));
-                        }
                       });
                     },
                     children: [
@@ -126,7 +109,7 @@ class _CategoryState extends State<Category> {
                     isSelected: isSelected,
                   )
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -1,19 +1,19 @@
-import 'package:dreamproject/screens/pages/subpages/area.dart';
-import 'package:dreamproject/screens/pages/subpages/category.dart';
-import 'package:dreamproject/screens/pages/subpages/with.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
 
-class ClubList extends StatefulWidget {
-  const ClubList({Key? key}) : super(key: key);
+class Category extends StatefulWidget {
+  const Category({Key? key}) : super(key: key);
 
   @override
-  _ClubListState createState() => _ClubListState();
+  _CategoryState createState() => _CategoryState();
 }
 
-class _ClubListState extends State<ClubList> {
+class _CategoryState extends State<Category> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, false, false, true];
+  final isSelected = <bool>[false, true, false, false];
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
