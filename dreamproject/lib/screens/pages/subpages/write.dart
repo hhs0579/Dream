@@ -191,6 +191,22 @@ class _WriteState extends State<Write> {
                   ),
                 ),
               ),
+              Container(
+                margin: EdgeInsets.only(left: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.attach_file,
+                        color: Color(0xff3AAFFC),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              TextButton(onPressed: () {}, child: Text('게시')),
             ],
           )),
         ));

@@ -69,7 +69,7 @@ class _PostCardState extends State<PostCard> {
                     )),
               ])),
           Container(
-            padding: EdgeInsets.only(left: 50, bottom: 10),
+            padding: EdgeInsets.only(left: 40, bottom: 10),
             height: 100,
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
@@ -81,7 +81,7 @@ class _PostCardState extends State<PostCard> {
 중 거동이 불편하거나 관절 등의 문제로
 좌식 식사가 어려운 어르신들에게 입식 식탁을'''),
                 Container(
-                    padding: EdgeInsets.only(top: 57, right: 15),
+                    padding: EdgeInsets.only(top: 57),
                     child: TextButton(
                         onPressed: () {
                           //게시글 전체 보기 글을 늘리기
