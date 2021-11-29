@@ -1,21 +1,19 @@
 import 'package:dreamproject/screens/pages/subpages/area.dart';
-import 'package:dreamproject/screens/pages/subpages/category.dart';
 import 'package:dreamproject/screens/pages/subpages/clublist.dart';
 import 'package:dreamproject/screens/pages/subpages/with.dart';
 import 'package:flutter/material.dart';
 
-class CurrentPage extends StatefulWidget {
-  CurrentPage({Key? key}) : super(key: key);
+class Category extends StatefulWidget {
+  const Category({Key? key}) : super(key: key);
 
   @override
-  State<CurrentPage> createState() => _CurrentPageState();
+  _CategoryState createState() => _CategoryState();
 }
 
-class _CurrentPageState extends State<CurrentPage> {
+class _CategoryState extends State<Category> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, false, false, false];
-
+  final isSelected = <bool>[false, true, false, false];
   @override
   Widget build(BuildContext context) {
     return Stack(children: [

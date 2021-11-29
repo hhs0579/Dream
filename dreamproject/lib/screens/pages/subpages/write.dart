@@ -63,129 +63,110 @@ class _WriteState extends State<Write> {
         body: SingleChildScrollView(
           child: Container(
               child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 40),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            activeColor: Colors.blue,
-                            checkColor: Colors.blue,
-                            value: check1,
-                            onChanged: (value) {
-                              setState(() {
-                                check1 = value!;
-                              });
-                            }),
-                        Text('노인')
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            activeColor: Colors.blue,
-                            checkColor: Colors.blue,
-                            value: check2,
-                            onChanged: (value) {
-                              setState(() {
-                                check2 = value!;
-                              });
-                            }),
-                        Text('아동')
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      right: 40,
-                    ),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            activeColor: Colors.blue,
-                            checkColor: Colors.blue,
-                            value: check3,
-                            onChanged: (value) {
-                              setState(() {
-                                check3 = value!;
-                              });
-                            }),
-                        Text('장애'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
+              Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 67.6),
+                        margin: EdgeInsets.only(right: 13),
                         child: Row(
                           children: [
                             Checkbox(
                                 activeColor: Colors.blue,
-                                checkColor: Colors.blue,
-                                value: check4,
+                                checkColor: Colors.white,
+                                value: check1,
                                 onChanged: (value) {
                                   setState(() {
-                                    check4 = value!;
+                                    check1 = value!;
                                   });
                                 }),
-                            Text('다문화'),
+                            Text('노인'),
                           ],
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 14),
+                        margin: EdgeInsets.only(right: 13),
                         child: Row(
                           children: [
                             Checkbox(
                                 activeColor: Colors.blue,
-                                checkColor: Colors.blue,
-                                value: check5,
+                                checkColor: Colors.white,
+                                value: check2,
                                 onChanged: (value) {
                                   setState(() {
-                                    check5 = value!;
+                                    check2 = value!;
                                   });
                                 }),
-                            Text('유기동물'),
+                            Text('아동'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 13),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                                activeColor: Colors.blue,
+                                checkColor: Colors.white,
+                                value: check3,
+                                onChanged: (value) {
+                                  setState(() {
+                                    check3 = value!;
+                                  });
+                                }),
+                            Text('장애'),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 1.6),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            activeColor: Colors.blue,
-                            checkColor: Colors.blue,
-                            value: check6,
-                            onChanged: (value) {
-                              setState(() {
-                                check6 = value!;
-                              });
-                            }),
-                        Text('빈곤'),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                          activeColor: Colors.blue,
+                          checkColor: Colors.white,
+                          value: check4,
+                          onChanged: (value) {
+                            setState(() {
+                              check4 = value!;
+                            });
+                          }),
+                      Text('다문화'),
+                      Checkbox(
+                          activeColor: Colors.blue,
+                          checkColor: Colors.white,
+                          value: check5,
+                          onChanged: (value) {
+                            setState(() {
+                              check5 = value!;
+                            });
+                          }),
+                      Text('유기동물'),
+                      Checkbox(
+                          activeColor: Colors.blue,
+                          checkColor: Colors.white,
+                          value: check6,
+                          onChanged: (value) {
+                            setState(() {
+                              check6 = value!;
+                            });
+                          }),
+                      Text('빈곤'),
+                    ],
                   ),
                 ],
               ),
               Container(
                 margin: EdgeInsets.only(top: 20, left: 40, right: 40),
-                child: TextFormField(
+                child: TextField(
+                  textAlignVertical: TextAlignVertical.top,
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(top: 140, bottom: 200),
+                    contentPadding: EdgeInsets.only(bottom: 300),
                     hintText: '내용작성',
                     border: OutlineInputBorder(),
                   ),
@@ -206,7 +187,9 @@ class _WriteState extends State<Write> {
                   ],
                 ),
               ),
-              TextButton(onPressed: () {}, child: Text('게시')),
+              Container(
+                  margin: EdgeInsets.only(right: 20),
+                  child: TextButton(onPressed: () {}, child: Text('게시'))),
             ],
           )),
         ));

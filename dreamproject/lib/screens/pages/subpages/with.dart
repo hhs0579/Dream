@@ -1,21 +1,18 @@
-import 'package:dreamproject/screens/pages/subpages/area.dart';
-import 'package:dreamproject/screens/pages/subpages/category.dart';
-import 'package:dreamproject/screens/pages/subpages/clublist.dart';
-import 'package:dreamproject/screens/pages/subpages/with.dart';
 import 'package:flutter/material.dart';
 
-class CurrentPage extends StatefulWidget {
-  CurrentPage({Key? key}) : super(key: key);
+class WithPage extends StatefulWidget {
+  WithPage({Key? key}) : super(key: key);
 
-  @override
-  State<CurrentPage> createState() => _CurrentPageState();
-}
-
-class _CurrentPageState extends State<CurrentPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, false, false, false];
+  @override
+  State<WithPage> createState() => _WithPageState();
+}
 
+final isSelected = <bool>[true, false, false, false];
+GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+class _WithPageState extends State<WithPage> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -88,22 +85,6 @@ class _CurrentPageState extends State<CurrentPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WithPage()));
-                        }
-                        if (index == 1) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Category()));
-                        }
-                        if (index == 2) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Area()));
-                        }
-                        if (index == 3) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ClubList()));
                         }
                       });
                     },

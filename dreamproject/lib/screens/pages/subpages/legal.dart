@@ -17,7 +17,6 @@ class _LegalState extends State<Legal> {
 
   @override
   Widget build(BuildContext context) {
-    var value = Get.arguments;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,

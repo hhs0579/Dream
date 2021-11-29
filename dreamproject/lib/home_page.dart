@@ -21,7 +21,6 @@ class HomePage extends GetView<HomePageController> {
             index: controller.homePageIndex.value,
             children: [
               //버튼 눌렀을때 다른 페이지로 넘어가는지
-
               Navigator(
                 key: controller.navigatorKey,
                 onGenerateRoute: (routeSettings) {
@@ -31,10 +30,9 @@ class HomePage extends GetView<HomePageController> {
               Navigator(
                 key: controller.navigatorKey2,
                 onGenerateRoute: (routeSettings) {
-                  return MaterialPageRoute(builder: (context) => Legal());
+                  return MaterialPageRoute(builder: (context) => CurrentPage());
                 },
               ),
-              CurrentPage(),
               DonatePage(),
               EmpathyPage(),
               MyInfoPage(),
