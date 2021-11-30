@@ -20,6 +20,7 @@ class _JoinPageState extends State<JoinPage> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController passwordOkController = new TextEditingController();
+  TextEditingController telController = new TextEditingController();
 
   void setMaleStateOn() {
     _maleButtonColor = Colors.blue;
@@ -44,6 +45,20 @@ class _JoinPageState extends State<JoinPage> {
     _femaleTextColor = Colors.blue;
     _femaleswitchState = false;
   }
+
+  final Textfield = Expanded(
+    child: Container(
+      margin: EdgeInsets.only(right: 10),
+      child: TextField(
+        textAlign: TextAlign.right,
+        style: TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+        ),
+        obscureText: true,
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -88,17 +103,7 @@ class _JoinPageState extends State<JoinPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextField(
-                            textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            )),
-                      ),
-                    ),
+                    Textfield,
                     Container(
                       width: 60,
                       height: 35,
@@ -140,17 +145,7 @@ class _JoinPageState extends State<JoinPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextField(
-                            textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            )),
-                      ),
-                    ),
+                    Textfield,
                   ],
                 ),
               ),
@@ -274,19 +269,7 @@ class _JoinPageState extends State<JoinPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          obscureText: true,
-                        ),
-                      ),
-                    ),
+                    Textfield,
                   ],
                 ),
               ),
@@ -315,19 +298,7 @@ class _JoinPageState extends State<JoinPage> {
                             fontWeight: FontWeight.bold,
                           )),
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          obscureText: true,
-                        ),
-                      ),
-                    ),
+                    Textfield,
                   ],
                 ),
               ),
@@ -412,6 +383,8 @@ class _JoinPageState extends State<JoinPage> {
                                 border: InputBorder.none,
                               ),
                               readOnly: true,
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
                             ),
                           ),
                         ),
