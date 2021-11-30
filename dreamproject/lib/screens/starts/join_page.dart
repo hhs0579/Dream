@@ -128,7 +128,7 @@ class _JoinPageState extends State<JoinPage> {
         },
         child: SingleChildScrollView(
           child: Form(
-            key: this.formKey,
+            key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -324,7 +324,7 @@ class _JoinPageState extends State<JoinPage> {
                             if (val.length < 8 || val.length > 12) {
                               return "8~12자 비밀번호를 설정해 주세요 ";
                             }
-                            if (val.length < 1) {
+                            if (val.isEmpty()) {
                               return "비밀번호는 필수 입력사항 입니다";
                             }
                             return null;
@@ -361,10 +361,10 @@ class _JoinPageState extends State<JoinPage> {
                       Textformfield(
                           onSaved: (val) {},
                           validator: (val) {
-                            if (val != _passwordTextEditor) {
+                            if (val != _passwordTextEditor.text) {
                               return "비밀번호가 틀립니다. 다시 확인해 주세요.";
                             }
-                            if (val.length < 1) {
+                            if (val.isEmpty()) {
                               return "비밀번호는 필수 입력사항 입니다";
                             }
                           }),
@@ -527,8 +527,10 @@ class _JoinPageState extends State<JoinPage> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (this.formKey.currentState!.validate()) {
+                      if (formKey.currentState!.validate()) {
                         Get.to(LoginPage());
+
+                        formKey.currentState!.save();
                       }
                     },
                     child: Text(
