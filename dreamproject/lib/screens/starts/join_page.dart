@@ -16,11 +16,16 @@ class _JoinPageState extends State<JoinPage> {
   bool _maleswitchState = false;
   bool _femaleswitchState = false;
 
-  TextEditingController idController = new TextEditingController();
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  TextEditingController passwordOkController = new TextEditingController();
-  TextEditingController telController = new TextEditingController();
+  String id = '';
+  String name = '';
+  String password = '';
+  String gender = '';
+  String post = '';
+  String address = '';
+
+  final _passwordTextEditor = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
 
   void setMaleStateOn() {
     _maleButtonColor = Colors.blue;
@@ -46,19 +51,73 @@ class _JoinPageState extends State<JoinPage> {
     _femaleswitchState = false;
   }
 
-  final Textfield = Expanded(
-    child: Container(
-      margin: EdgeInsets.only(right: 10),
-      child: TextField(
-        textAlign: TextAlign.right,
-        style: TextStyle(color: Colors.black),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-        ),
-        obscureText: true,
+  genderButton(
+      String gender, Color primaryColor, Color textColor, dynamic onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(side: BorderSide(color: Colors.blue)),
+        primary: primaryColor,
+        minimumSize: Size(60, 50),
       ),
-    ),
-  );
+      child: Text(
+        gender,
+        style: TextStyle(color: textColor),
+      ),
+    );
+  }
+
+  Textformfield({
+    required FormFieldSetter onSaved,
+    required FormFieldValidator validator,
+  }) {
+    assert(onSaved != null);
+    assert(validator != null);
+
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        child: TextFormField(
+          textAlign: TextAlign.right,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            errorStyle: TextStyle(color: Colors.blue),
+          ),
+          obscureText: true,
+          onSaved: onSaved,
+          validator: validator,
+        ),
+      ),
+    );
+  }
+
+  passwordTextformfield({
+    required FormFieldSetter onSaved,
+    required FormFieldValidator validator,
+    required TextEditingController controller,
+  }) {
+    assert(onSaved != null);
+    assert(validator != null);
+
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        child: TextFormField(
+          controller: controller,
+          textAlign: TextAlign.right,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            errorStyle: TextStyle(color: Colors.blue),
+          ),
+          obscureText: true,
+          onSaved: onSaved,
+          validator: validator,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,435 +127,450 @@ class _JoinPageState extends State<JoinPage> {
           FocusScope.of(context).unfocus();
         },
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 30),
-                child: Text(
-                  "회원가입",
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+          child: Form(
+            key: this.formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: Text(
+                    "회원가입",
+                    style:
+                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              SizedBox(height: 30.0),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.person, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 60,
-                      child: Text("ID",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    Textfield,
-                    Container(
-                      width: 60,
-                      height: 35,
-                      child: TextButton(
-                        child: Text("확인"),
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            primary: Colors.white,
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
+                SizedBox(height: 30.0),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.person, color: Colors.blue),
                       ),
-                    ),
-                  ],
+                      Container(
+                        width: 60,
+                        child: Text("ID",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Textformfield(onSaved: (val) {}, validator: (val) {}),
+                      Container(
+                        width: 60,
+                        height: 35,
+                        child: TextButton(
+                          child: Text("확인"),
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.create_rounded, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("이름",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Textformfield(onSaved: (val) {}, validator: (val) {}),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.create_rounded, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 60,
-                      child: Text("이름",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    Textfield,
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.male, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 60,
-                      child: Text("성별",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    SizedBox(
-                      width: 75,
-                    ),
-                    Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.male, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("성별",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      SizedBox(
+                        width: 75,
+                      ),
+                      Row(
+                        children: [
+                          genderButton("남", _maleButtonColor, _maleTextColor,
+                              () {
                             if (_maleswitchState == false) {
                               if (_femaleswitchState == true) {
                                 setState(() {
                                   setMaleStateOn();
                                   setFemaleStateOff();
+                                  gender = '남자';
                                 });
                               } else {
                                 setState(() {
                                   setMaleStateOn();
+                                  gender = '남자';
                                 });
                               }
                             } else {
                               setState(() {
                                 setMaleStateOff();
+                                gender = '';
                               });
                             }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(
-                                side: BorderSide(color: Colors.blue)),
-                            primary: _maleButtonColor,
-                            minimumSize: Size(60, 50),
-                          ),
-                          child: Text(
-                            "남",
-                            style: TextStyle(color: _maleTextColor),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        ElevatedButton(
-                          onPressed: () {
+                            print(gender);
+                          }),
+                          SizedBox(width: 10),
+                          genderButton(
+                              "여", _femaleButtonColor, _femaleTextColor, () {
                             if (_femaleswitchState == false) {
                               if (_maleswitchState == true) {
                                 setState(() {
                                   setFemaleStateOn();
                                   setMaleStateOff();
+                                  gender = '여자';
+                                });
+                              } else {
+                                setState(() {
+                                  setFemaleStateOn();
+                                  gender = '여자';
                                 });
                               }
-                              setState(() {
-                                setFemaleStateOn();
-                              });
                             } else {
                               setState(() {
                                 setFemaleStateOff();
+                                gender = '';
                               });
                             }
+                            print(gender);
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.lock, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("비밀번호",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      passwordTextformfield(
+                          onSaved: (val) {},
+                          validator: (val) {
+                            if (val.length < 8 || val.length > 12) {
+                              return "8~12자 비밀번호를 설정해 주세요 ";
+                            }
+                            if (val.length < 1) {
+                              return "비밀번호는 필수 입력사항 입니다";
+                            }
+                            return null;
                           },
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(
-                                side: BorderSide(color: Colors.blue)),
-                            primary: _femaleButtonColor,
-                            minimumSize: Size(60, 50),
+                          controller: _passwordTextEditor),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.lock, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 90,
+                        child: Text("비밀번호 확인",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Textformfield(
+                          onSaved: (val) {},
+                          validator: (val) {
+                            if (val != _passwordTextEditor) {
+                              return "비밀번호가 틀립니다. 다시 확인해 주세요.";
+                            }
+                            if (val.length < 1) {
+                              return "비밀번호는 필수 입력사항 입니다";
+                            }
+                          }),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 150,
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 20),
+                            child: Icon(Icons.place, color: Colors.blue),
                           ),
+                          Container(
+                            width: 90,
+                            child: Text("주소",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                textAlign: TextAlign.right,
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 80,
+                            height: 35,
+                            child: TextButton(
+                              child: Text(
+                                "우편번호 검색",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                ),
+                              ),
+                              onPressed: () {},
+                              style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 43),
+                            width: 90,
+                            child: Text("상세주소",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                textAlign: TextAlign.right,
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.call, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("핸드폰",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: TextField(
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            keyboardType: TextInputType.phone,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 85,
+                        height: 30,
+                        child: TextButton(
                           child: Text(
-                            "여",
-                            style: TextStyle(color: _femaleTextColor),
+                            "인증번호 보내기",
+                            style: TextStyle(fontSize: 10),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.lock, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 60,
-                      child: Text("비밀번호",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    Textfield,
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.lock, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 90,
-                      child: Text("비밀번호 확인",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    Textfield,
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 150,
-                margin: EdgeInsets.only(left: 30, right: 30),
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.place, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 90,
-                          child: Text("주소",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: TextField(
-                              textAlign: TextAlign.right,
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              readOnly: true,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 80,
-                          height: 35,
-                          child: TextButton(
-                            child: Text(
-                              "우편번호 검색",
-                              style: TextStyle(
-                                fontSize: 11,
-                              ),
-                            ),
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 43),
-                          width: 90,
-                          child: Text("상세주소",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: TextField(
-                              textAlign: TextAlign.right,
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              readOnly: true,
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Container(
-                alignment: Alignment(0, 0),
-                height: 70,
-                margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                padding: EdgeInsets.only(left: 20, right: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1.0, color: Colors.black12),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.call, color: Colors.blue),
-                    ),
-                    Container(
-                      width: 60,
-                      child: Text("핸드폰",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          keyboardType: TextInputType.phone,
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 85,
-                      height: 30,
-                      child: TextButton(
-                        child: Text(
-                          "인증번호 보내기",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            primary: Colors.white,
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 30,
+                  ),
+                  width: 330,
+                  height: 45,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (this.formKey.currentState!.validate()) {
+                        Get.to(LoginPage());
+                      }
+                    },
+                    child: Text(
+                      "가입하기",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: 30,
-                ),
-                width: 330,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "가입하기",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 15,
+                    bottom: 30,
                   ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: 15,
-                  bottom: 30,
-                ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(LoginPage());
-                  },
-                  child: Text(
-                    "뒤로가기",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.to(LoginPage());
+                    },
+                    child: Text(
+                      "뒤로가기",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      minimumSize: Size(330, 45),
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    minimumSize: Size(330, 45),
-                    side: BorderSide(color: Colors.blue),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
