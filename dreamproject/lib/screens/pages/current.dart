@@ -11,10 +11,12 @@ class CurrentPage extends StatefulWidget {
   State<CurrentPage> createState() => _CurrentPageState();
 }
 
+var texts = ["g ", "ㅁㅁ"];
+
 class _CurrentPageState extends State<CurrentPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, false, false, false];
+  final isSelected = <bool>[true, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _CurrentPageState extends State<CurrentPage> {
                 ),
                 ListTile(
                   title: Text('''카카오톡 플친
-    전화 010-0000-0000''', textAlign: TextAlign.center),
+      전화 010-0000-0000''', textAlign: TextAlign.center),
                   onTap: () {},
                 ),
               ],
@@ -78,35 +80,6 @@ class _CurrentPageState extends State<CurrentPage> {
                     borderColor: Colors.black.withOpacity(0.1),
                     selectedBorderColor: Color(0xff3AAFFC),
                     constraints: BoxConstraints(minHeight: 36.0),
-                    onPressed: (index) {
-                      setState(() {
-                        for (int i = 0; i < isSelected.length; i++) {
-                          isSelected[i] = i == index;
-                        }
-                        if (index == 0) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WithPage()));
-                        }
-                        if (index == 1) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Category()));
-                        }
-                        if (index == 2) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Area()));
-                        }
-                        if (index == 3) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ClubList()));
-                        }
-                      });
-                    },
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -122,13 +95,47 @@ class _CurrentPageState extends State<CurrentPage> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('\t\t클럽\t\t'),
+                        child: Text('    클럽    '),
                       ),
                     ],
+                    onPressed: (index) {
+                      setState(() {
+                        for (int i = 0; i < isSelected.length; i++) {
+                          isSelected[i] = i == index;
+                        }
+                      });
+                    },
                     isSelected: isSelected,
-                  )
+                  ),
                 ],
-              )
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('지역',
+                        style:
+                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15)),
+                    Text('기부자',
+                        style:
+                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15)),
+                    Text('기부금액',
+                        style:
+                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15))
+                  ],
+                ),
+              ),
+              ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: texts.length,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(),
+                  itemBuilder: (context, index) {
+                    var tile = ListTile(title: Text(texts[index]));
+                    return tile;
+                  }),
             ],
           ),
         ),

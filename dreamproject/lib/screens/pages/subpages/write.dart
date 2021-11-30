@@ -163,6 +163,7 @@ class _WriteState extends State<Write> {
               Container(
                 margin: EdgeInsets.only(top: 20, left: 40, right: 40),
                 child: TextField(
+                  readOnly: true,
                   textAlignVertical: TextAlignVertical.top,
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
