@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kpostal/kpostal.dart';
 
 import 'login_page.dart';
 
@@ -16,14 +17,17 @@ class _JoinPageState extends State<JoinPage> {
   bool _maleswitchState = false;
   bool _femaleswitchState = false;
 
-  String id = '';
-  String name = '';
-  String password = '';
-  String gender = '';
-  String post = '';
-  String address = '';
+  String? id;
+  String? name;
+  String? password;
+  String? gender;
+  String? address;
+  String? postCode;
 
+  final _idTextEditor = TextEditingController();
   final _passwordTextEditor = TextEditingController();
+  final _postTextEditor = TextEditingController();
+  final _addressTextEditor = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -63,6 +67,32 @@ class _JoinPageState extends State<JoinPage> {
       child: Text(
         gender,
         style: TextStyle(color: textColor),
+      ),
+    );
+  }
+
+  IdTextformfield({
+    required FormFieldSetter onSaved,
+    required FormFieldValidator validator,
+    required TextEditingController controller,
+  }) {
+    assert(onSaved != null);
+    assert(validator != null);
+
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        child: TextFormField(
+          controller: controller,
+          textAlign: TextAlign.right,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            errorStyle: TextStyle(color: Colors.blue),
+          ),
+          onSaved: onSaved,
+          validator: validator,
+        ),
       ),
     );
   }
@@ -165,13 +195,22 @@ class _JoinPageState extends State<JoinPage> {
                               fontWeight: FontWeight.bold,
                             )),
                       ),
-                      Textformfield(onSaved: (val) {}, validator: (val) {}),
+                      IdTextformfield(
+                          onSaved: (val) {
+                            id = val;
+                          },
+                          validator: (val) {},
+                          controller: _idTextEditor),
                       Container(
                         width: 60,
                         height: 35,
                         child: TextButton(
                           child: Text("확인"),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _idTextEditor.text = "완료";
+                            });
+                          },
                           style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor: Colors.blue,
@@ -207,7 +246,11 @@ class _JoinPageState extends State<JoinPage> {
                               fontWeight: FontWeight.bold,
                             )),
                       ),
-                      Textformfield(onSaved: (val) {}, validator: (val) {}),
+                      Textformfield(
+                          onSaved: (val) {
+                            name = val;
+                          },
+                          validator: (val) {}),
                     ],
                   ),
                 ),
@@ -392,7 +435,7 @@ class _JoinPageState extends State<JoinPage> {
                           ),
                           Container(
                             width: 90,
-                            child: Text("주소",
+                            child: Text("우편번호",
                                 style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
@@ -402,6 +445,7 @@ class _JoinPageState extends State<JoinPage> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
+                                controller: _postTextEditor,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
@@ -421,7 +465,30 @@ class _JoinPageState extends State<JoinPage> {
                                   fontSize: 11,
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => KpostalView(
+                                      useLocalServer: true,
+                                      localPort: 8080,
+                                      kakaoKey:
+                                          '{e7332691953b203d499ffb8ad8a411c6}',
+                                      callback: (Kpostal result) {
+                                        setState(() {
+                                          postCode = result.postCode;
+                                          address = result.address;
+                                          _postTextEditor.text =
+                                              result.postCode;
+                                          _addressTextEditor.text =
+                                              result.address;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                                Navigator.pop(context);
+                              },
                               style: TextButton.styleFrom(
                                   primary: Colors.white,
                                   backgroundColor: Colors.blue,
@@ -446,6 +513,7 @@ class _JoinPageState extends State<JoinPage> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
+                                controller: _addressTextEditor,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
