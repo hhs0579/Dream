@@ -3,6 +3,18 @@ import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
 import 'package:flutter/material.dart';
 
+final bearItem = {
+  "list": [
+    {"부산", "김땡땡", "1000000원"},
+    {"인천", "황땡땡", "900000원"},
+    {"부천", "박땡떙", "800000원"},
+    {"충주", "이땡떙", "600000원"},
+    {"청주", "나땡땡", "400000원"},
+    {"안동", "손땡떙", "300000원"},
+    {"제주", "강땡떙", "2000000원"},
+  ]
+};
+
 class WithPage extends StatefulWidget {
   WithPage({Key? key}) : super(key: key);
 

@@ -2,6 +2,8 @@ import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class Category extends StatefulWidget {
   const Category({Key? key}) : super(key: key);
@@ -11,6 +13,25 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
+  final List<String> _yearList = ["2020", "2021", "2022"];
+  final monthList = [
+    '1월',
+    '2월',
+    '3월',
+    '4월',
+    '5월',
+    '6월',
+    '7월',
+    '8월',
+    '9월',
+    '10월',
+    '11월',
+    '12월'
+  ];
+  var yearValue = '2021';
+  String monthValue = '1월';
+  Map<String, double> dataMap = {"아동": 0, "노인": 0, "장애": 0, "빈곤": 0, "유기동물": 0};
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final isSelected = <bool>[false, true, false, false];
@@ -126,6 +147,63 @@ class _CategoryState extends State<Category> {
                     isSelected: isSelected,
                   )
                 ],
+              ),
+              Row(
+                children: [
+                  DropdownButton(
+                    icon: Icon(
+                      Icons.expand_more,
+                      color: Color(0xff3AAFFC),
+                    ),
+                    underline: Container(height: 2, color: Color(0xff3AAFFC)),
+                    value: yearValue,
+                    items: _yearList.map(
+                      (value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        yearValue = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: PieChart(
+                  dataMap: dataMap,
+                  animationDuration: Duration(milliseconds: 800),
+                  chartLegendSpacing: 32,
+                  chartRadius: MediaQuery.of(context).size.width / 3.2,
+
+                  initialAngleInDegree: 0,
+                  chartType: ChartType.ring,
+                  ringStrokeWidth: 32,
+
+                  legendOptions: LegendOptions(
+                    showLegendsInRow: false,
+                    legendPosition: LegendPosition.right,
+                    showLegends: true,
+                    legendShape: BoxShape.circle,
+                    legendTextStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  chartValuesOptions: ChartValuesOptions(
+                    showChartValueBackground: true,
+                    showChartValues: true,
+                    showChartValuesInPercentage: false,
+                    showChartValuesOutside: false,
+                    decimalPlaces: 1,
+                  ),
+                  // gradientList: ---To add gradient colors---
+                  // emptyColorGradient: ---Empty Color gradient---
+                ),
               )
             ],
           ),

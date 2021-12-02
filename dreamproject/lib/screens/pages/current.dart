@@ -11,7 +11,15 @@ class CurrentPage extends StatefulWidget {
   State<CurrentPage> createState() => _CurrentPageState();
 }
 
-var texts = ["g ", "ㅁㅁ"];
+var texts = [
+  {"부산", "김미미", "900000원"},
+  {"충주", "황지지", "70000원"},
+  {"인천", "박지지", "40000원"},
+  {"부천", "이지지", "20000원"},
+  {"대구", "유지지", "10000원"},
+  {"대전", "정지지", "5000원"},
+  {"청주", "김지지", "1000원"}
+];
 
 class _CurrentPageState extends State<CurrentPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -103,39 +111,34 @@ class _CurrentPageState extends State<CurrentPage> {
                         for (int i = 0; i < isSelected.length; i++) {
                           isSelected[i] = i == index;
                         }
+                        if (index == 0) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WithPage()));
+                        }
+                        if (index == 1) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Category()));
+                        }
+                        if (index == 2) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Area()));
+                        }
+                        if (index == 3) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ClubList()));
+                        }
                       });
                     },
                     isSelected: isSelected,
                   ),
                 ],
               ),
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('지역',
-                        style:
-                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15)),
-                    Text('기부자',
-                        style:
-                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15)),
-                    Text('기부금액',
-                        style:
-                            TextStyle(color: Color(0xff3AAFFC), fontSize: 15))
-                  ],
-                ),
-              ),
-              ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: texts.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  itemBuilder: (context, index) {
-                    var tile = ListTile(title: Text(texts[index]));
-                    return tile;
-                  }),
             ],
           ),
         ),
