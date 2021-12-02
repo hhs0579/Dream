@@ -16,6 +16,30 @@ class _AreaState extends State<Area> {
   final isSelected = <bool>[false, false, true, false];
   @override
   Widget build(BuildContext context) {
+    final List<String> _yearList = ["2020", "2021", "2022"];
+    final monthList = [
+      '1월',
+      '2월',
+      '3월',
+      '4월',
+      '5월',
+      '6월',
+      '7월',
+      '8월',
+      '9월',
+      '10월',
+      '11월',
+      '12월'
+    ];
+    var yearValue = '2021';
+    String monthValue = '1월';
+    Map<String, double> dataMap = {
+      "아동": 10,
+      "노인": 1,
+      "장애": 8,
+      "빈곤": 20,
+      "유기동물": 5
+    };
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
@@ -126,7 +150,102 @@ class _AreaState extends State<Area> {
                     isSelected: isSelected,
                   )
                 ],
-              )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 40,
+                    margin: EdgeInsets.only(top: 40, right: 20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xff3AAFFC))),
+                    child: DropdownButton(
+                      isExpanded: true,
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: Color(0xff3AAFFC),
+                      ),
+                      underline: SizedBox(),
+                      value: yearValue,
+                      items: _yearList.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          yearValue = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    margin: EdgeInsets.only(top: 40, right: 20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xff3AAFFC))),
+                    child: DropdownButton(
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: Color(0xff3AAFFC),
+                      ),
+                      underline: SizedBox(),
+                      value: monthValue,
+                      items: monthList.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          monthValue = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                child: Center(
+                  child: Stack(
+                    children: [
+                      Image(
+                          width: 250, image: AssetImage('assets/imgs/map.png')),
+                      Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: OutlinedButton(
+                            onPressed: () {},
+                            child: Text.rich(TextSpan(
+                                text: '경기\n',
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                      text: '10',
+                                      style: TextStyle(
+                                          color: Color(0xff3AAFFC),
+                                          fontSize: 20))
+                                ]))),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

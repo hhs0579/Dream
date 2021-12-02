@@ -158,6 +158,7 @@ class _CategoryState extends State<Category> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
+                    width: 150,
                     margin: EdgeInsets.only(top: 40, right: 20),
                     padding: EdgeInsets.symmetric(
                       horizontal: 20,
@@ -219,7 +220,17 @@ class _CategoryState extends State<Category> {
                   ),
                 ],
               ),
-              Center(),
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                child: Center(
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        '200000원',
+                        style: TextStyle(fontSize: 20),
+                      )),
+                ),
+              ),
               Container(
                 margin: EdgeInsets.only(top: 40),
                 child: PieChart(
