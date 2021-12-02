@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kpostal/kpostal.dart';
+import 'package:remedi_kopo/remedi_kopo.dart';
 
 import 'login_page.dart';
 
@@ -417,7 +418,7 @@ class _JoinPageState extends State<JoinPage> {
                 SizedBox(height: 30),
                 Container(
                   alignment: Alignment(0, 0),
-                  height: 150,
+                  height: 170,
                   margin: EdgeInsets.only(left: 30, right: 30),
                   padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                   decoration: BoxDecoration(
@@ -447,7 +448,8 @@ class _JoinPageState extends State<JoinPage> {
                               child: TextField(
                                 controller: _postTextEditor,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                 ),
@@ -466,34 +468,54 @@ class _JoinPageState extends State<JoinPage> {
                                 ),
                               ),
                               onPressed: () async {
-                                await Navigator.push(
+                                KopoModel result = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => KpostalView(
-                                      useLocalServer: true,
-                                      localPort: 8080,
-                                      kakaoKey:
-                                          '{e7332691953b203d499ffb8ad8a411c6}',
-                                      callback: (Kpostal result) {
-                                        setState(() {
-                                          postCode = result.postCode;
-                                          address = result.address;
-                                          _postTextEditor.text =
-                                              result.postCode;
-                                          _addressTextEditor.text =
-                                              result.address;
-                                        });
-                                      },
-                                    ),
+                                  CupertinoPageRoute(
+                                    builder: (context) => RemediKopo(),
                                   ),
                                 );
-                                Navigator.pop(context);
+                                setState(() {
+                                  address = '${result.address}';
+                                  postCode = '${result.zonecode}';
+                                  _addressTextEditor.text = address!;
+                                  _postTextEditor.text = postCode!;
+                                });
                               },
                               style: TextButton.styleFrom(
                                   primary: Colors.white,
                                   backgroundColor: Colors.blue,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 43),
+                            width: 90,
+                            child: Text("주소",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: _addressTextEditor,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                              ),
                             ),
                           ),
                         ],
@@ -513,13 +535,12 @@ class _JoinPageState extends State<JoinPage> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
-                                controller: _addressTextEditor,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                 ),
-                                readOnly: true,
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
                               ),
