@@ -115,7 +115,7 @@ class _CurrentPageState extends State<CurrentPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WithPage()));
+                                  builder: (context) => CurrentPage()));
                         }
                         if (index == 1) {
                           Navigator.push(

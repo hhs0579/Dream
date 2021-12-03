@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
@@ -112,7 +113,7 @@ class _CategoryState extends State<Category> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WithPage()));
+                                  builder: (context) => CurrentPage()));
                         }
                         if (index == 1) {
                           Navigator.push(
@@ -158,7 +159,8 @@ class _CategoryState extends State<Category> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    width: 150,
+                    height: 40,
+                    width: 120,
                     margin: EdgeInsets.only(top: 40, right: 20),
                     padding: EdgeInsets.symmetric(
                       horizontal: 20,
@@ -189,6 +191,7 @@ class _CategoryState extends State<Category> {
                     ),
                   ),
                   Container(
+                    height: 40,
                     margin: EdgeInsets.only(top: 40, right: 20),
                     padding: EdgeInsets.symmetric(
                       horizontal: 10,
@@ -223,16 +226,27 @@ class _CategoryState extends State<Category> {
               Container(
                 margin: EdgeInsets.only(top: 40),
                 child: Center(
-                  child: TextButton(
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        primary: Color(0xff3AAFFC),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                        side: BorderSide(
+                          color: Color(0xff3AAFFC),
+                        ),
+                      ),
                       onPressed: () {},
                       child: Text(
                         '200000원',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 15),
                       )),
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 40),
+                margin: EdgeInsets.only(top: 60),
                 child: PieChart(
                   dataMap: dataMap,
                   animationDuration: Duration(milliseconds: 800),

@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
@@ -99,7 +100,7 @@ class _WithPageState extends State<WithPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WithPage()));
+                                  builder: (context) => CurrentPage()));
                         }
                         if (index == 1) {
                           Navigator.push(

@@ -1,16 +1,67 @@
+import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class ClubList extends StatefulWidget {
   const ClubList({Key? key}) : super(key: key);
-
   @override
   _ClubListState createState() => _ClubListState();
 }
 
 class _ClubListState extends State<ClubList> {
+  Color _memberButtonColor = Colors.white;
+  Color _moneyButtonColor = Colors.white;
+  Color _memberTextColor = Colors.blue;
+  Color _moneyTextColor = Colors.blue;
+  bool _memberswitchState = false;
+  bool _moneyswitchState = false;
+
+  String? clicked;
+  void setMemberStateOn() {
+    _memberButtonColor = Colors.blue;
+    _memberTextColor = Colors.white;
+    _memberswitchState = true;
+  }
+
+  void setMemberStateOff() {
+    _memberButtonColor = Colors.white;
+    _memberTextColor = Colors.blue;
+    _memberswitchState = false;
+  }
+
+  void setMoneyStateOn() {
+    _moneyButtonColor = Colors.blue;
+    _moneyTextColor = Colors.white;
+    _moneyswitchState = true;
+  }
+
+  void setMoneyStateOff() {
+    _moneyButtonColor = Colors.white;
+    _moneyTextColor = Colors.blue;
+    _moneyswitchState = false;
+  }
+
+  MemberButton(
+      String clicked, Color primaryColor, Color textColor, dynamic onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: Colors.blue)),
+        primary: primaryColor,
+        minimumSize: Size(60, 40),
+      ),
+      child: Text(
+        clicked,
+        style: TextStyle(color: textColor),
+      ),
+    );
+  }
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final isSelected = <bool>[false, false, false, true];
@@ -85,7 +136,7 @@ class _ClubListState extends State<ClubList> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WithPage()));
+                                  builder: (context) => CurrentPage()));
                         }
                         if (index == 1) {
                           Navigator.push(
@@ -125,6 +176,69 @@ class _ClubListState extends State<ClubList> {
                     ],
                     isSelected: isSelected,
                   )
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 40, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    MemberButton(
+                        "회원 수 순위", _memberButtonColor, _memberTextColor, () {
+                      if (_memberswitchState == false) {
+                        if (_moneyswitchState == true) {
+                          setState(() {
+                            setMemberStateOn();
+                            setMoneyStateOff();
+                            clicked = '회원 수 순위';
+                          });
+                        } else {
+                          setState(() {
+                            setMemberStateOn();
+                            clicked = '회원 수 순위';
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          setMemberStateOff();
+                          clicked = '';
+                        });
+                      }
+                      print(clicked);
+                    }),
+                    SizedBox(width: 10),
+                    MemberButton('기부금액 순위', _moneyButtonColor, _moneyTextColor,
+                        () {
+                      if (_moneyswitchState == false) {
+                        if (_memberswitchState == true) {
+                          setState(() {
+                            setMoneyStateOn();
+                            setMemberStateOff();
+                            clicked = '기부금액 순위';
+                          });
+                        } else {
+                          setState(() {
+                            setMoneyStateOn();
+                            clicked = '기부금액 순위';
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          setMoneyStateOff();
+                          clicked = '';
+                        });
+                      }
+                      print(clicked);
+                    })
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Text('순위'),
+                  Text('클럽명'),
+                  Text('회원수'),
+                  Text('총 기부 금액')
                 ],
               )
             ],
