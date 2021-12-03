@@ -30,7 +30,13 @@ class _CategoryState extends State<Category> {
   ];
   var yearValue = '2021';
   String monthValue = '1월';
-  Map<String, double> dataMap = {"아동": 0, "노인": 0, "장애": 0, "빈곤": 0, "유기동물": 0};
+  Map<String, double> dataMap = {
+    "아동": 10,
+    "노인": 1,
+    "장애": 8,
+    "빈곤": 20,
+    "유기동물": 5
+  };
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -149,37 +155,89 @@ class _CategoryState extends State<Category> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  DropdownButton(
-                    icon: Icon(
-                      Icons.expand_more,
-                      color: Color(0xff3AAFFC),
+                  Container(
+                    width: 150,
+                    margin: EdgeInsets.only(top: 40, right: 20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
                     ),
-                    underline: Container(height: 2, color: Color(0xff3AAFFC)),
-                    value: yearValue,
-                    items: _yearList.map(
-                      (value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xff3AAFFC))),
+                    child: DropdownButton(
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: Color(0xff3AAFFC),
+                      ),
+                      underline: SizedBox(),
+                      value: yearValue,
+                      items: _yearList.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          yearValue = value!;
+                        });
                       },
-                    ).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        yearValue = value!;
-                      });
-                    },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 40, right: 20),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0xff3AAFFC))),
+                    child: DropdownButton(
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: Color(0xff3AAFFC),
+                      ),
+                      underline: SizedBox(),
+                      value: monthValue,
+                      items: monthList.map(
+                        (value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          monthValue = value!;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
               Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 40),
+                child: Center(
+                  child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        '200000원',
+                        style: TextStyle(fontSize: 20),
+                      )),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 40),
                 child: PieChart(
                   dataMap: dataMap,
                   animationDuration: Duration(milliseconds: 800),
                   chartLegendSpacing: 32,
-                  chartRadius: MediaQuery.of(context).size.width / 3.2,
+                  chartRadius: MediaQuery.of(context).size.width / 2.8,
 
                   initialAngleInDegree: 0,
                   chartType: ChartType.ring,
@@ -198,8 +256,8 @@ class _CategoryState extends State<Category> {
                     showChartValueBackground: true,
                     showChartValues: true,
                     showChartValuesInPercentage: false,
-                    showChartValuesOutside: false,
-                    decimalPlaces: 1,
+                    showChartValuesOutside: true,
+                    decimalPlaces: 0,
                   ),
                   // gradientList: ---To add gradient colors---
                   // emptyColorGradient: ---Empty Color gradient---
