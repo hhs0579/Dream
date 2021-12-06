@@ -1,3 +1,6 @@
+import 'package:dreamproject/screens/pages/feed.dart';
+import 'package:dreamproject/screens/pages/subpages/donatesub/regulardonate.dart';
+import 'package:dreamproject/screens/pages/subpages/donatesub/temporarydonate.dart';
 import 'package:dreamproject/states/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
@@ -49,8 +52,35 @@ class DonatePage extends StatelessWidget {
                 onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
           ],
         ),
-        body: Column(
-          children: [],
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  child:
+                      Image.asset('assets/imgs/a.png', width: 120, height: 120),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegularDonated()));
+                  },
+                ),
+                InkWell(
+                  child:
+                      Image.asset('assets/imgs/a.png', width: 120, height: 120),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TemporaryDonated()));
+                  },
+                )
+              ],
+            ),
+          ],
         ),
       )
     ]);

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
+
 import 'package:flutter/material.dart';
 import 'package:dreamproject/model/clubitem.dart';
 

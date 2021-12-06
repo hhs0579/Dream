@@ -4,7 +4,7 @@ import 'package:dreamproject/model/withitem.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
+
 import 'package:flutter/material.dart';
 
 class CurrentPage extends StatefulWidget {
@@ -201,46 +201,55 @@ class _CurrentPageState extends State<CurrentPage> {
                     ],
                   ),
                 ),
-                ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(), //separatorBuilder : item과 item 사이에 그려질 위젯 (개수는 itemCount -1 이 된다)
-                    itemCount: withList!.list!.length, //리스트의 개수
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                              width: 40,
-                              child: Text(
-                                withList!.list!.elementAt(index).areaname!,
-                                textAlign: TextAlign.center,
-                              )),
-                          Container(
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  height: 2,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black12,
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: ListView.separated(
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(), //separatorBuilder : item과 item 사이에 그려질 위젯 (개수는 itemCount -1 이 된다)
+                      itemCount: withList!.list!.length, //리스트의 개수
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
                             child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(300),
-                                  child: Image.asset(
-                                      withList!.list!.elementAt(index).image!,
-                                      width: 30,
-                                      height: 30),
-                                ),
-                                Text(withList!.list!.elementAt(index).name!),
-                              ],
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                                width: 40,
+                                child: Text(
+                                  withList!.list!.elementAt(index).areaname!,
+                                  textAlign: TextAlign.center,
+                                )),
+                            Container(
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(300),
+                                    child: Image.asset(
+                                        withList!.list!.elementAt(index).image!,
+                                        width: 30,
+                                        height: 30),
+                                  ),
+                                  Text(withList!.list!.elementAt(index).name!),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                              child: Text(
-                            withList!.list!.elementAt(index).money!,
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
-                      ));
-                    })
+                            Container(
+                                child: Text(
+                              withList!.list!.elementAt(index).money!,
+                              textAlign: TextAlign.center,
+                            )),
+                          ],
+                        ));
+                      }),
+                )
               ],
             ),
           ),

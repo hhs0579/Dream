@@ -1,6 +1,7 @@
+import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
+
 import 'package:flutter/material.dart';
 
 class Area extends StatefulWidget {
@@ -110,7 +111,7 @@ class _AreaState extends State<Area> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WithPage()));
+                                    builder: (context) => CurrentPage()));
                           }
                           if (index == 1) {
                             Navigator.push(

@@ -6,7 +6,7 @@ import 'screens/pages/donate.dart';
 import 'screens/pages/empathy.dart';
 import 'screens/pages/feed.dart';
 import 'screens/pages/my_info.dart';
-import 'screens/pages/subpages/legal.dart';
+import 'screens/pages/subpages/feedsub/legal.dart';
 
 class HomePage extends GetView<HomePageController> {
   HomePage({Key? key}) : super(key: key);
@@ -33,7 +33,12 @@ class HomePage extends GetView<HomePageController> {
                   return MaterialPageRoute(builder: (context) => CurrentPage());
                 },
               ),
-              DonatePage(),
+              Navigator(
+                key: controller.navigatorKey3,
+                onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => DonatePage());
+                },
+              ),
               EmpathyPage(),
               MyInfoPage(),
             ],

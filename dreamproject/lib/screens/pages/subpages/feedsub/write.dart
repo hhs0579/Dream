@@ -1,3 +1,4 @@
+import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,12 +10,12 @@ class Write extends StatefulWidget {
 }
 
 class _WriteState extends State<Write> {
-  var check1 = false;
-  var check2 = false;
-  var check3 = false;
-  var check4 = false;
-  var check5 = false;
-  var check6 = false;
+  var old = false;
+  var child = false;
+  var disorder = false;
+  var multiculture = false;
+  var pet = false;
+  var poverty = false;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -52,7 +53,8 @@ class _WriteState extends State<Write> {
           leading: IconButton(
               icon: Icon(Icons.close, color: Color(0xff3AAFFC), size: 30),
               onPressed: () {
-                Get.back();
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Feed()));
               }),
           actions: <Widget>[
             IconButton(
@@ -77,10 +79,10 @@ class _WriteState extends State<Write> {
                             Checkbox(
                                 activeColor: Colors.blue,
                                 checkColor: Colors.white,
-                                value: check1,
+                                value: old,
                                 onChanged: (value) {
                                   setState(() {
-                                    check1 = value!;
+                                    old = value!;
                                   });
                                 }),
                             Text('노인'),
@@ -94,10 +96,10 @@ class _WriteState extends State<Write> {
                             Checkbox(
                                 activeColor: Colors.blue,
                                 checkColor: Colors.white,
-                                value: check2,
+                                value: child,
                                 onChanged: (value) {
                                   setState(() {
-                                    check2 = value!;
+                                    child = value!;
                                   });
                                 }),
                             Text('아동'),
@@ -111,10 +113,10 @@ class _WriteState extends State<Write> {
                             Checkbox(
                                 activeColor: Colors.blue,
                                 checkColor: Colors.white,
-                                value: check3,
+                                value: disorder,
                                 onChanged: (value) {
                                   setState(() {
-                                    check3 = value!;
+                                    disorder = value!;
                                   });
                                 }),
                             Text('장애'),
@@ -129,30 +131,30 @@ class _WriteState extends State<Write> {
                       Checkbox(
                           activeColor: Colors.blue,
                           checkColor: Colors.white,
-                          value: check4,
+                          value: multiculture,
                           onChanged: (value) {
                             setState(() {
-                              check4 = value!;
+                              multiculture = value!;
                             });
                           }),
                       Text('다문화'),
                       Checkbox(
                           activeColor: Colors.blue,
                           checkColor: Colors.white,
-                          value: check5,
+                          value: pet,
                           onChanged: (value) {
                             setState(() {
-                              check5 = value!;
+                              pet = value!;
                             });
                           }),
                       Text('유기동물'),
                       Checkbox(
                           activeColor: Colors.blue,
                           checkColor: Colors.white,
-                          value: check6,
+                          value: poverty,
                           onChanged: (value) {
                             setState(() {
-                              check6 = value!;
+                              poverty = value!;
                             });
                           }),
                       Text('빈곤'),
