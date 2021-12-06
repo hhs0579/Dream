@@ -15,6 +15,7 @@ class Category extends StatefulWidget {
 
 class _CategoryState extends State<Category> {
   final List<String> _yearList = ["2020", "2021", "2022"];
+  var yearValue = '2021';
   final monthList = [
     '1월',
     '2월',
@@ -29,7 +30,7 @@ class _CategoryState extends State<Category> {
     '11월',
     '12월'
   ];
-  var yearValue = '2021';
+
   String monthValue = '1월';
   Map<String, double> dataMap = {
     "아동": 10,
@@ -169,6 +170,7 @@ class _CategoryState extends State<Category> {
                         color: Colors.white,
                         border: Border.all(color: Color(0xff3AAFFC))),
                     child: DropdownButton(
+                      isExpanded: true,
                       icon: Icon(
                         Icons.expand_more,
                         color: Color(0xff3AAFFC),

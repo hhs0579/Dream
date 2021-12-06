@@ -10,6 +10,8 @@ class RegularDonated extends StatefulWidget {
 }
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+final List<String> _yearList = ["10000", "30000", "50000", "100000"];
+var yearValue = '100000';
 
 class _RegularDonatedState extends State<RegularDonated> {
   var old = false;
@@ -18,6 +20,8 @@ class _RegularDonatedState extends State<RegularDonated> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  var unnamed = false;
+  var named = false;
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +76,11 @@ class _RegularDonatedState extends State<RegularDonated> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
                   width: 350,
                   height: 150,
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black12),
+                      border: Border.all(color: Color(0xff3AAFFC)),
                       borderRadius: BorderRadius.circular(25)),
                   child: Container(
                     margin: EdgeInsets.only(top: 10),
@@ -90,14 +94,14 @@ class _RegularDonatedState extends State<RegularDonated> {
                               Text(
                                 '후원 분야',
                                 style: TextStyle(
-                                    color: Colors.black38, fontSize: 15),
+                                    color: Color(0xff3AAFFC), fontSize: 15),
                               ),
                             ],
                           ),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 10),
-                          color: Colors.black12,
+                          color: Color(0xff3AAFFC),
                           width: 300,
                           height: 1,
                         ),
@@ -197,6 +201,215 @@ class _RegularDonatedState extends State<RegularDonated> {
                   ),
                 ),
               ],
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              width: 350,
+              height: 100,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xff3AAFFC)),
+                  borderRadius: BorderRadius.circular(25)),
+              child: Container(
+                margin: EdgeInsets.only(top: 10),
+                child: Column(children: [
+                  Container(
+                    width: 300,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '기부자',
+                          style:
+                              TextStyle(color: Color(0xff3AAFFC), fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    color: Color(0xff3AAFFC),
+                    width: 300,
+                    height: 1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                                activeColor: Colors.blue,
+                                checkColor: Colors.white,
+                                value: unnamed,
+                                onChanged: (value) {
+                                  setState(() {
+                                    unnamed = value!;
+                                  });
+                                }),
+                            Text('익명'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                                activeColor: Colors.blue,
+                                checkColor: Colors.white,
+                                value: named,
+                                onChanged: (value) {
+                                  setState(() {
+                                    named = value!;
+                                  });
+                                }),
+                            Text('실명'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              width: 350,
+              height: 100,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xff3AAFFC)),
+                  borderRadius: BorderRadius.circular(25)),
+              child: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Column(children: [
+                    Container(
+                      width: 300,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '금액',
+                            style: TextStyle(
+                                color: Color(0xff3AAFFC), fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      color: Color(0xff3AAFFC),
+                      width: 300,
+                      height: 1,
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      Container(
+                        height: 30,
+                        width: 120,
+                        margin: EdgeInsets.only(top: 10, right: 10),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Color(0xff3AAFFC))),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          icon: Icon(
+                            Icons.expand_more,
+                            color: Color(0xff3AAFFC),
+                          ),
+                          underline: SizedBox(),
+                          value: yearValue,
+                          items: _yearList.map(
+                            (value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              yearValue = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, right: 30),
+                          child: Text('원')),
+                    ]),
+                  ])),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              width: 350,
+              height: 100,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Color(0xff3AAFFC)),
+                  borderRadius: BorderRadius.circular(25)),
+              child: Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Column(children: [
+                    Container(
+                      width: 300,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '금액',
+                            style: TextStyle(
+                                color: Color(0xff3AAFFC), fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      color: Color(0xff3AAFFC),
+                      width: 300,
+                      height: 1,
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      Container(
+                        height: 30,
+                        width: 120,
+                        margin: EdgeInsets.only(top: 10, right: 10),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Color(0xff3AAFFC))),
+                        child: DropdownButton(
+                          isExpanded: true,
+                          icon: Icon(
+                            Icons.expand_more,
+                            color: Color(0xff3AAFFC),
+                          ),
+                          underline: SizedBox(),
+                          value: yearValue,
+                          items: _yearList.map(
+                            (value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              yearValue = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 10, right: 30),
+                          child: Text('원')),
+                    ]),
+                  ])),
             ),
           ],
         ),
