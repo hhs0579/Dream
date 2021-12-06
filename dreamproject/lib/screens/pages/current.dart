@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:dreamproject/model/withitem.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
@@ -11,23 +14,62 @@ class CurrentPage extends StatefulWidget {
   State<CurrentPage> createState() => _CurrentPageState();
 }
 
-var texts = [
-  {"부산", "김미미", "900000원"},
-  {"충주", "황지지", "70000원"},
-  {"인천", "박지지", "40000원"},
-  {"부천", "이지지", "20000원"},
-  {"대구", "유지지", "10000원"},
-  {"대전", "정지지", "5000원"},
-  {"청주", "김지지", "1000원"}
-];
-
 class _CurrentPageState extends State<CurrentPage> {
+  final withitem = {
+    "list": [
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "부산",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "경기",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "서울",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "충북",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "부산",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "부산",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "name": "김땡땡",
+        "areaname": "부산",
+        "money": "900000원"
+      }
+    ]
+  };
+  WithList? withList;
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final isSelected = <bool>[true, false, false, false];
 
   @override
   Widget build(BuildContext context) {
+    withList = WithList.fromJson(withitem);
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
@@ -71,76 +113,125 @@ class _CurrentPageState extends State<CurrentPage> {
                 onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
           ],
         ),
-        body: Container(
-          margin: EdgeInsets.only(top: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+        body: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Column(
                 children: [
-                  ToggleButtons(
-                    color: Colors.black.withOpacity(0.6),
-                    selectedColor: Color(0xff3AAFFC),
-                    fillColor: Colors.white.withOpacity(0.3),
-                    splashColor: Color(0xff3AAFFC).withOpacity(0.2),
-                    hoverColor: Color(0xff3AAFFC).withOpacity(0.04),
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderColor: Colors.black.withOpacity(0.1),
-                    selectedBorderColor: Color(0xff3AAFFC),
-                    constraints: BoxConstraints(minHeight: 36.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('함께하는 분'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('분야별 현황'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('지역별 현황'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('    클럽    '),
+                      ToggleButtons(
+                        color: Colors.black.withOpacity(0.6),
+                        selectedColor: Color(0xff3AAFFC),
+                        fillColor: Colors.white.withOpacity(0.3),
+                        splashColor: Color(0xff3AAFFC).withOpacity(0.2),
+                        hoverColor: Color(0xff3AAFFC).withOpacity(0.04),
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderColor: Colors.black.withOpacity(0.1),
+                        selectedBorderColor: Color(0xff3AAFFC),
+                        constraints: BoxConstraints(minHeight: 36.0),
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('함께하는 분'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('분야별 현황'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('지역별 현황'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text('    클럽    '),
+                          ),
+                        ],
+                        onPressed: (index) {
+                          setState(() {
+                            for (int i = 0; i < isSelected.length; i++) {
+                              isSelected[i] = i == index;
+                            }
+                            if (index == 0) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CurrentPage()));
+                            }
+                            if (index == 1) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Category()));
+                            }
+                            if (index == 2) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Area()));
+                            }
+                            if (index == 3) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ClubList()));
+                            }
+                          });
+                        },
+                        isSelected: isSelected,
                       ),
                     ],
-                    onPressed: (index) {
-                      setState(() {
-                        for (int i = 0; i < isSelected.length; i++) {
-                          isSelected[i] = i == index;
-                        }
-                        if (index == 0) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CurrentPage()));
-                        }
-                        if (index == 1) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Category()));
-                        }
-                        if (index == 2) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Area()));
-                        }
-                        if (index == 3) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ClubList()));
-                        }
-                      });
-                    },
-                    isSelected: isSelected,
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    height: 2,
+                    width: MediaQuery.of(context).size.width,
+                    color: Color(0xff3AAFFC),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text('지역', style: TextStyle(color: Color(0xff3AAFFC))),
+                        Text('기부자', style: TextStyle(color: Color(0xff3AAFFC))),
+                        Text('기부 금액',
+                            style: TextStyle(color: Color(0xff3AAFFC)))
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(), //separatorBuilder : item과 item 사이에 그려질 위젯 (개수는 itemCount -1 이 된다)
+                          itemCount: withList!.list!.length, //리스트의 개수
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                child: Row(
+                              children: [
+                                Text(
+                                    withList!.list!.elementAt(index).areaname!),
+                                Image.asset(
+                                  withList!.list!.elementAt(index).image!,
+                                ),
+                                Text(withList!.list!.elementAt(index).name!),
+                                Text(withList!.list!.elementAt(index).money!),
+                              ],
+                            ));
+                          }),
+                    ],
+                  )
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ]);

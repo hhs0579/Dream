@@ -22,20 +22,50 @@ class _ClubListState extends State<ClubList> {
   });
 
   Widget _listItem(index) {
-    return Container(
-        padding: const EdgeInsets.all(10),
-        child: ListTile(
-          leading: Text(index.toString(), style: TextStyle(fontSize: 15)),
-          title: Text(
-            _clubData[index]['clubName'].toString(),
-            style: TextStyle(fontSize: 15),
-          ),
-          trailing: Text(_clubData[index]['money'].toString(),
-              style: TextStyle(fontSize: 15)),
-        ),
-        decoration: BoxDecoration(
-            border:
-                Border(bottom: BorderSide(width: 1, color: Colors.black26))));
+    return Column(
+      children: [
+        Container(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  (index + 1).toString(),
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text('한양대학교'),
+                Text('9000명'),
+                Text(
+                  _clubData[index]['money'].toString(),
+                  style: TextStyle(fontSize: 15),
+                )
+              ],
+            ),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 1, color: Colors.black26)))),
+        Container(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  (index + 1).toString(),
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text('한양대학교'),
+                Text('9000명'),
+                Text(
+                  _clubData[index]['money'].toString(),
+                  style: TextStyle(fontSize: 15),
+                )
+              ],
+            ),
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 1, color: Colors.black26)))),
+      ],
+    );
   }
 
   Color _memberButtonColor = Colors.white;
