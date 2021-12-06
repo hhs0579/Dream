@@ -1,5 +1,5 @@
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
 
@@ -128,7 +128,7 @@ class _AreaState extends State<Area> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ClubList()));
+                                    builder: (context) => ClubListPage()));
                           }
                         });
                       },

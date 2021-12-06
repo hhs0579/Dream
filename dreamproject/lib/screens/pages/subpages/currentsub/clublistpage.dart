@@ -5,68 +5,62 @@ import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
+import 'package:dreamproject/model/clubitem.dart';
 
-class ClubList extends StatefulWidget {
-  const ClubList({Key? key}) : super(key: key);
+class ClubListPage extends StatefulWidget {
+  const ClubListPage({Key? key}) : super(key: key);
   @override
-  _ClubListState createState() => _ClubListState();
+  State<ClubListPage> createState() => _ClubListPageState();
 }
 
-class _ClubListState extends State<ClubList> {
-  final List _clubData = List.generate(100, (index) {
-    return {
-      "clubName": "Club \#$index",
-      "money": Random().nextInt(10000) * 1000
-    };
-  });
-
-  Widget _listItem(index) {
-    return Column(
-      children: [
-        Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  (index + 1).toString(),
-                  style: TextStyle(fontSize: 15),
-                ),
-                Text('한양대학교'),
-                Text('9000명'),
-                Text(
-                  _clubData[index]['money'].toString(),
-                  style: TextStyle(fontSize: 15),
-                )
-              ],
-            ),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(width: 1, color: Colors.black26)))),
-        Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  (index + 1).toString(),
-                  style: TextStyle(fontSize: 15),
-                ),
-                Text('한양대학교'),
-                Text('9000명'),
-                Text(
-                  _clubData[index]['money'].toString(),
-                  style: TextStyle(fontSize: 15),
-                )
-              ],
-            ),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(width: 1, color: Colors.black26)))),
-      ],
-    );
-  }
+class _ClubListPageState extends State<ClubListPage> {
+  final clubitem = {
+    "list": [
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "한양대학교",
+        "member": "9000명",
+        "money": "900000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "스마일회사",
+        "member": "8000명",
+        "money": "800000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "크라운모임",
+        "member": "6000명",
+        "money": "700000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "클럽명",
+        "member": "5000명",
+        "money": "690000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "클럽명",
+        "member": "4000명",
+        "money": "500000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "클럽명",
+        "member": "3000명",
+        "money": "300000원"
+      },
+      {
+        "image": "assets/imgs/a.png",
+        "clubname": "클럽명",
+        "member": "2000명",
+        "money": "100000원"
+      }
+    ]
+  };
+  ClubList? clubList;
 
   Color _memberButtonColor = Colors.white;
   Color _moneyButtonColor = Colors.white;
@@ -124,6 +118,8 @@ class _ClubListState extends State<ClubList> {
   final isSelected = <bool>[false, false, false, true];
   @override
   Widget build(BuildContext context) {
+    clubList = ClubList.fromJson(clubitem);
+
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
@@ -207,7 +203,7 @@ class _ClubListState extends State<ClubList> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ClubList()));
+                                builder: (context) => ClubListPage()));
                       }
                     });
                   },
@@ -306,12 +302,60 @@ class _ClubListState extends State<ClubList> {
                 ],
               ),
             ),
-            Expanded(
-                child: ListView.builder(
-                    itemCount: _clubData.length,
-                    itemBuilder: (_, index) {
-                      return _listItem(index);
-                    }))
+            Container(
+              margin: EdgeInsets.only(top: 15),
+              height: 2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black12,
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 15),
+              child: ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(), //separatorBuilder : item과 item 사이에 그려질 위젯 (개수는 itemCount -1 이 된다)
+                  itemCount: clubList!.list!.length, //리스트의 개수
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          width: 5,
+                          child: Text('$index'),
+                        ),
+                        Container(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(300),
+                                child: Image.asset(
+                                    clubList!.list!.elementAt(index).image!,
+                                    width: 30,
+                                    height: 30),
+                              ),
+                              Text(clubList!.list!.elementAt(index).clubname!),
+                            ],
+                          ),
+                        ),
+                        Container(
+                            width: 50,
+                            child: Text(
+                              clubList!.list!.elementAt(index).member!,
+                              textAlign: TextAlign.center,
+                            )),
+                        Container(
+                            child: Text(
+                          clubList!.list!.elementAt(index).money!,
+                          textAlign: TextAlign.center,
+                        )),
+                      ],
+                    ));
+                  }),
+            )
           ],
         ),
       ),

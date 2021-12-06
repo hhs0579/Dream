@@ -1,6 +1,6 @@
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/with.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -129,7 +129,7 @@ class _CategoryState extends State<Category> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ClubList()));
+                                  builder: (context) => ClubListPage()));
                         }
                       });
                     },

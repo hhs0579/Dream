@@ -1,7 +1,7 @@
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/clublist.dart';
+import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
 import 'package:flutter/material.dart';
 
 final bearItem = {
@@ -116,7 +116,7 @@ class _WithPageState extends State<WithPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ClubList()));
+                                  builder: (context) => ClubListPage()));
                         }
                       });
                     },
