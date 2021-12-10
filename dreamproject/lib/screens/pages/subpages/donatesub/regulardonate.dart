@@ -345,7 +345,7 @@ class _RegularDonatedState extends State<RegularDonated> {
             Container(
               margin: EdgeInsets.only(bottom: 20),
               width: 350,
-              height: 100,
+              height: 94,
               decoration: BoxDecoration(
                   border: Border.all(color: Color(0xff3AAFFC)),
                   borderRadius: BorderRadius.circular(25)),
