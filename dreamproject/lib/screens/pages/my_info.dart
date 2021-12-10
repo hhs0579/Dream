@@ -11,8 +11,11 @@ class MyInfoPage extends StatefulWidget {
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  PickedFile? _image;
+  // PickedFile? _image;
   final ImagePicker _picker = ImagePicker();
+
+  var _member = 0;
+  var _donation = 0;
 
   Future _getImage() async {
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -161,6 +164,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
+                                elevation: 0,
                                 primary: Colors.white,
                                 minimumSize: Size(20, 30),
                                 side: BorderSide(color: Colors.blue),
@@ -254,6 +258,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           primary: Colors.white,
                           minimumSize: Size(40, 35),
                           side: BorderSide(color: Colors.grey),
@@ -271,6 +276,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           primary: Colors.white,
                           minimumSize: Size(40, 35),
                           side: BorderSide(color: Colors.grey),
@@ -288,6 +294,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
+                          elevation: 0,
                           primary: Colors.white,
                           minimumSize: Size(40, 35),
                           side: BorderSide(color: Colors.blue),
@@ -303,38 +310,316 @@ class _MyInfoPageState extends State<MyInfoPage> {
                   margin: EdgeInsets.only(left: 40),
                   child: Text(
                     "나의 클럽",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 15, left: 40, right: 40),
+                  margin: EdgeInsets.only(top: 15, left: 35, right: 35),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
                         width: 100,
-                        height: 200,
+                        height: 220,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: Colors.blue)),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(children: [
+                                  Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    margin:
+                                        EdgeInsets.only(left: 20.0, top: 12),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/imgs/a.png"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(50.0)),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        top: 7, bottom: 7, left: 20),
+                                    child: Text("클럽 이름",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        )),
+                                  ),
+                                ]),
+                                Container(
+                                  margin: EdgeInsets.only(top: 7, right: 3),
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.more_vert,
+                                            color: Colors.blue),
+                                        iconSize: 15,
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                                width: 80, height: 1, color: Colors.grey[350]),
+                            SizedBox(height: 10),
+                            Container(
+                              width: 80,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("회원 수",
+                                          style: TextStyle(
+                                              fontSize: 9, color: Colors.grey)),
+                                      SizedBox(width: 9),
+                                      Text("$_member 명",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 7),
+                                  Text("총 기부금",
+                                      style: TextStyle(
+                                          fontSize: 9, color: Colors.grey)),
+                                  SizedBox(height: 3),
+                                  Text("$_donation 원",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 11),
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(14),
+                                bottomRight: Radius.circular(14),
+                              ),
+                              child: Container(
+                                  width: 98,
+                                  height: 35,
+                                  color: Colors.blue,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 40,
+                                        height: 35,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.all(6),
+                                            primary: Colors.blue,
+                                            elevation: 0,
+                                          ),
+                                          child: Text("탈퇴",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 0.5,
+                                        height: 22,
+                                        color: Colors.white54,
+                                      ),
+                                      Container(
+                                        width: 57.5,
+                                        child: ElevatedButton(
+                                          onPressed: () {},
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.all(6),
+                                            primary: Colors.blue,
+                                            elevation: 0,
+                                          ),
+                                          child: Text("로고변경",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            )
+                          ],
+                        ),
                       ),
                       Container(
                         width: 100,
-                        height: 200,
+                        height: 220,
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: Colors.blue)),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(children: [
+                                  Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    margin:
+                                        EdgeInsets.only(left: 20.0, top: 12),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/imgs/a.png"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(50.0)),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        top: 7, bottom: 7, left: 20),
+                                    child: Text("클럽 이름",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                        )),
+                                  ),
+                                ]),
+                                Container(
+                                  margin: EdgeInsets.only(top: 7, right: 3),
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.more_vert,
+                                            color: Colors.blue),
+                                        iconSize: 15,
+                                        alignment: Alignment.center,
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                                width: 80, height: 1, color: Colors.grey[350]),
+                            SizedBox(height: 10),
+                            Container(
+                              width: 80,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("회원 수",
+                                          style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey[300])),
+                                      SizedBox(width: 9),
+                                      Text("$_member 명",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[300])),
+                                    ],
+                                  ),
+                                  SizedBox(height: 7),
+                                  Text("총 기부금",
+                                      style: TextStyle(
+                                          fontSize: 9,
+                                          color: Colors.grey[300])),
+                                  SizedBox(height: 3),
+                                  Text("$_donation 원",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[300])),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 12.5),
+                            Container(
+                              width: 120,
+                              height: 1,
+                              color: Colors.blue,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10, bottom: 9),
+                              child: Text("승인 대기중",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.blue,
+                                  )),
+                            )
+                          ],
+                        ),
                       ),
                       Container(
                         width: 100,
-                        height: 200,
+                        height: 220,
                         decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.grey)),
-                      ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Color(0xffd6d6d6)),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 60.0,
+                              height: 60.0,
+                              margin: EdgeInsets.only(top: 12),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: Icon(Icons.add, color: Colors.white),
+                                style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    primary: Color(0xffd6d6d6),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    )),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 20, bottom: 69),
+                              child: Text(
+                                "클럽 추가",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black54),
+                              ),
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(14),
+                                bottomRight: Radius.circular(14),
+                              ),
+                              child: Container(
+                                width: 98,
+                                height: 35,
+                                color: Color(0xffd6d6d6),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 )
