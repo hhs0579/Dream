@@ -355,7 +355,7 @@ class _RegularDonatedState extends State<RegularDonated> {
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
                       width: 350,
-                      height: 100,
+                      height: 200,
                       decoration: BoxDecoration(
                           border: Border.all(color: Color(0xff3AAFFC)),
                           borderRadius: BorderRadius.circular(25)),
@@ -384,12 +384,12 @@ class _RegularDonatedState extends State<RegularDonated> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  if (old == true &&
+                                  if (old == true ||
                                       child == false &&
-                                      disorder == false &&
-                                      multiculture == false &&
-                                      pet == false &&
-                                      poverty == false)
+                                          disorder == false &&
+                                          multiculture == false &&
+                                          pet == false &&
+                                          poverty == false)
                                     Container(
                                         margin: EdgeInsets.only(right: 100),
                                         child: Text('노인')),
