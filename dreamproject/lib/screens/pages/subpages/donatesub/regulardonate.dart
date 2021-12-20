@@ -342,75 +342,71 @@ class _RegularDonatedState extends State<RegularDonated> {
                     ]),
                   ])),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 20),
-              width: 350,
-              height: 94,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xff3AAFFC)),
-                  borderRadius: BorderRadius.circular(25)),
-              child: Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Column(children: [
-                    Container(
-                      width: 300,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '금액',
-                            style: TextStyle(
-                                color: Color(0xff3AAFFC), fontSize: 15),
+            Column(
+              children: <Widget>[
+                Container(),
+                // Always visible
+                if (old == true || Checkbox == true)
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    width: 350,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xff3AAFFC)),
+                        borderRadius: BorderRadius.circular(25)),
+                    child: Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Column(children: [
+                          Container(
+                            width: 300,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '노인',
+                                  style: TextStyle(
+                                      color: Color(0xff3AAFFC), fontSize: 15),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      color: Color(0xff3AAFFC),
-                      width: 300,
-                      height: 1,
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                      Container(
-                        height: 30,
-                        width: 120,
-                        margin: EdgeInsets.only(top: 10, right: 10),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Color(0xff3AAFFC))),
-                        child: DropdownButton(
-                          isExpanded: true,
-                          icon: Icon(
-                            Icons.expand_more,
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
                             color: Color(0xff3AAFFC),
+                            width: 300,
+                            height: 1,
                           ),
-                          underline: SizedBox(),
-                          value: yearValue,
-                          items: _yearList.map(
-                            (value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            },
-                          ).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              yearValue = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(top: 10, right: 30),
-                          child: Text('원')),
-                    ]),
-                  ])),
-            ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  height: 30,
+                                  width: 120,
+                                  margin: EdgeInsets.only(top: 10, right: 10),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border:
+                                          Border.all(color: Color(0xff3AAFFC))),
+                                  child: Container(
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 5, left: 20),
+                                    child: Text(
+                                      yearValue,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.only(top: 10, right: 30),
+                                    child: Text('원')),
+                              ]),
+                        ])),
+                  ),
+              ],
+            )
           ],
         ),
       )

@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "689667699579",
-    "project_id": "dreamproject-54356",
-    "storage_bucket": "dreamproject-54356.appspot.com"
+    "project_number": "803759764285",
+    "project_id": "dream-bc223",
+    "storage_bucket": "dream-bc223.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:689667699579:android:b28f6ddadf1b8ead6d43de",
+        "mobilesdk_app_id": "1:803759764285:android:f69300ef85332e90ff0b54",
         "android_client_info": {
           "package_name": "com.example.dreamproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "689667699579-0637ci75ofcg5iqdkdfb4gqsomkgea7c.apps.googleusercontent.com",
+          "client_id": "803759764285-49e1id17bmrh4ime1suo65v2h4pnhc9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dreamproject",
+            "certificate_hash": "f86a0ebf06cd57ff23c6509ca85f8af4ebe47701"
+          }
+        },
+        {
+          "client_id": "803759764285-fphq61a2bo5vqg7n72el0l21fkflufr8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyACuULSi1RWfUQS4J9Qjh0D4Q8bUtDtyWE"
+          "current_key": "AIzaSyAeLCeceQ0HMi2EPoJS6FFFWeROaio-Y9I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "689667699579-0637ci75ofcg5iqdkdfb4gqsomkgea7c.apps.googleusercontent.com",
+              "client_id": "803759764285-fphq61a2bo5vqg7n72el0l21fkflufr8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
