@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
+import 'dart:async';
 
 import 'login_page.dart';
 
@@ -17,6 +18,10 @@ class _JoinPageState extends State<JoinPage> {
   Color _femaleTextColor = Colors.blue;
   bool _maleswitchState = false;
   bool _femaleswitchState = false;
+  bool _isAuthsms = false;
+
+  Timer? _timer;
+  var _time = 0;
 
   String? id;
   String? name;
@@ -148,6 +153,30 @@ class _JoinPageState extends State<JoinPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _timerStart() {
+    _time = 10;
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _time--;
+        if (_time <= 0) {
+          _time = 0;
+        }
+      });
+    });
+  }
+
+  String _viewTime(int time) {
+    final minutes = ((time / 60) % 60).floor().toString();
+    final seconds = (time % 60).floor().toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
@@ -603,7 +632,12 @@ class _JoinPageState extends State<JoinPage> {
                             "인증번호 보내기",
                             style: TextStyle(fontSize: 10),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _isAuthsms = true;
+                              _timerStart();
+                            });
+                          },
                           style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor: Colors.blue,
@@ -615,8 +649,81 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                 ),
                 Container(
+                  margin: EdgeInsets.only(left: 60, top: 10),
+                  child: Visibility(
+                    visible: _isAuthsms == true,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 140,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.zero,
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black26, width: 0.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black26, width: 0.5)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: Text(_viewTime(_time),
+                              style: TextStyle(
+                                color: Colors.blue,
+                              )),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          width: 60,
+                          height: 30,
+                          child: TextButton(
+                            child: Text(
+                              "확인",
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                                primary: Colors.white,
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                          width: 60,
+                          height: 30,
+                          child: TextButton(
+                            child: Text(
+                              "재전송",
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _time = 120;
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                                primary: Colors.blue,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    side: BorderSide(color: Colors.blue),
+                                    borderRadius: BorderRadius.circular(8))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
                   margin: EdgeInsets.only(
-                    top: 30,
+                    top: 25,
                   ),
                   width: 330,
                   height: 45,
