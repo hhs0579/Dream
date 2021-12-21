@@ -162,7 +162,7 @@ class _JoinPageState extends State<JoinPage> {
   }
 
   void _timerStart() {
-    _time = 10;
+    _time = 120;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         _time--;
