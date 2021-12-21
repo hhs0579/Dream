@@ -270,7 +270,7 @@ class _JoinPageState extends State<JoinPage> {
                       ),
                       Container(
                         width: 60,
-                        child: Text("이름dwadwa",
+                        child: Text("이름",
                             style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
