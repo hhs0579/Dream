@@ -1,4 +1,3 @@
-import 'package:dreamproject/classes/oneselect_box.dart';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/donate.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,62 @@ class RegularDonated extends StatefulWidget {
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 final List<String> _yearList = ["10000", "30000", "50000", "100000"];
 var yearValue = '100000';
+
+onselectBox(String m) {
+  Container(
+      margin: EdgeInsets.only(bottom: 20),
+      width: 350,
+      height: 100,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color(0xff3AAFFC)),
+          borderRadius: BorderRadius.circular(25)),
+      child: Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Column(children: [
+            Container(
+              width: 300,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '후원하기',
+                    style: TextStyle(color: Color(0xff3AAFFC), fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              color: Color(0xff3AAFFC),
+              width: 300,
+              height: 1,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Container(margin: EdgeInsets.only(right: 100), child: Text(m)),
+              Container(
+                height: 30,
+                width: 120,
+                margin: EdgeInsets.only(top: 10, right: 10),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Color(0xff3AAFFC))),
+                child: Container(
+                  width: 120,
+                  margin: EdgeInsets.only(top: 5, left: 20),
+                  child: Text(
+                    yearValue,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+            ]),
+          ])));
+}
 
 class _RegularDonatedState extends State<RegularDonated> {
   var old = false;
@@ -698,16 +753,24 @@ class _RegularDonatedState extends State<RegularDonated> {
                     ),
                   ),
                   Visibility(
-                    visible: old == false &&
-                        child == false &&
+                      visible: old == false &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == true,
+                      child: (onselectBox('빈곤'))),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
                         disorder == false &&
                         multiculture == false &&
                         pet == false &&
-                        poverty == true,
+                        poverty == false,
                     child: Container(
                       margin: EdgeInsets.only(bottom: 20),
                       width: 350,
-                      height: 100,
+                      height: 150,
                       decoration: BoxDecoration(
                           border: Border.all(color: Color(0xff3AAFFC)),
                           borderRadius: BorderRadius.circular(25)),
@@ -738,7 +801,686 @@ class _RegularDonatedState extends State<RegularDonated> {
                                 children: [
                                   Container(
                                       margin: EdgeInsets.only(right: 100),
-                                      child: Text('빈곤')),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                          ])),
+                    ),
+                  ),
+                  Visibility(
+                    visible: old == true &&
+                        child == true &&
+                        disorder == false &&
+                        multiculture == false &&
+                        pet == false &&
+                        poverty == false,
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      width: 350,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xff3AAFFC)),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(children: [
+                            Container(
+                              width: 300,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '후원하기',
+                                    style: TextStyle(
+                                        color: Color(0xff3AAFFC), fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('노인')),
+                                  Container(
+                                    height: 30,
+                                    width: 120,
+                                    margin: EdgeInsets.only(top: 10, right: 10),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Color(0xff3AAFFC))),
+                                    child: Container(
+                                      width: 120,
+                                      margin: EdgeInsets.only(top: 5, left: 20),
+                                      child: Text(
+                                        yearValue,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, right: 30),
+                                      child: Text('원'))
+                                ]),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              color: Color(0xff3AAFFC),
+                              width: 300,
+                              height: 1,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                      margin: EdgeInsets.only(right: 100),
+                                      child: Text('아동')),
                                   Container(
                                     height: 30,
                                     width: 120,
