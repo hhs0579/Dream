@@ -333,6 +333,36 @@ fourselectBox(String m, String n, String i, String j) {
             height: 1,
           ),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(n)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 4).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             Container(margin: EdgeInsets.only(right: 100), child: Text(i)),
             Container(
               height: 30,
@@ -386,6 +416,63 @@ fourselectBox(String m, String n, String i, String j) {
             Container(
                 margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
           ]),
+        ])),
+  );
+}
+
+fiveselectBox(String m, String n, String i, String j, String k) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 20),
+    width: 350,
+    height: 300,
+    decoration: BoxDecoration(
+        border: Border.all(color: Color(0xff3AAFFC)),
+        borderRadius: BorderRadius.circular(25)),
+    child: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(children: [
+          Container(
+            width: 300,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '후원하기',
+                  style: TextStyle(color: Color(0xff3AAFFC), fontSize: 15),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(m)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 5).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
           Container(
             margin: EdgeInsets.only(top: 10),
             color: Color(0xff3AAFFC),
@@ -408,7 +495,304 @@ fourselectBox(String m, String n, String i, String j) {
                 width: 120,
                 margin: EdgeInsets.only(top: 5, left: 20),
                 child: Text(
-                  (int.parse(yearValue) / 4).toStringAsFixed(0),
+                  (int.parse(yearValue) / 5).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(i)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 5).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(j)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 5).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(k)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 5).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+        ])),
+  );
+}
+
+sixselectBox(String m, String n, String i, String j, String k, String z) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 20),
+    width: 350,
+    height: 350,
+    decoration: BoxDecoration(
+        border: Border.all(color: Color(0xff3AAFFC)),
+        borderRadius: BorderRadius.circular(25)),
+    child: Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Column(children: [
+          Container(
+            width: 300,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '후원하기',
+                  style: TextStyle(color: Color(0xff3AAFFC), fontSize: 15),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(m)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(n)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(i)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(j)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(k)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10, right: 30), child: Text('원'))
+          ]),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Color(0xff3AAFFC),
+            width: 300,
+            height: 1,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(margin: EdgeInsets.only(right: 100), child: Text(z)),
+            Container(
+              height: 30,
+              width: 120,
+              margin: EdgeInsets.only(top: 10, right: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Color(0xff3AAFFC))),
+              child: Container(
+                width: 120,
+                margin: EdgeInsets.only(top: 5, left: 20),
+                child: Text(
+                  (int.parse(yearValue) / 6).toStringAsFixed(0),
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -977,6 +1361,279 @@ class _RegularDonatedState extends State<RegularDonated> {
                           pet == false &&
                           poverty == true,
                       child: threeselectBox('노인', '장애', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: threeselectBox('노인', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: threeselectBox('노인', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: threeselectBox('노인', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == false,
+                      child: threeselectBox('아동', '장애', '다문화')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == false,
+                      child: threeselectBox('아동', '장애', '유기동물')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == true,
+                      child: threeselectBox('아동', '장애', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: threeselectBox('아동', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: threeselectBox('아동', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: threeselectBox('아동', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: threeselectBox('장애', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == false &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: threeselectBox('장애', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: threeselectBox('다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == false,
+                      child: fourselectBox('노인', '아동', '장애', '다문화')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == false,
+                      child: fourselectBox('노인', '아동', '장애', '유기동물')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == true,
+                      child: fourselectBox('노인', '아동', '장애', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: fourselectBox('노인', '아동', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: fourselectBox('노인', '아동', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('노인', '아동', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: fourselectBox('노인', '장애', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: fourselectBox('노인', '장애', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('노인', '장애', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('노인', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: fourselectBox('아동', '장애', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: fourselectBox('아동', '장애', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('아동', '장애', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('아동', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fourselectBox('장애', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == false,
+                      child: fiveselectBox('노인', '아동', '장애', '다문화', '유기동물')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == true,
+                      child: fiveselectBox('노인', '아동', '장애', '다문화', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == true,
+                      child: fiveselectBox('노인', '아동', '장애', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fiveselectBox('노인', '아동', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fiveselectBox('노인', '장애', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == false &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child: fiveselectBox('아동', '장애', '다문화', '유기동물', '빈곤')),
+                  Visibility(
+                      visible: old == true &&
+                          child == true &&
+                          disorder == true &&
+                          multiculture == true &&
+                          pet == true &&
+                          poverty == true,
+                      child:
+                          sixselectBox('노인', '아동', '장애', '다문화', '유기동물', '빈곤')),
                 ],
               )
             ],
