@@ -403,355 +403,45 @@ class _RegularDonatedState extends State<RegularDonated> {
                 children: <Widget>[
                   Container(),
                   Visibility(
-                    visible: old == true &&
-                        child == false &&
-                        disorder == false &&
-                        multiculture == false &&
-                        pet == false &&
-                        poverty == false,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xff3AAFFC)),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Column(children: [
-                            Container(
-                              width: 300,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '후원하기',
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              color: Color(0xff3AAFFC),
-                              width: 300,
-                              height: 1,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(right: 100),
-                                      child: Text('노인')),
-                                  Container(
-                                    height: 30,
-                                    width: 120,
-                                    margin: EdgeInsets.only(top: 10, right: 10),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: Container(
-                                      width: 120,
-                                      margin: EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        yearValue,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 10, right: 30),
-                                      child: Text('원'))
-                                ]),
-                          ])),
-                    ),
-                  ),
+                      visible: old == true &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == false,
+                      child: onselectBox('노인')),
                   Visibility(
-                    visible: old == false &&
-                        child == true &&
-                        disorder == false &&
-                        multiculture == false &&
-                        pet == false &&
-                        poverty == false,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xff3AAFFC)),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Column(children: [
-                            Container(
-                              width: 300,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '후원하기',
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              color: Color(0xff3AAFFC),
-                              width: 300,
-                              height: 1,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(right: 100),
-                                      child: Text('아동')),
-                                  Container(
-                                    height: 30,
-                                    width: 120,
-                                    margin: EdgeInsets.only(top: 10, right: 10),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: Container(
-                                      width: 120,
-                                      margin: EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        yearValue,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 10, right: 30),
-                                      child: Text('원'))
-                                ]),
-                          ])),
-                    ),
-                  ),
+                      visible: old == false &&
+                          child == true &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == false,
+                      child: onselectBox('아동')),
                   Visibility(
-                    visible: old == false &&
-                        child == false &&
-                        disorder == true &&
-                        multiculture == false &&
-                        pet == false &&
-                        poverty == false,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xff3AAFFC)),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Column(children: [
-                            Container(
-                              width: 300,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '후원하기',
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              color: Color(0xff3AAFFC),
-                              width: 300,
-                              height: 1,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(right: 100),
-                                      child: Text('장애')),
-                                  Container(
-                                    height: 30,
-                                    width: 120,
-                                    margin: EdgeInsets.only(top: 10, right: 10),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: Container(
-                                      width: 120,
-                                      margin: EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        yearValue,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 10, right: 30),
-                                      child: Text('원'))
-                                ]),
-                          ])),
-                    ),
-                  ),
+                      visible: old == false &&
+                          child == false &&
+                          disorder == true &&
+                          multiculture == false &&
+                          pet == false &&
+                          poverty == false,
+                      child: onselectBox('장애')),
                   Visibility(
-                    visible: old == false &&
-                        child == false &&
-                        disorder == false &&
-                        multiculture == true &&
-                        pet == false &&
-                        poverty == false,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xff3AAFFC)),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Column(children: [
-                            Container(
-                              width: 300,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '후원하기',
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              color: Color(0xff3AAFFC),
-                              width: 300,
-                              height: 1,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(right: 100),
-                                      child: Text('다문화')),
-                                  Container(
-                                    height: 30,
-                                    width: 120,
-                                    margin: EdgeInsets.only(top: 10, right: 10),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: Container(
-                                      width: 120,
-                                      margin: EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        yearValue,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 10, right: 30),
-                                      child: Text('원'))
-                                ]),
-                          ])),
-                    ),
-                  ),
+                      visible: old == false &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == true &&
+                          pet == false &&
+                          poverty == false,
+                      child: onselectBox('다문화')),
                   Visibility(
-                    visible: old == false &&
-                        child == false &&
-                        disorder == false &&
-                        multiculture == false &&
-                        pet == true &&
-                        poverty == false,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xff3AAFFC)),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: Column(children: [
-                            Container(
-                              width: 300,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '후원하기',
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10),
-                              color: Color(0xff3AAFFC),
-                              width: 300,
-                              height: 1,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                      margin: EdgeInsets.only(right: 100),
-                                      child: Text('유기동물')),
-                                  Container(
-                                    height: 30,
-                                    width: 120,
-                                    margin: EdgeInsets.only(top: 10, right: 10),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: Container(
-                                      width: 120,
-                                      margin: EdgeInsets.only(top: 5, left: 20),
-                                      child: Text(
-                                        yearValue,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 10, right: 30),
-                                      child: Text('원'))
-                                ]),
-                          ])),
-                    ),
-                  ),
+                      visible: old == false &&
+                          child == false &&
+                          disorder == false &&
+                          multiculture == false &&
+                          pet == true &&
+                          poverty == false,
+                      child: onselectBox('유기동물')),
                   Visibility(
                       visible: old == false &&
                           child == false &&
@@ -759,7 +449,7 @@ class _RegularDonatedState extends State<RegularDonated> {
                           multiculture == false &&
                           pet == false &&
                           poverty == true,
-                      child: (onselectBox('빈곤'))),
+                      child: onselectBox('빈곤')!),
                   Visibility(
                     visible: old == true &&
                         child == true &&
