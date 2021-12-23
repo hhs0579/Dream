@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'subpages/feedsub/fix_info.dart';
 
 class MyInfoPage extends StatefulWidget {
   const MyInfoPage({Key? key}) : super(key: key);
@@ -13,12 +18,75 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   // PickedFile? _image;
   final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
   var _member = 0;
   var _donation = 0;
 
+  bool isProfile = false;
+
   Future _getImage() async {
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (image != null) {
+        _image = image;
+      }
+    });
+  }
+
+  _profileImage() {
+    return Stack(
+      children: [
+        Container(
+            margin: EdgeInsets.only(
+              top: 20,
+              left: 15,
+              right: 30,
+            ),
+            child: Container(
+                width: 65,
+                height: 65,
+                child:
+                    _image == null ? _profileImageOff() : _profileImageOn())),
+        Positioned(
+            right: 22,
+            top: 60,
+            child: Container(
+              width: 22,
+              height: 22,
+              child: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: IconButton(
+                  onPressed: () {
+                    _getImage();
+                  },
+                  icon: Icon(Icons.edit, color: Colors.white),
+                  iconSize: 15,
+                  color: Colors.blue,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                ),
+              ),
+            ))
+      ],
+    );
+  }
+
+  _profileImageOn() {
+    return Container(
+        width: 65,
+        height: 65,
+        child: CircleAvatar(
+            radius: 40, backgroundImage: FileImage(File(_image!.path))));
+  }
+
+  _profileImageOff() {
+    return Container(
+      width: 65,
+      height: 65,
+      child: CircleAvatar(backgroundImage: AssetImage('assets/imgs/basic.png')),
+    );
   }
 
   @override
@@ -72,7 +140,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
           ),
           body: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -83,30 +151,13 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     children: [
                       Column(
                         children: [
+                          _profileImage(),
                           Container(
-                            margin: EdgeInsets.only(
-                              top: 20,
-                              left: 15,
-                              right: 30,
-                            ),
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[350],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40)),
-                            ),
-                            child: Icon(Icons.person,
-                                color: Colors.white, size: 45),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 15, right: 30),
+                            margin:
+                                EdgeInsets.only(top: 10, left: 15, right: 30),
                             child: Text("홍길동",
                                 style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
                           ),
                           SizedBox(
                             height: 5,
@@ -249,7 +300,11 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            isProfile = true;
+                          });
+                        },
                         child: Text(
                           "나의 후원내역",
                           style: TextStyle(
@@ -267,7 +322,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(FixInfo());
+                        },
                         child: Text(
                           "개인정보 설정",
                           style: TextStyle(
@@ -285,7 +342,11 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            isProfile = false;
+                          });
+                        },
                         child: Text(
                           "드럼 파트너 회원",
                           style: TextStyle(
@@ -306,12 +367,17 @@ class _MyInfoPageState extends State<MyInfoPage> {
                   ),
                 ),
                 SizedBox(height: 15),
-                Container(
-                  margin: EdgeInsets.only(left: 40),
-                  child: Text(
-                    "나의 클럽",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 40),
+                      child: Text(
+                        "나의 클럽",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 15, left: 35, right: 35),
@@ -622,7 +688,35 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       )
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: 15),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 40),
+                      child: Text(
+                        "나의 게시글",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  width: 330,
+                  height: 300,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    children: List.generate(
+                        9,
+                        (index) => Container(
+                            color: Colors.lightBlue,
+                            child: Text('Item $index'))),
+                  ),
+                ),
               ],
             ),
           ),

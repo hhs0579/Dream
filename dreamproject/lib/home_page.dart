@@ -39,8 +39,18 @@ class HomePage extends GetView<HomePageController> {
                   return MaterialPageRoute(builder: (context) => DonatePage());
                 },
               ),
-              EmpathyPage(),
-              MyInfoPage(),
+              Navigator(
+                key: controller.navigatorKey4,
+                onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => EmpathyPage());
+                },
+              ),
+              Navigator(
+                key: controller.navigatorKey5,
+                onGenerateRoute: (routeSettings) {
+                  return MaterialPageRoute(builder: (context) => MyInfoPage());
+                },
+              ),
             ],
           ),
           resizeToAvoidBottomInset: false,

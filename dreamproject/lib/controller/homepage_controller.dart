@@ -10,6 +10,8 @@ class HomePageController extends GetxController {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> navigatorKey2 = GlobalKey<NavigatorState>();
   GlobalKey<NavigatorState> navigatorKey3 = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> navigatorKey4 = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> navigatorKey5 = GlobalKey<NavigatorState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   RxBool isCategoryPageOpen = false.obs;
   void changeHomePageIndex(int index) {
