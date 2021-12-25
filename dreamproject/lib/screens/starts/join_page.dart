@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class JoinPage extends StatefulWidget {
 }
 
 class _JoinPageState extends State<JoinPage> {
+  VerificationStatus _verificationStatus = VerificationStatus.none;
   Color _maleButtonColor = Colors.white;
   Color _femaleButtonColor = Colors.white;
   Color _maleTextColor = Colors.blue;
@@ -337,7 +339,7 @@ class _JoinPageState extends State<JoinPage> {
                             }
                             print(gender);
                           }),
-                          SizedBox(width: 10),
+                          SizedBox(width: 1),
                           genderButton(
                               "여", _femaleButtonColor, _femaleTextColor, () {
                             if (_femaleswitchState == false) {
@@ -632,7 +634,32 @@ class _JoinPageState extends State<JoinPage> {
                             "인증번호 보내기",
                             style: TextStyle(fontSize: 10),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            FirebaseAuth auth = FirebaseAuth.instance;
+
+                            await auth.verifyPhoneNumber(
+                              phoneNumber: '+821030358049',
+                              verificationCompleted:
+                                  (PhoneAuthCredential credential) async {
+                                // ANDROID ONLY!
+
+                                // Sign the user in (or link) with the auto-generated credential
+                                await auth.signInWithCredential(credential);
+                              },
+                              codeAutoRetrievalTimeout:
+                                  (String verificationId) {},
+                              codeSent: (String verificationId,
+                                  int? forceResendingToken) {
+                                setState(() {
+                                  _verificationStatus =
+                                      VerificationStatus.codeSent;
+                                });
+                              },
+                              verificationFailed:
+                                  (FirebaseAuthException error) {
+                                print('에러');
+                              },
+                            );
                             setState(() {
                               _isAuthsms = true;
                               _timerStart();
@@ -781,3 +808,5 @@ class _JoinPageState extends State<JoinPage> {
     );
   }
 }
+
+enum VerificationStatus { none, codeSent, verifying, verificationDone }
