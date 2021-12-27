@@ -300,11 +300,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            isProfile = true;
-                          });
-                        },
+                        onPressed: () {},
                         child: Text(
                           "나의 후원내역",
                           style: TextStyle(
@@ -342,11 +338,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            isProfile = false;
-                          });
-                        },
+                        onPressed: () {},
                         child: Text(
                           "드럼 파트너 회원",
                           style: TextStyle(

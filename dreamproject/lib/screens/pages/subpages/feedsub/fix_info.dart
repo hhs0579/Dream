@@ -727,7 +727,7 @@ class _FixInfoState extends State<FixInfo> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.to(MyInfoPage());
+                      Get.back();
                     },
                     child: Text(
                       "수정하기",

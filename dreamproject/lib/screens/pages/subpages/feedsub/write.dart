@@ -1,6 +1,7 @@
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Write extends StatefulWidget {
   Write({Key? key}) : super(key: key);
@@ -17,7 +18,46 @@ class _WriteState extends State<Write> {
   var pet = false;
   var poverty = false;
 
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  List<String> questionImages = [];
+
+  @override
+  void initState() {
+    questionImages = [];
+    super.initState();
+  }
+
+  Future _getImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (image != null) {
+        _image = image;
+      }
+    });
+  }
+
+  Widget _ImageBox() {
+    return GestureDetector(
+      onTap: () async {
+        String? resultUrl = await _getImage();
+        if (resultUrl != null) {
+          questionImages.add(resultUrl);
+        }
+      },
+      child: SizedBox(
+        width: 45,
+        height: 45,
+        child: Stack(
+          children: [
+            Center(child: Icon(Icons.attach_file, color: Color(0xff3AAFFC))),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,139 +102,180 @@ class _WriteState extends State<Write> {
                 onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Container(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 13),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                                activeColor: Colors.blue,
-                                checkColor: Colors.white,
-                                value: old,
-                                onChanged: (value) {
-                                  setState(() {
-                                    old = value!;
-                                  });
-                                }),
-                            Text('노인'),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 13),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                                activeColor: Colors.blue,
-                                checkColor: Colors.white,
-                                value: child,
-                                onChanged: (value) {
-                                  setState(() {
-                                    child = value!;
-                                  });
-                                }),
-                            Text('아동'),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 13),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                                activeColor: Colors.blue,
-                                checkColor: Colors.white,
-                                value: disorder,
-                                onChanged: (value) {
-                                  setState(() {
-                                    disorder = value!;
-                                  });
-                                }),
-                            Text('장애'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                          activeColor: Colors.blue,
-                          checkColor: Colors.white,
-                          value: multiculture,
-                          onChanged: (value) {
-                            setState(() {
-                              multiculture = value!;
-                            });
-                          }),
-                      Text('다문화'),
-                      Checkbox(
-                          activeColor: Colors.blue,
-                          checkColor: Colors.white,
-                          value: pet,
-                          onChanged: (value) {
-                            setState(() {
-                              pet = value!;
-                            });
-                          }),
-                      Text('유기동물'),
-                      Checkbox(
-                          activeColor: Colors.blue,
-                          checkColor: Colors.white,
-                          value: poverty,
-                          onChanged: (value) {
-                            setState(() {
-                              poverty = value!;
-                            });
-                          }),
-                      Text('빈곤'),
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20, left: 40, right: 40),
-                child: TextField(
-                  readOnly: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  textAlign: TextAlign.start,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(bottom: 300),
-                    hintText: '내용작성',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Column(
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.attach_file,
-                        color: Color(0xff3AAFFC),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 11),
+                          child: Row(
+                            children: [
+                              Transform.scale(
+                                scale: 0.8,
+                                child: Checkbox(
+                                    activeColor: Colors.blue,
+                                    checkColor: Colors.white,
+                                    value: old,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        old = value!;
+                                      });
+                                    }),
+                              ),
+                              Text('노인', style: TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 8),
+                          child: Row(
+                            children: [
+                              Transform.scale(
+                                scale: 0.8,
+                                child: Checkbox(
+                                    activeColor: Colors.blue,
+                                    checkColor: Colors.white,
+                                    value: child,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        child = value!;
+                                      });
+                                    }),
+                              ),
+                              Text('아동'),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: [
+                              Transform.scale(
+                                scale: 0.8,
+                                child: Checkbox(
+                                    activeColor: Colors.blue,
+                                    checkColor: Colors.white,
+                                    value: disorder,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        disorder = value!;
+                                      });
+                                    }),
+                              ),
+                              Text('장애', style: TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Transform.scale(
+                          scale: 0.8,
+                          child: Checkbox(
+                              activeColor: Colors.blue,
+                              checkColor: Colors.white,
+                              value: multiculture,
+                              onChanged: (value) {
+                                setState(() {
+                                  multiculture = value!;
+                                });
+                              }),
+                        ),
+                        Text('다문화', style: TextStyle(fontSize: 12)),
+                        Transform.scale(
+                          scale: 0.8,
+                          child: Checkbox(
+                              activeColor: Colors.blue,
+                              checkColor: Colors.white,
+                              value: pet,
+                              onChanged: (value) {
+                                setState(() {
+                                  pet = value!;
+                                });
+                              }),
+                        ),
+                        Text('유기동물', style: TextStyle(fontSize: 12)),
+                        Transform.scale(
+                          scale: 0.8,
+                          child: Checkbox(
+                              activeColor: Colors.blue,
+                              checkColor: Colors.white,
+                              value: poverty,
+                              onChanged: (value) {
+                                setState(() {
+                                  poverty = value!;
+                                });
+                              }),
+                        ),
+                        Text('빈곤', style: TextStyle(fontSize: 12)),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(right: 20),
-                  child: TextButton(onPressed: () {}, child: Text('게시'))),
-            ],
-          )),
+                Container(
+                  width: 350,
+                  margin: EdgeInsets.only(top: 5, left: 40, right: 40),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffd6d6d6))),
+                  child: TextField(
+                    textAlignVertical: TextAlignVertical.top,
+                    textAlign: TextAlign.start,
+                    maxLines: 15,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10),
+                      hintText: '내용작성',
+                      hintStyle:
+                          TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 45,
+                        height: 45,
+                        child: Stack(
+                          children: [
+                            Center(
+                                child: Icon(Icons.attach_file,
+                                    color: Color(0xff3AAFFC))),
+                          ],
+                        ),
+                      ),
+                      // ListView.builder(
+                      //     itemCount: questionImages.length + 1,
+                      //     itemBuilder: (context, index) {
+                      //       if (index == questionImages.length) {
+                      //         return Container();
+                      //       } else {
+                      //         return Container();
+                      //       }
+                      //     })
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                    margin: EdgeInsets.only(right: 20),
+                    child: TextButton(onPressed: () {}, child: Text('게시'))),
+              ],
+            )),
+          ),
         ));
   }
 }
