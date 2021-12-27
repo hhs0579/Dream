@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -635,31 +635,31 @@ class _JoinPageState extends State<JoinPage> {
                             style: TextStyle(fontSize: 10),
                           ),
                           onPressed: () async {
-                            FirebaseAuth auth = FirebaseAuth.instance;
+                            // FirebaseAuth auth = FirebaseAuth.instance;
 
-                            await auth.verifyPhoneNumber(
-                              phoneNumber: '+821030358049',
-                              verificationCompleted:
-                                  (PhoneAuthCredential credential) async {
-                                // ANDROID ONLY!
+                            // await auth.verifyPhoneNumber(
+                            //   phoneNumber: '+821030358049',
+                            //   verificationCompleted:
+                            //       (PhoneAuthCredential credential) async {
+                            //     // ANDROID ONLY!
 
-                                // Sign the user in (or link) with the auto-generated credential
-                                await auth.signInWithCredential(credential);
-                              },
-                              codeAutoRetrievalTimeout:
-                                  (String verificationId) {},
-                              codeSent: (String verificationId,
-                                  int? forceResendingToken) {
-                                setState(() {
-                                  _verificationStatus =
-                                      VerificationStatus.codeSent;
-                                });
-                              },
-                              verificationFailed:
-                                  (FirebaseAuthException error) {
-                                print('에러');
-                              },
-                            );
+                            //     // Sign the user in (or link) with the auto-generated credential
+                            //     await auth.signInWithCredential(credential);
+                            //   },
+                            //   codeAutoRetrievalTimeout:
+                            //       (String verificationId) {},
+                            //   codeSent: (String verificationId,
+                            //       int? forceResendingToken) {
+                            //     setState(() {
+                            //       _verificationStatus =
+                            //           VerificationStatus.codeSent;
+                            //     });
+                            //   },
+                            //   verificationFailed:
+                            //       (FirebaseAuthException error) {
+                            //     print('에러');
+                            //   },
+                            // );
                             setState(() {
                               _isAuthsms = true;
                               _timerStart();

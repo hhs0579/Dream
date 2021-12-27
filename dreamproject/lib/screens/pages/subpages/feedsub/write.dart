@@ -22,7 +22,7 @@ class _WriteState extends State<Write> {
   XFile? _image;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<String> questionImages = [];
+  List<XFile> questionImages = [];
 
   @override
   void initState() {
@@ -37,14 +37,15 @@ class _WriteState extends State<Write> {
         _image = image;
       }
     });
+    return _image;
   }
 
   Widget _ImageBox() {
     return GestureDetector(
       onTap: () async {
-        String? resultUrl = await _getImage();
-        if (resultUrl != null) {
-          questionImages.add(resultUrl);
+        XFile? result = await _getImage();
+        if (result != null) {
+          questionImages.add(result);
         }
       },
       child: SizedBox(
@@ -108,173 +109,174 @@ class _WriteState extends State<Write> {
           },
           child: SingleChildScrollView(
             child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 25),
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 11),
-                          child: Row(
-                            children: [
-                              Transform.scale(
-                                scale: 0.8,
-                                child: Checkbox(
-                                    activeColor: Colors.blue,
-                                    checkColor: Colors.white,
-                                    value: old,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        old = value!;
-                                      });
-                                    }),
-                              ),
-                              Text('노인', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 8),
-                          child: Row(
-                            children: [
-                              Transform.scale(
-                                scale: 0.8,
-                                child: Checkbox(
-                                    activeColor: Colors.blue,
-                                    checkColor: Colors.white,
-                                    value: child,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        child = value!;
-                                      });
-                                    }),
-                              ),
-                              Text('아동'),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: [
-                              Transform.scale(
-                                scale: 0.8,
-                                child: Checkbox(
-                                    activeColor: Colors.blue,
-                                    checkColor: Colors.white,
-                                    value: disorder,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        disorder = value!;
-                                      });
-                                    }),
-                              ),
-                              Text('장애', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Transform.scale(
-                          scale: 0.8,
-                          child: Checkbox(
-                              activeColor: Colors.blue,
-                              checkColor: Colors.white,
-                              value: multiculture,
-                              onChanged: (value) {
-                                setState(() {
-                                  multiculture = value!;
-                                });
-                              }),
-                        ),
-                        Text('다문화', style: TextStyle(fontSize: 12)),
-                        Transform.scale(
-                          scale: 0.8,
-                          child: Checkbox(
-                              activeColor: Colors.blue,
-                              checkColor: Colors.white,
-                              value: pet,
-                              onChanged: (value) {
-                                setState(() {
-                                  pet = value!;
-                                });
-                              }),
-                        ),
-                        Text('유기동물', style: TextStyle(fontSize: 12)),
-                        Transform.scale(
-                          scale: 0.8,
-                          child: Checkbox(
-                              activeColor: Colors.blue,
-                              checkColor: Colors.white,
-                              value: poverty,
-                              onChanged: (value) {
-                                setState(() {
-                                  poverty = value!;
-                                });
-                              }),
-                        ),
-                        Text('빈곤', style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 350,
-                  margin: EdgeInsets.only(top: 5, left: 40, right: 40),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xffd6d6d6))),
-                  child: TextField(
-                    textAlignVertical: TextAlignVertical.top,
-                    textAlign: TextAlign.start,
-                    maxLines: 15,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      hintText: '내용작성',
-                      hintStyle:
-                          TextStyle(fontSize: 12, color: Colors.grey[400]),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 45,
-                        height: 45,
-                        child: Stack(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Center(
-                                child: Icon(Icons.attach_file,
-                                    color: Color(0xff3AAFFC))),
+                            Container(
+                              margin: EdgeInsets.only(right: 11),
+                              child: Row(
+                                children: [
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Checkbox(
+                                        activeColor: Colors.blue,
+                                        checkColor: Colors.white,
+                                        value: old,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            old = value!;
+                                          });
+                                        }),
+                                  ),
+                                  Text('노인', style: TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(right: 8),
+                              child: Row(
+                                children: [
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Checkbox(
+                                        activeColor: Colors.blue,
+                                        checkColor: Colors.white,
+                                        value: child,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            child = value!;
+                                          });
+                                        }),
+                                  ),
+                                  Text('아동'),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Checkbox(
+                                        activeColor: Colors.blue,
+                                        checkColor: Colors.white,
+                                        value: disorder,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            disorder = value!;
+                                          });
+                                        }),
+                                  ),
+                                  Text('장애', style: TextStyle(fontSize: 12)),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Transform.scale(
+                              scale: 0.8,
+                              child: Checkbox(
+                                  activeColor: Colors.blue,
+                                  checkColor: Colors.white,
+                                  value: multiculture,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      multiculture = value!;
+                                    });
+                                  }),
+                            ),
+                            Text('다문화', style: TextStyle(fontSize: 12)),
+                            Transform.scale(
+                              scale: 0.8,
+                              child: Checkbox(
+                                  activeColor: Colors.blue,
+                                  checkColor: Colors.white,
+                                  value: pet,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      pet = value!;
+                                    });
+                                  }),
+                            ),
+                            Text('유기동물', style: TextStyle(fontSize: 12)),
+                            Transform.scale(
+                              scale: 0.8,
+                              child: Checkbox(
+                                  activeColor: Colors.blue,
+                                  checkColor: Colors.white,
+                                  value: poverty,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      poverty = value!;
+                                    });
+                                  }),
+                            ),
+                            Text('빈곤', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: 350,
+                      margin: EdgeInsets.only(top: 5),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xffd6d6d6))),
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.top,
+                        textAlign: TextAlign.start,
+                        maxLines: 15,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          hintText: '내용작성',
+                          hintStyle:
+                              TextStyle(fontSize: 12, color: Colors.grey[400]),
+                        ),
                       ),
-                      // ListView.builder(
-                      //     itemCount: questionImages.length + 1,
-                      //     itemBuilder: (context, index) {
-                      //       if (index == questionImages.length) {
-                      //         return Container();
-                      //       } else {
-                      //         return Container();
-                      //       }
-                      //     })
-                    ],
-                  ),
-                ),
-                SizedBox(height: 30),
-                Container(
-                    margin: EdgeInsets.only(right: 20),
-                    child: TextButton(onPressed: () {}, child: Text('게시'))),
-              ],
-            )),
+                    ),
+                    Row(
+                      children: [
+                        _ImageBox(),
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 45,
+                      child: questionImages.isEmpty
+                          ? Container()
+                          : ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: questionImages.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                          width: 45,
+                                          height: 45,
+                                          child: Container() //이미지
+                                          ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                    ),
+                    SizedBox(height: 30),
+                    Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: TextButton(onPressed: () {}, child: Text('게시'))),
+                  ],
+                )),
           ),
         ));
   }
