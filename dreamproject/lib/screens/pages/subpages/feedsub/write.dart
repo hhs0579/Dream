@@ -1,3 +1,4 @@
+import 'package:dreamproject/repo/user_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -274,7 +275,11 @@ class _WriteState extends State<Write> {
                     SizedBox(height: 30),
                     Container(
                         margin: EdgeInsets.only(right: 20),
-                        child: TextButton(onPressed: () {}, child: Text('게시'))),
+                        child: TextButton(
+                            onPressed: () {
+                              UserService().firestoreTest();
+                            },
+                            child: Text('게시'))),
                   ],
                 )),
           ),
