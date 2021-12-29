@@ -601,7 +601,13 @@ class _JoinPageState extends State<JoinPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10.0),
+                Container(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Text(
+                    '010은 제외하고 입력해주세요',
+                    style: TextStyle(color: Color(0xff3AAFFC)),
+                  ),
+                ),
                 Container(
                   alignment: Alignment(0, 0),
                   height: 70,
