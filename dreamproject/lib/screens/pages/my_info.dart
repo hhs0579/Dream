@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'subpages/feedsub/fix_info.dart';
+import 'subpages/infosub/fix_info.dart';
 
 class MyInfoPage extends StatefulWidget {
   const MyInfoPage({Key? key}) : super(key: key);
@@ -206,7 +207,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               ],
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(PointAdd());
+                              },
                               child: Text(
                                 "포인트 충전하기",
                                 style: TextStyle(
