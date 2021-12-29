@@ -1,7 +1,8 @@
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'package:dreamproject/constants/shared_pref_keys.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
 import 'dart:async';
@@ -32,11 +33,22 @@ class _JoinPageState extends State<JoinPage> {
   String? gender;
   String? address;
   String? postCode;
-
+  FocusNode otpFocusNode = FocusNode();
   final _idTextEditor = TextEditingController();
   final _passwordTextEditor = TextEditingController();
   final _postTextEditor = TextEditingController();
   final _addressTextEditor = TextEditingController();
+  final phoneNumber = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool authOk = false;
+
+  bool passwordHide = true;
+  bool requestedAuth = false;
+  late String verificationId;
+  bool showLoading = false;
 
   final formKey = GlobalKey<FormState>();
 
@@ -509,7 +521,7 @@ class _JoinPageState extends State<JoinPage> {
                                           'e7332691953b203d499ffb8ad8a411c6',
                                       callback: (Kpostal result) {
                                         setState(() {
-                                          address = SHARED_ADDRESS;
+                                          address = '${result.address}';
                                           postCode = '${result.postCode}';
                                           _addressTextEditor.text = address!;
                                           _postTextEditor.text = postCode!;
@@ -617,7 +629,8 @@ class _JoinPageState extends State<JoinPage> {
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(right: 10),
-                          child: TextField(
+                          child: TextFormField(
+                            controller: phoneNumber,
                             textAlign: TextAlign.right,
                             style: TextStyle(color: Colors.black),
                             decoration: InputDecoration(
@@ -636,6 +649,43 @@ class _JoinPageState extends State<JoinPage> {
                             style: TextStyle(fontSize: 10),
                           ),
                           onPressed: () async {
+                            setState(() {
+                              showLoading = true;
+                            });
+                            await _auth.verifyPhoneNumber(
+                                timeout: const Duration(seconds: 60),
+                                codeAutoRetrievalTimeout:
+                                    (String verificationId) {},
+                                phoneNumber: "+8210" + phoneNumber.text.trim(),
+                                verificationCompleted:
+                                    (phoneAuthCredential) async {
+                                  print('otp문자옴');
+                                },
+                                verificationFailed: (verificationFailed) async {
+                                  print(verificationFailed.code);
+                                  print("코드 발송 실패");
+                                  setState(() {
+                                    showLoading = false;
+                                  });
+                                },
+                                codeSent: (verificationId,
+                                    forceResendingToken) async {
+                                  print('코드 보냄');
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "010${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.lightBlue,
+                                      fontSize: 12.0);
+                                  setState(() {
+                                    requestedAuth = true;
+                                    FocusScope.of(context)
+                                        .requestFocus(otpFocusNode);
+                                    showLoading = false;
+                                    this.verificationId = verificationId;
+                                  });
+                                });
                             // FirebaseAuth auth = FirebaseAuth.instance;
 
                             // await auth.verifyPhoneNumber(

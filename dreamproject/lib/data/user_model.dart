@@ -57,7 +57,6 @@ class UserModel {
     map['log'] = log;
     map['geoFirePoint'] = geoFirePoint;
     map['createDate'] = createDate;
-
     return map;
   }
 }
