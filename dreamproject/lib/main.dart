@@ -24,8 +24,34 @@ class MyApp extends StatefulWidget {
 // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
 class _MyAppState extends State<MyApp> {
-  final routes = <String, WidgetBuilder>{};
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          return AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              child: _splashLoadingWidget(snapshot));
+        });
+  }
+
+  StatelessWidget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+    if (snapshot.hasError) {
+      print('error occur while loading');
+      return Text('error occur');
+    } else if (snapshot.hasData) {
+      return DreamApp();
+    } else {
+      return DreamApp();
+    }
+  }
+}
+
+class DreamApp extends StatelessWidget {
+  DreamApp({Key? key}) : super(key: key);
+  final routes = <String, WidgetBuilder>{};
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserService {
-  Future firestoreTest() async {
-    FirebaseFirestore.instance
-        .collection('Testing')
-        .add({'testing': 'testing value', 'number': 123123});
+  void firestoreTest() {
+    final userCollectionReference =
+        FirebaseFirestore.instance.collection("users").doc("userkey1");
+    userCollectionReference.set({"userName": "이정찬", "age": 24});
   }
 }
