@@ -35,7 +35,8 @@ dependencies:
   firebase_core: ^1.10.6
   firebase_analytics: ^9.0.4
   firebase_auth: ^3.3.4
-  cloud_firestore: ^3.1.5
+  geoflutterfire: ^3.0.1
+  cloud_firestore: ^2.3.0
   cupertino_icons: ^1.0.4
   extended_image: ^6.0.1
   logger: ^1.1.0

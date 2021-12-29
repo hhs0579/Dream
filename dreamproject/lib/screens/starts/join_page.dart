@@ -1,4 +1,5 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dreamproject/constants/shared_pref_keys.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -508,7 +509,7 @@ class _JoinPageState extends State<JoinPage> {
                                           'e7332691953b203d499ffb8ad8a411c6',
                                       callback: (Kpostal result) {
                                         setState(() {
-                                          address = '${result.address}';
+                                          address = SHARED_ADDRESS;
                                           postCode = '${result.postCode}';
                                           _addressTextEditor.text = address!;
                                           _postTextEditor.text = postCode!;
