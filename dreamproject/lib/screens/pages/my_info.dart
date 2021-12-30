@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -649,7 +650,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               height: 60.0,
                               margin: EdgeInsets.only(top: 12),
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.to(ClubAddPage());
+                                },
                                 child: Icon(Icons.add, color: Colors.white),
                                 style: ElevatedButton.styleFrom(
                                     elevation: 0,
