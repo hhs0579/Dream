@@ -1,7 +1,6 @@
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/pages/subpages/donatesub/regulardonate.dart';
 import 'package:dreamproject/screens/pages/subpages/donatesub/temporarydonate.dart';
-import 'package:dreamproject/states/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 

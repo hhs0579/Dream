@@ -1,4 +1,5 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dreamproject/repo/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -814,7 +815,7 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.to(LoginPage());
+                      UserService().firestoreReadTest();
                     },
                     child: Text(
                       "뒤로가기",
