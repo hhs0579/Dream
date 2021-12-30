@@ -692,31 +692,6 @@ class _JoinPageState extends State<JoinPage> {
                                     this.verificationId = verificationId;
                                   });
                                 });
-                            // FirebaseAuth auth = FirebaseAuth.instance;
-
-                            // await auth.verifyPhoneNumber(
-                            //   phoneNumber: '+821030358049',
-                            //   verificationCompleted:
-                            //       (PhoneAuthCredential credential) async {
-                            //     // ANDROID ONLY!
-
-                            //     // Sign the user in (or link) with the auto-generated credential
-                            //     await auth.signInWithCredential(credential);
-                            //   },
-                            //   codeAutoRetrievalTimeout:
-                            //       (String verificationId) {},
-                            //   codeSent: (String verificationId,
-                            //       int? forceResendingToken) {
-                            //     setState(() {
-                            //       _verificationStatus =
-                            //           VerificationStatus.codeSent;
-                            //     });
-                            //   },
-                            //   verificationFailed:
-                            //       (FirebaseAuthException error) {
-                            //     print('에러');
-                            //   },
-                            // );
                             setState(() {
                               _isAuthsms = true;
                               _timerStart();

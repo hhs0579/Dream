@@ -1635,7 +1635,14 @@ class _RegularDonatedState extends State<RegularDonated> {
                       child:
                           sixselectBox('노인', '아동', '장애', '다문화', '유기동물', '빈곤')),
                 ],
-              )
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(336, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25))),
+                  onPressed: () {},
+                  child: Text('드림'))
             ],
           ),
         ),
