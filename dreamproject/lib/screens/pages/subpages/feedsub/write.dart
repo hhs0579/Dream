@@ -275,11 +275,7 @@ class _WriteState extends State<Write> {
                     SizedBox(height: 30),
                     Container(
                         margin: EdgeInsets.only(right: 20),
-                        child: TextButton(
-                            onPressed: () {
-                              UserService().firestoreReadTest();
-                            },
-                            child: Text('게시'))),
+                        child: TextButton(onPressed: () {}, child: Text('게시'))),
                   ],
                 )),
           ),

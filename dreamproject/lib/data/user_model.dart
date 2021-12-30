@@ -22,9 +22,6 @@ class UserModel {
       required this.sex,
       required this.phoneNumber,
       required this.address,
-      required this.lat,
-      required this.log,
-      required this.geoFirePoint,
       required this.createDate,
       this.refernce});
 
@@ -36,10 +33,6 @@ class UserModel {
     name = json['name'];
     sex = json['sex'];
     address = json['address'];
-    lat = json['lat'];
-    log = json['log'];
-    geoFirePoint = GeoFirePoint((json['geoFirePoint']['geopoint']).latitude,
-        (json['geoFirePoint']['geopoint']).logitude);
     createDate = json['createDate'] == null
         ? DateTime.now().toUtc()
         : (json['createDate'] as Timestamp).toDate();
@@ -53,9 +46,6 @@ class UserModel {
     map['sex'] = sex;
     map['phoneNumber'] = phoneNumber;
     map['address'] = address;
-    map['lat'] = lat;
-    map['log'] = log;
-    map['geoFirePoint'] = geoFirePoint;
     map['createDate'] = createDate;
     return map;
   }
