@@ -53,6 +53,43 @@ class _JoinPageState extends State<JoinPage> {
 
   final formKey = GlobalKey<FormState>();
 
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
+    setState(() {
+      showLoading = true;
+    });
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
+      setState(() {
+        showLoading = false;
+      });
+      if (authCredential.user != null) {
+        setState(() {
+          print("인증완료 및 가입성공");
+          authOk = true;
+          requestedAuth = false;
+        });
+        await _auth.currentUser?.delete();
+        print("auth정보삭제");
+        _auth.signOut();
+        print("phone로그인된것 로그아웃");
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        print("인증실패..로그인실패");
+        showLoading = false;
+      });
+
+      await Fluttertoast.showToast(
+          msg: '오류',
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          fontSize: 16.0);
+    }
+  }
+
   void setMaleStateOn() {
     _maleButtonColor = Colors.blue;
     _maleTextColor = Colors.white;
