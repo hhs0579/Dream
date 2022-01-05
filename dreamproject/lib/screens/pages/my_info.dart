@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class MyInfoPage extends StatefulWidget {
   @override
   State<MyInfoPage> createState() => _MyInfoPageState();
 }
+
+final AuthService _auth = AuthService();
 
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -114,6 +117,12 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     title: Text('''카카오톡 플친
         전화 010-0000-0000''', textAlign: TextAlign.center),
                     onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('로그아웃', textAlign: TextAlign.center),
+                    onTap: () async {
+                      await _auth.signOut();
+                    },
                   ),
                 ],
               ),

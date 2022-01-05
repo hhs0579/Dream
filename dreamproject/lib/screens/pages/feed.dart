@@ -1,5 +1,6 @@
 import 'package:dreamproject/classes/circle_button.dart';
 import 'package:dreamproject/controller/homepage_controller.dart';
+import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/legal.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/postcard.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class _FeedState extends State<Feed> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
+  final AuthService _auth = AuthService();
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -38,6 +40,12 @@ class _FeedState extends State<Feed> {
                     title: Text('''카카오톡 플친
     전화 010-0000-0000''', textAlign: TextAlign.center),
                     onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text('로그아웃', textAlign: TextAlign.center),
+                    onTap: () async {
+                      await _auth.signOut();
+                    },
                   ),
                 ],
               ),

@@ -1,4 +1,3 @@
-import 'package:dreamproject/repo/user_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

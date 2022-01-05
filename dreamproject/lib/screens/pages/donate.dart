@@ -1,3 +1,4 @@
+import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/pages/subpages/donatesub/regulardonate.dart';
 import 'package:dreamproject/screens/pages/subpages/donatesub/temporarydonate.dart';
@@ -8,6 +9,8 @@ class DonatePage extends StatelessWidget {
   DonatePage({Key? key}) : super(key: key);
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
+  final AuthService _auth = AuthService();
+
   Widget build(BuildContext context) {
     return Stack(children: [
       Scaffold(
@@ -29,6 +32,12 @@ class DonatePage extends StatelessWidget {
                   title: Text('''카카오톡 플친
       전화 010-0000-0000''', textAlign: TextAlign.center),
                   onTap: () {},
+                ),
+                ListTile(
+                  title: Text('로그아웃', textAlign: TextAlign.center),
+                  onTap: () async {
+                    await _auth.signOut();
+                  },
                 ),
               ],
             ),

@@ -1,8 +1,12 @@
 import 'package:dreamproject/home_page.dart';
+import 'package:dreamproject/repo/auth_service.dart';
+import 'package:dreamproject/repo/user.dart';
+import 'package:dreamproject/warpper.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'controller/homepage_controller.dart';
 import 'screens/pages/feed.dart';
 import 'screens/starts/login_page.dart';
@@ -16,7 +20,6 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -54,16 +57,20 @@ class DreamApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{};
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: '드림기부앱',
-      initialBinding: BindingsBuilder(() {
-        Get.put(HomePageController());
-      }),
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+    return StreamProvider<UserModel?>.value(
+      value: AuthService().user,
+      initialData: null,
+      child: GetMaterialApp(
+        title: '드림기부앱',
+        initialBinding: BindingsBuilder(() {
+          Get.put(HomePageController());
+        }),
+        theme: ThemeData(
+          primarySwatch: Colors.lightBlue,
+        ),
+        home: Wrapper(),
+        routes: routes,
       ),
-      home: LoginPage(),
-      routes: routes,
     );
   }
 }

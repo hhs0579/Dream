@@ -1,4 +1,5 @@
 import 'package:dreamproject/home_page.dart';
+import 'package:dreamproject/repo/auth_service.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+
+final AuthService _auth = AuthService();
 
 class _LoginPageState extends State<LoginPage> {
   @override
@@ -51,8 +54,15 @@ class _LoginPageState extends State<LoginPage> {
           ),
           padding: EdgeInsets.all(12),
         ),
-        onPressed: () {
-          Get.to(HomePage());
+        onPressed: () async {
+          dynamic result = await _auth.signInAnon();
+          if (result == null) {
+            print('@@ error signing in');
+          } else {
+            print('@@ signed in');
+            print(result); // return Instance of UserModel
+            print(result.uid); // return uid value in UserModel class
+          }
         },
         child: Text('로그인', style: TextStyle(color: Colors.white)),
       ),
