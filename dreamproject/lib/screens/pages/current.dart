@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dreamproject/model/withitem.dart';
+import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
@@ -68,6 +69,8 @@ class _CurrentPageState extends State<CurrentPage> {
   final isSelected = <bool>[true, false, false, false];
 
   @override
+  final AuthService _auth = AuthService();
+
   Widget build(BuildContext context) {
     withList = WithList.fromJson(withitem);
     return Stack(children: [
@@ -90,6 +93,12 @@ class _CurrentPageState extends State<CurrentPage> {
                   title: Text('''카카오톡 플친
       전화 010-0000-0000''', textAlign: TextAlign.center),
                   onTap: () {},
+                ),
+                ListTile(
+                  title: Text('로그아웃', textAlign: TextAlign.center),
+                  onTap: () async {
+                    await _auth.signOut();
+                  },
                 ),
               ],
             ),
