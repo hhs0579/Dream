@@ -35,6 +35,19 @@ class AuthService {
       return null;
     }
   }
+
+  Future signUpWithEmailAndPassword(String email, String password) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      User? user = result.user;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print('sign up failed');
+      print(e.toString());
+      return null;
+    }
+  }
 }
 // UserModel? _userFromFirebaseUser(User? user) {
 //   return user != null ? UserModel(uid: user.uid) : null;
