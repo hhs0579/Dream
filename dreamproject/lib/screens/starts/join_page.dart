@@ -61,43 +61,6 @@ class _JoinPageState extends State<JoinPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthService _authJoin = AuthService();
 
-  void signInWithPhoneAuthCredential(
-      PhoneAuthCredential phoneAuthCredential) async {
-    setState(() {
-      showLoading = true;
-    });
-    try {
-      final authCredential =
-          await _auth.signInWithCredential(phoneAuthCredential);
-      setState(() {
-        showLoading = false;
-      });
-      if (authCredential?.user != null) {
-        setState(() {
-          print("인증완료 및 로그인성공");
-          authOk = true;
-          requestedAuth = false;
-        });
-        await _auth.currentUser?.delete();
-        print("auth정보삭제");
-        _auth.signOut();
-        print("phone로그인된것 로그아웃");
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        print("인증실패..로그인실패");
-        showLoading = false;
-      });
-
-      await Fluttertoast.showToast(
-          msg: '오류',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          fontSize: 16.0);
-    }
-  }
-
   Future<UserCredential?> signUpUserCredential(
       {required String email, required String password}) async {
     try {
@@ -341,7 +304,7 @@ class _JoinPageState extends State<JoinPage> {
                         IdTextformfield(
                             onSaved: (val) {
                               setState(() {
-                                this.email = val;
+                                email = val;
                               });
                             },
                             validator: (val) {},
@@ -509,7 +472,7 @@ class _JoinPageState extends State<JoinPage> {
                         passwordTextformfield(
                             onSaved: (val) {
                               setState(() {
-                                this.password = val;
+                                password = val;
                               });
                             },
                             validator: (val) {
@@ -900,7 +863,12 @@ class _JoinPageState extends State<JoinPage> {
                           dynamic result = await _authJoin
                               .signUpWithEmailAndPassword(email, password);
                           if (result == null) {
-                            setState(() => 'please supply a valid email');
+                            Fluttertoast.showToast(
+                                msg: "값을 넣어주세요",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.lightBlue,
+                                fontSize: 12.0);
                           }
                         }
                       },
