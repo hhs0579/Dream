@@ -1,3 +1,4 @@
+import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/user.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
@@ -13,7 +14,7 @@ class Wrapper extends StatelessWidget {
     if (providerUserModel == null) {
       return LoginPage();
     } else {
-      return Feed();
+      return HomePage();
     }
   }
 }
