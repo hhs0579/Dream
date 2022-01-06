@@ -627,7 +627,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 12.5),
+                            SizedBox(height: 13.5),
                             Container(
                               width: 120,
                               height: 1,

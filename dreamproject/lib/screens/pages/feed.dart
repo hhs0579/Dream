@@ -91,12 +91,11 @@ class _FeedState extends State<Feed> {
             margin: EdgeInsets.all(30),
             child: OutlineCircleButton(
               child: Icon(
-                Icons.cloud,
+                Icons.edit,
                 color: Colors.white,
                 size: 30,
               ),
               radius: 50.0,
-              borderSize: 0.5,
               onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Legal()));

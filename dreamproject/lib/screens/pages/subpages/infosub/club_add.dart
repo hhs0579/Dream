@@ -72,10 +72,12 @@ class _ClubAddPageState extends State<ClubAddPage> {
   _clubeCreateOn() {
     return Container(
         width: Get.width,
-        height: 312,
+        height: 313,
         decoration: BoxDecoration(
             shape: BoxShape.rectangle,
-            border: Border.all(color: Color(0xffd6d6d6)),
+            border: Border.all(
+                color: _isEnabldcheck() ? Color(0xff3AAFFC) : Color(0xffd6d6d6),
+                width: 1.5),
             borderRadius: BorderRadius.circular(25)),
         child: Column(
           children: [
@@ -121,7 +123,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
             ClipRRect(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24)),
+                  bottomRight: Radius.circular(23)),
               child: Container(
                 width: 370,
                 height: 50,

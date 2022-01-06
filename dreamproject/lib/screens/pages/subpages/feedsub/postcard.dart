@@ -11,11 +11,12 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
           //제목칸
           Container(
-            padding: EdgeInsets.only(left: 30, right: 30),
+            padding: EdgeInsets.only(left: 10, right: 10),
             height: 50,
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
@@ -34,7 +35,7 @@ class _PostCardState extends State<PostCard> {
                     //프로필 사진,이름 받아오기
                     Text(
                       '황해성',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 15),
                     ),
                   ],
                 ),
@@ -43,11 +44,16 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
           ),
+          SizedBox(height: 10),
           Container(
               height: 200,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
-              child: Center(child: Image.asset('assets/imgs/noin2.jpg'))),
+              child: Center(
+                  child: Image.asset(
+                'assets/imgs/noin2.jpg',
+                fit: BoxFit.cover,
+              ))),
           Container(
               padding: EdgeInsets.only(top: 10),
               height: 50,
@@ -55,13 +61,12 @@ class _PostCardState extends State<PostCard> {
               color: Colors.white,
               child: Row(children: [
                 Container(
-                    width: 70,
-                    height: 25,
-                    margin: EdgeInsets.only(left: 50),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    width: 60,
+                    height: 20,
+                    margin: EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                         color: Color(0xff3AAFFC),
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(5)),
                     child: Text(
                       '노인',
                       textAlign: TextAlign.center,
@@ -69,29 +74,41 @@ class _PostCardState extends State<PostCard> {
                     )),
               ])),
           Container(
-            padding: EdgeInsets.only(left: 40, bottom: 10),
-            height: 100,
             width: MediaQuery.of(context).size.width,
-            color: Colors.white,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //작성하기 글 가져오기
                 Text('''강림면 노인인구가 41% 로 이중 독거노인이 32%
 를 차지하는 초고령사회에 해당하고, 독거노인 
 중 거동이 불편하거나 관절 등의 문제로
 좌식 식사가 어려운 어르신들에게 입식 식탁을'''),
-                Container(
-                    padding: EdgeInsets.only(top: 57),
-                    child: TextButton(
-                        onPressed: () {
-                          //게시글 전체 보기 글을 늘리기
-                        },
-                        child: Text('더보기..'))),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                        width: 40,
+                        height: 15,
+                        margin: EdgeInsets.only(bottom: 3),
+                        child: TextButton(
+                            onPressed: () {
+                              //게시글 전체 보기 글을 늘리기
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Text(
+                              '더보기..',
+                              style: TextStyle(fontSize: 12),
+                            ))),
+                  ],
+                ),
               ],
             ),
           ),
           Container(
-              padding: EdgeInsets.only(left: 50, bottom: 10),
+              padding: EdgeInsets.only(left: 20, bottom: 10),
               height: 35,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
@@ -101,7 +118,7 @@ class _PostCardState extends State<PostCard> {
               ])),
           Container(
               height: 40,
-              padding: EdgeInsets.only(left: 45),
+              padding: EdgeInsets.only(left: 15),
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
               child: Row(children: [
@@ -159,7 +176,7 @@ class _PostCardState extends State<PostCard> {
                 ),
               ])),
           Container(
-              padding: EdgeInsets.only(left: 40),
+              padding: EdgeInsets.only(left: 10),
               height: 180,
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
