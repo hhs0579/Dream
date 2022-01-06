@@ -1,6 +1,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // z
 import 'package:dreamproject/repo/auth_service.dart';
+import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,8 +115,11 @@ class _JoinPageState extends State<JoinPage> {
   Future<UserCredential?> signUpUserCredential(
       {required String email, required String password}) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      User? user = result.user;
+      await DatabaseService(uid: user!.uid)
+          .updateUserData('$address', '$email', '$password');
     } catch (e) {
       void errorToast(String message) {
         Fluttertoast.showToast(
