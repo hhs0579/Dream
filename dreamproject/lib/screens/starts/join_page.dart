@@ -4,6 +4,7 @@ import 'package:dreamproject/repo/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
@@ -73,6 +74,81 @@ class _JoinPageState extends State<JoinPage> {
 
   final AuthService _authService = AuthService();
 
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
+    setState(() {
+      showLoading = true;
+    });
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
+      setState(() {
+        showLoading = false;
+      });
+      if (authCredential.user != null) {
+        setState(() {
+          print("인증완료 및 로그인성공");
+          authOk = true;
+          requestedAuth = false;
+        });
+        await _auth.currentUser!.delete();
+        print("auth정보삭제");
+        _auth.signOut();
+        print("phone로그인된것 로그아웃");
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        print("인증실패..로그인실패");
+        showLoading = false;
+      });
+
+      await Fluttertoast.showToast(
+          msg: (e.code),
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          fontSize: 16.0);
+    }
+  }
+
+  Future<UserCredential?> signUpUserCredential(
+      {required String email, required String password}) async {
+    try {
+      return await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } catch (e) {
+      void errorToast(String message) {
+        Fluttertoast.showToast(
+            msg: message,
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            fontSize: 16.0);
+      }
+
+      switch (e) {
+        case "email-already-in-use":
+          errorToast("이미 사용중인 이메일입니다");
+
+          break;
+        case "invalid-email":
+          errorToast("잘못된 이메일 형식입니다");
+          break;
+        case "operation-not-allowed":
+          errorToast("사용할 수 없는 방식입니다");
+
+          break;
+        case "weak-password":
+          errorToast("비밀번호 보안 수준이 너무 낮습니다");
+
+          break;
+        default:
+          errorToast("알수없는 오류가 발생했습니다");
+      }
+      return null;
+    }
+  }
+
   void setMaleStateOn() {
     _maleButtonColor = Colors.blue;
     _maleTextColor = Colors.white;
@@ -125,16 +201,18 @@ class _JoinPageState extends State<JoinPage> {
       child: Container(
         margin: EdgeInsets.only(right: 10),
         child: TextFormField(
-          controller: controller,
           textAlign: TextAlign.right,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
+            isDense: true,
             border: InputBorder.none,
             errorStyle: TextStyle(color: Colors.blue),
           ),
-          obscureText: true,
-          onSaved: onSaved,
-          validator: validator,
+          textInputAction: TextInputAction.next,
+          onEditingComplete: () =>
+              FocusScope.of(context).requestFocus(passwordFocusNode),
+          keyboardType: TextInputType.emailAddress,
+          controller: emailController,
         ),
       ),
     );
@@ -157,9 +235,6 @@ class _JoinPageState extends State<JoinPage> {
             border: InputBorder.none,
             errorStyle: TextStyle(color: Colors.blue),
           ),
-          obscureText: true,
-          onSaved: onSaved,
-          validator: validator,
         ),
       ),
     );
@@ -177,16 +252,18 @@ class _JoinPageState extends State<JoinPage> {
       child: Container(
         margin: EdgeInsets.only(right: 10),
         child: TextFormField(
-          controller: controller,
           textAlign: TextAlign.right,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
+            isDense: true,
             border: InputBorder.none,
             errorStyle: TextStyle(color: Colors.blue),
           ),
-          obscureText: true,
-          onSaved: onSaved,
-          validator: validator,
+          textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.visiblePassword,
+          focusNode: verifyPasswordFocusNode,
+          obscureText: passwordHide,
+          controller: verifyPasswordController,
         ),
       ),
     );
@@ -219,643 +296,893 @@ class _JoinPageState extends State<JoinPage> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
-      child: Scaffold(
-        body: GestureDetector(
+        key: _formKey,
+        child: Scaffold(
+            body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: SingleChildScrollView(
             child: Form(
               key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 30),
-                    child: Text(
-                      "회원가입",
-                      style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
-                    ),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: Text(
+                    "회원가입",
+                    style:
+                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 30.0),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.person, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 60,
-                          child: Text("Email",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        IdTextformfield(
-                            onSaved: (val) {
-                              email = val;
-                            },
-                            validator: (val) {},
-                            controller: _idTextEditor),
-                      ],
-                    ),
+                ),
+                SizedBox(height: 30.0),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
                   ),
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.create_rounded, color: Colors.blue),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.person, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("Email",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: TextFormField(
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            errorStyle: TextStyle(color: Colors.blue),
+                          ),
+                          textInputAction: TextInputAction.next,
+                          onEditingComplete: () => FocusScope.of(context)
+                              .requestFocus(passwordFocusNode),
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailController,
                         ),
-                        Container(
-                          width: 60,
-                          child: Text("이름",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Textformfield(
-                            onSaved: (val) {
-                              name = val;
-                            },
-                            validator: (val) {}),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.male, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 60,
-                          child: Text("성별",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        SizedBox(
-                          width: 75,
-                        ),
-                        Row(
-                          children: [
-                            genderButton("남", _maleButtonColor, _maleTextColor,
-                                () {
-                              if (_maleswitchState == false) {
-                                if (_femaleswitchState == true) {
-                                  setState(() {
-                                    setMaleStateOn();
-                                    setFemaleStateOff();
-                                    gender = '남자';
-                                  });
-                                } else {
-                                  setState(() {
-                                    setMaleStateOn();
-                                    gender = '남자';
-                                  });
-                                }
-                              } else {
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.create_rounded, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("이름",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Textformfield(
+                          onSaved: (val) {
+                            name = val;
+                          },
+                          validator: (val) {}),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.male, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("성별",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      SizedBox(
+                        width: 75,
+                      ),
+                      Row(
+                        children: [
+                          genderButton("남", _maleButtonColor, _maleTextColor,
+                              () {
+                            if (_maleswitchState == false) {
+                              if (_femaleswitchState == true) {
                                 setState(() {
-                                  setMaleStateOff();
-                                  gender = '';
-                                });
-                              }
-                              print(gender);
-                            }),
-                            SizedBox(width: 1),
-                            genderButton(
-                                "여", _femaleButtonColor, _femaleTextColor, () {
-                              if (_femaleswitchState == false) {
-                                if (_maleswitchState == true) {
-                                  setState(() {
-                                    setFemaleStateOn();
-                                    setMaleStateOff();
-                                    gender = '여자';
-                                  });
-                                } else {
-                                  setState(() {
-                                    setFemaleStateOn();
-                                    gender = '여자';
-                                  });
-                                }
-                              } else {
-                                setState(() {
+                                  setMaleStateOn();
                                   setFemaleStateOff();
-                                  gender = '';
+                                  gender = '남자';
+                                });
+                              } else {
+                                setState(() {
+                                  setMaleStateOn();
+                                  gender = '남자';
                                 });
                               }
-                              print(gender);
-                            }),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.lock, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 60,
-                          child: Text("비밀번호",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        passwordTextformfield(
-                            onSaved: (val) {
-                              password = val;
-                            },
-                            validator: (val) {
-                              if (val.length < 8 || val.length > 12) {
-                                return "8~12자 비밀번호를 설정해 주세요 ";
-                              }
-                              if (val.isEmpty()) {
-                                return "비밀번호는 필수 입력사항 입니다";
-                              }
-                              return password;
-                            },
-                            controller: _passwordTextEditor),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.lock, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 90,
-                          child: Text("비밀번호 확인",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Textformfield(
-                            onSaved: (val) {},
-                            validator: (val) {
-                              if (val != _passwordTextEditor.text) {
-                                return "비밀번호가 틀립니다. 다시 확인해 주세요.";
-                              }
-                              if (val.isEmpty()) {
-                                return "비밀번호는 필수 입력사항 입니다";
-                              }
-                            }),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 170,
-                    margin: EdgeInsets.only(left: 30, right: 30),
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              child: Icon(Icons.place, color: Colors.blue),
-                            ),
-                            Container(
-                              width: 90,
-                              child: Text("우편번호",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: TextField(
-                                  controller: _postTextEditor,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  readOnly: true,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 80,
-                              height: 35,
-                              child: TextButton(
-                                child: Text(
-                                  "우편번호 검색",
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => KpostalView(
-                                        useLocalServer: true,
-                                        kakaoKey:
-                                            'e7332691953b203d499ffb8ad8a411c6',
-                                        callback: (Kpostal result) {
-                                          setState(() {
-                                            address = '${result.address}';
-                                            postCode = '${result.postCode}';
-                                            _addressTextEditor.text = address!;
-                                            _postTextEditor.text = postCode!;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                                style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Colors.blue,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10))),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 43),
-                              width: 90,
-                              child: Text("주소",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: TextField(
-                                  controller: _addressTextEditor,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  readOnly: true,
-                                  maxLines: null,
-                                  keyboardType: TextInputType.multiline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 43),
-                              width: 90,
-                              child: Text("상세주소",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 10),
-                                child: TextField(
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 13),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                  ),
-                                  maxLines: null,
-                                  keyboardType: TextInputType.multiline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 6),
-                    child: Text(
-                      '010은 제외하고 입력해주세요',
-                      style: TextStyle(color: Color(0xff3AAFFC)),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.call, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 60,
-                          child: Text("핸드폰",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: TextFormField(
-                              controller: phoneNumber,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              keyboardType: TextInputType.phone,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 85,
-                          height: 30,
-                          child: TextButton(
-                            child: Text(
-                              "인증번호 보내기",
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            onPressed: () async {
+                            } else {
                               setState(() {
-                                showLoading = true;
+                                setMaleStateOff();
+                                gender = '';
                               });
-                              await _auth.verifyPhoneNumber(
-                                  timeout: const Duration(seconds: 60),
-                                  codeAutoRetrievalTimeout:
-                                      (String verificationId) {},
-                                  phoneNumber:
-                                      "+8210" + phoneNumber.text.trim(),
-                                  verificationCompleted:
-                                      (phoneAuthCredential) async {
-                                    print('otp문자옴');
-                                  },
-                                  verificationFailed:
-                                      (verificationFailed) async {
-                                    print(verificationFailed.code);
-                                    print("코드 발송 실패");
-                                    setState(() {
-                                      showLoading = false;
-                                    });
-                                  },
-                                  codeSent: (verificationId,
-                                      forceResendingToken) async {
-                                    print('코드 보냄');
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "010${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.lightBlue,
-                                        fontSize: 12.0);
-                                    setState(() {
-                                      requestedAuth = true;
-                                      FocusScope.of(context)
-                                          .requestFocus(otpFocusNode);
-                                      showLoading = false;
-                                      this.verificationId = verificationId;
-                                    });
-                                  });
+                            }
+                            print(gender);
+                          }),
+                          SizedBox(width: 1),
+                          genderButton(
+                              "여", _femaleButtonColor, _femaleTextColor, () {
+                            if (_femaleswitchState == false) {
+                              if (_maleswitchState == true) {
+                                setState(() {
+                                  setFemaleStateOn();
+                                  setMaleStateOff();
+                                  gender = '여자';
+                                });
+                              } else {
+                                setState(() {
+                                  setFemaleStateOn();
+                                  gender = '여자';
+                                });
+                              }
+                            } else {
                               setState(() {
-                                _isAuthsms = true;
-                                _timerStart();
+                                setFemaleStateOff();
+                                gender = '';
                               });
-                            },
-                            style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                          ),
-                        ),
-                      ],
-                    ),
+                            }
+                            print(gender);
+                          }),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 60, top: 10),
-                    child: Visibility(
-                      visible: _isAuthsms == true,
-                      child: Row(
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.lock, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 60,
+                        child: Text("비밀번호",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: TextFormField(
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            errorStyle: TextStyle(color: Colors.blue),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
+                          onEditingComplete: () => FocusScope.of(context)
+                              .requestFocus(verifyPasswordFocusNode),
+                          focusNode: passwordFocusNode,
+                          obscureText: passwordHide,
+                          controller: passwordController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.lock, color: Colors.blue),
+                      ),
+                      Container(
+                        width: 90,
+                        child: Text("비밀번호 확인",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: TextFormField(
+                          textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            errorStyle: TextStyle(color: Colors.blue),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
+                          focusNode: verifyPasswordFocusNode,
+                          obscureText: passwordHide,
+                          controller: verifyPasswordController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 40),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 170,
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
                           Container(
-                            width: 140,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black26, width: 0.5)),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black26, width: 0.5)),
+                            margin: EdgeInsets.only(right: 20),
+                            child: Icon(Icons.place, color: Colors.blue),
+                          ),
+                          Container(
+                            width: 90,
+                            child: Text("우편번호",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: _postTextEditor,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
                               ),
                             ),
                           ),
                           Container(
-                            child: Text(_viewTime(_time),
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                )),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
+                            width: 80,
+                            height: 35,
                             child: TextButton(
                               child: Text(
-                                "확인",
-                                style: TextStyle(fontSize: 10),
+                                "우편번호 검색",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                ),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => KpostalView(
+                                      useLocalServer: true,
+                                      kakaoKey:
+                                          'e7332691953b203d499ffb8ad8a411c6',
+                                      callback: (Kpostal result) {
+                                        setState(() {
+                                          address = '${result.address}';
+                                          postCode = '${result.postCode}';
+                                          _addressTextEditor.text = address!;
+                                          _postTextEditor.text = postCode!;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
                               style: TextButton.styleFrom(
                                   primary: Colors.white,
                                   backgroundColor: Colors.blue,
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8))),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            child: TextButton(
-                              child: Text(
-                                "재전송",
-                                style: TextStyle(fontSize: 10),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _time = 120;
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                  primary: Colors.blue,
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.blue),
-                                      borderRadius: BorderRadius.circular(8))),
+                                      borderRadius: BorderRadius.circular(10))),
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 43),
+                            width: 90,
+                            child: Text("주소",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: _addressTextEditor,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 14),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                readOnly: true,
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 43),
+                            width: 90,
+                            child: Text("상세주소",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 25,
-                    ),
-                    width: 330,
-                    height: 45,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        //유효성 검사
-                        if (_formKey.currentState!.validate()) {
-                          dynamic result = await _authJoin
-                              .signUpWithEmailAndPassword(email, password);
-                          if (result == null) {
-                            Fluttertoast.showToast(
-                                msg: "값을 넣어주세요",
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.lightBlue,
-                                fontSize: 15.0);
-                          }
-                        }
-                      },
-                      child: Text(
-                        "가입하기",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Text(
+                    '010은 제외하고 입력해주세요',
+                    style: TextStyle(color: Color(0xff3AAFFC)),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment(0, 0),
+                  height: 70,
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(width: 1.0, color: Colors.black12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.call, color: Colors.blue),
+                      ),
+                      //       Container(
+                      //         width: 60,
+                      //         child: Text("핸드폰",
+                      //             style: TextStyle(
+                      //               color: Colors.blue,
+                      //               fontWeight: FontWeight.bold,
+                      //             )),
+                      //       ),
+                      //       Expanded(
+                      //         child: Container(
+                      //           margin: EdgeInsets.only(right: 10),
+                      //           child: TextFormField(
+                      //             controller: phoneNumber,
+                      //             textAlign: TextAlign.right,
+                      //             style: TextStyle(color: Colors.black),
+                      //             decoration: InputDecoration(
+                      //               border: InputBorder.none,
+                      //             ),
+                      //             keyboardType: TextInputType.phone,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Container(
+                      //         width: 85,
+                      //         height: 30,
+                      //         child: TextButton(
+                      //           child: Text(
+                      //             "인증번호 보내기",
+                      //             style: TextStyle(fontSize: 10),
+                      //           ),
+                      //           onPressed: () async {
+                      //             setState(() {
+                      //               showLoading = true;
+                      //             });
+                      //             await _auth.verifyPhoneNumber(
+                      //                 timeout: const Duration(seconds: 60),
+                      //                 codeAutoRetrievalTimeout:
+                      //                     (String verificationId) {},
+                      //                 phoneNumber:
+                      //                     "+8210" + phoneNumber.text.trim(),
+                      //                 verificationCompleted:
+                      //                     (phoneAuthCredential) async {
+                      //                   print('otp문자옴');
+                      //                 },
+                      //                 verificationFailed:
+                      //                     (verificationFailed) async {
+                      //                   print(verificationFailed.code);
+                      //                   print("코드 발송 실패");
+                      //                   setState(() {
+                      //                     showLoading = false;
+                      //                   });
+                      //                 },
+                      //                 codeSent: (verificationId,
+                      //                     forceResendingToken) async {
+                      //                   print('코드 보냄');
+                      //                   Fluttertoast.showToast(
+                      //                       msg:
+                      //                           "010${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
+                      //                       toastLength: Toast.LENGTH_SHORT,
+                      //                       timeInSecForIosWeb: 1,
+                      //                       backgroundColor: Colors.lightBlue,
+                      //                       fontSize: 12.0);
+                      //                   setState(() {
+                      //                     requestedAuth = true;
+                      //                     FocusScope.of(context)
+                      //                         .requestFocus(otpFocusNode);
+                      //                     showLoading = false;
+                      //                     this.verificationId = verificationId;
+                      //                   });
+                      //                 });
+                      //             setState(() {
+                      //               _isAuthsms = true;
+                      //               _timerStart();
+                      //             });
+                      //           },
+                      //           style: TextButton.styleFrom(
+                      //               primary: Colors.white,
+                      //               backgroundColor: Colors.blue,
+                      //               shape: RoundedRectangleBorder(
+                      //                   borderRadius: BorderRadius.circular(10))),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin: EdgeInsets.only(left: 60, top: 10),
+                      //   child: Visibility(
+                      //     visible: _isAuthsms == true,
+                      //     child: Row(
+                      //       children: [
+                      //         Container(
+                      //           width: 140,
+                      //           child: TextField(
+                      //             decoration: InputDecoration(
+                      //               contentPadding: EdgeInsets.zero,
+                      //               enabledBorder: UnderlineInputBorder(
+                      //                   borderSide: BorderSide(
+                      //                       color: Colors.black26, width: 0.5)),
+                      //               focusedBorder: UnderlineInputBorder(
+                      //                   borderSide: BorderSide(
+                      //                       color: Colors.black26, width: 0.5)),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         Container(
+                      //           child: Text(_viewTime(_time),
+                      //               style: TextStyle(
+                      //                 color: Colors.blue,
+                      //               )),
+                      //         ),
+                      //         SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         Container(
+                      //           width: 60,
+                      //           height: 30,
+                      //           child: TextButton(
+                      //             child: Text(
+                      //               "확인",
+                      //               style: TextStyle(fontSize: 10),
+                      //             ),
+                      //             onPressed: () {},
+                      //             style: TextButton.styleFrom(
+                      //                 primary: Colors.white,
+                      //                 backgroundColor: Colors.blue,
+                      //                 shape: RoundedRectangleBorder(
+                      //                     borderRadius: BorderRadius.circular(8))),
+                      //           ),
+                      //         ),
+                      //         SizedBox(
+                      //           width: 5,
+                      //         ),
+                      //         Container(
+                      //           width: 60,
+                      //           height: 30,
+                      //           child: TextButton(
+                      //             child: Text(
+                      //               "재전송",
+                      //               style: TextStyle(fontSize: 10),
+                      //             ),
+                      //             onPressed: () {
+                      //               setState(() {
+                      //                 _time = 120;
+                      //               });
+                      //             },
+                      //             style: TextButton.styleFrom(
+                      //                 primary: Colors.blue,
+                      //                 backgroundColor: Colors.white,
+                      //                 shape: RoundedRectangleBorder(
+                      //                     side: BorderSide(color: Colors.blue),
+                      //                     borderRadius: BorderRadius.circular(8))),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      //),
+                      Row(
+                        children: [
+                          Expanded(flex: 1, child: Text("휴대폰")),
+                          Expanded(
+                            flex: 3,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 1,
+                                        child: numberInsert(
+                                          editAble: false,
+                                          hintText: "010",
+                                        )),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: numberInsert(
+                                        editAble: authOk ? false : true,
+                                        hintText: "0000",
+                                        focusNode: phoneNumberFocusNode1,
+                                        controller: phoneNumberController1,
+                                        textInputAction: TextInputAction.next,
+                                        maxLegnth: 4,
+                                        widgetFunction: () {
+                                          FocusScope.of(context).requestFocus(
+                                              phoneNumberFocusNode2);
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: numberInsert(
+                                        editAble: authOk ? false : true,
+                                        hintText: "0000",
+                                        focusNode: phoneNumberFocusNode2,
+                                        controller: phoneNumberController2,
+                                        textInputAction: TextInputAction.done,
+                                        maxLegnth: 4,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                authOk
+                                    ? ElevatedButton(
+                                        onPressed: () {}, child: Text("인증완료"))
+                                    : phoneNumberController1.text.length == 4 &&
+                                            phoneNumberController2
+                                                    .text.length ==
+                                                4
+                                        ? ElevatedButton(
+                                            onPressed: () async {
+                                              setState(() {
+                                                showLoading = true;
+                                              });
+                                              await _auth.verifyPhoneNumber(
+                                                timeout:
+                                                    const Duration(seconds: 60),
+                                                codeAutoRetrievalTimeout:
+                                                    (String verificationId) {
+                                                  // Auto-resolution timed out...
+                                                },
+                                                phoneNumber: "+8210" +
+                                                    phoneNumberController1.text
+                                                        .trim() +
+                                                    phoneNumberController2.text
+                                                        .trim(),
+                                                verificationCompleted:
+                                                    (phoneAuthCredential) async {
+                                                  print("otp 문자옴");
+                                                },
+                                                verificationFailed:
+                                                    (verificationFailed) async {
+                                                  print(
+                                                      verificationFailed.code);
+
+                                                  print("코드발송실패");
+                                                  setState(() {
+                                                    showLoading = false;
+                                                  });
+                                                },
+                                                codeSent: (verificationId,
+                                                    resendingToken) async {
+                                                  print("코드보냄");
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "010-${phoneNumberController1.text}-${phoneNumberController2.text} 로 인증코드를 발송하였습니다. 문자가 올때까지 잠시만 기다려 주세요.",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      fontSize: 12.0);
+                                                  setState(() {
+                                                    requestedAuth = true;
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            otpFocusNode);
+                                                    showLoading = false;
+                                                    this.verificationId =
+                                                        verificationId;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                            child: Text("인증요청"))
+                                        : ElevatedButton(
+                                            onPressed: () {},
+                                            child: Text("인증요청")),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      authOk
+                          ? SizedBox()
+                          : Visibility(
+                              visible: requestedAuth,
+                              child: Row(
+                                children: [
+                                  Expanded(flex: 1, child: Text("")),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: numberInsert(
+                                            editAble: true,
+                                            hintText: "6자리 입력",
+                                            focusNode: otpFocusNode,
+                                            controller: otpController,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            maxLegnth: 6,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              PhoneAuthCredential
+                                                  phoneAuthCredential =
+                                                  PhoneAuthProvider.credential(
+                                                      verificationId:
+                                                          verificationId,
+                                                      smsCode:
+                                                          otpController.text);
+
+                                              signInWithPhoneAuthCredential(
+                                                  phoneAuthCredential);
+                                            },
+                                            child: Text("확인")),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: 25,
+                        ),
+                        width: 330,
+                        height: 45,
+                        child: ElevatedButton(
+                          onPressed: () async {
+//유효성 검사
+                            if (_formKey.currentState!.validate()) {
+                              dynamic result = await _authJoin
+                                  .signUpWithEmailAndPassword(email, password);
+                              if (result == null) {
+                                Fluttertoast.showToast(
+                                    msg: "값을 넣어주세요",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              }
+                            }
+                          },
+                          child: Text(
+                            "가입하기",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                      top: 15,
-                      bottom: 30,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        "뒤로가기",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.blue,
+                      Container(
+                        margin: EdgeInsets.only(
+                          top: 15,
+                          bottom: 30,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "뒤로가기",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            minimumSize: Size(330, 45),
+                            side: BorderSide(color: Colors.blue),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        minimumSize: Size(330, 45),
-                        side: BorderSide(color: Colors.blue),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)),
-                      ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ]),
             ),
           ),
+        )));
+  }
+
+  Widget numberInsert({
+    bool? editAble,
+    String? hintText,
+    FocusNode? focusNode,
+    TextEditingController? controller,
+    TextInputAction? textInputAction,
+    Function? widgetFunction,
+    int? maxLegnth,
+  }) {
+    return TextFormField(
+      enabled: editAble,
+      style: TextStyle(
+        fontSize: 12,
+      ),
+      decoration: InputDecoration(
+        contentPadding:
+            new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        isDense: true,
+        counterText: "",
+        hintText: hintText,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
+      textInputAction: textInputAction,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      focusNode: focusNode,
+      controller: controller,
+      maxLength: maxLegnth,
+      onChanged: (value) {
+        if (value.length >= maxLegnth!) {
+          if (widgetFunction == null) {
+            print("noFunction");
+          } else {
+            widgetFunction();
+          }
+        }
+        setState(() {});
+      },
+      onEditingComplete: () {
+        if (widgetFunction == null) {
+          print("noFunction");
+        } else {
+          widgetFunction();
+        }
+      },
     );
   }
 }
