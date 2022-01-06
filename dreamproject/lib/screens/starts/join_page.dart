@@ -339,21 +339,23 @@ class _JoinPageState extends State<JoinPage> {
                               fontWeight: FontWeight.bold,
                             )),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextFormField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            errorStyle: TextStyle(color: Colors.blue),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: TextFormField(
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              errorStyle: TextStyle(color: Colors.blue),
+                            ),
+                            textInputAction: TextInputAction.next,
+                            onEditingComplete: () => FocusScope.of(context)
+                                .requestFocus(passwordFocusNode),
+                            keyboardType: TextInputType.emailAddress,
+                            controller: emailController,
                           ),
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(passwordFocusNode),
-                          keyboardType: TextInputType.emailAddress,
-                          controller: emailController,
                         ),
                       ),
                     ],
@@ -499,25 +501,27 @@ class _JoinPageState extends State<JoinPage> {
                               fontWeight: FontWeight.bold,
                             )),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextFormField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            errorStyle: TextStyle(color: Colors.blue),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: TextFormField(
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              errorStyle: TextStyle(color: Colors.blue),
+                            ),
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.visiblePassword,
+                            onEditingComplete: () => FocusScope.of(context)
+                                .requestFocus(verifyPasswordFocusNode),
+                            focusNode: passwordFocusNode,
+                            obscureText: passwordHide,
+                            controller: passwordController,
                           ),
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.visiblePassword,
-                          onEditingComplete: () => FocusScope.of(context)
-                              .requestFocus(verifyPasswordFocusNode),
-                          focusNode: passwordFocusNode,
-                          obscureText: passwordHide,
-                          controller: passwordController,
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -546,23 +550,25 @@ class _JoinPageState extends State<JoinPage> {
                               fontWeight: FontWeight.bold,
                             )),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: TextFormField(
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            errorStyle: TextStyle(color: Colors.blue),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10),
+                          child: TextFormField(
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              isDense: true,
+                              border: InputBorder.none,
+                              errorStyle: TextStyle(color: Colors.blue),
+                            ),
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.visiblePassword,
+                            focusNode: verifyPasswordFocusNode,
+                            obscureText: passwordHide,
+                            controller: verifyPasswordController,
                           ),
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.visiblePassword,
-                          focusNode: verifyPasswordFocusNode,
-                          obscureText: passwordHide,
-                          controller: verifyPasswordController,
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -1069,7 +1075,7 @@ class _JoinPageState extends State<JoinPage> {
                         height: 45,
                         child: ElevatedButton(
                           onPressed: () async {
-//유효성 검사
+                            //유효성 검사
                             if (_formKey.currentState!.validate()) {
                               dynamic result = await _authJoin
                                   .signUpWithEmailAndPassword(email, password);
