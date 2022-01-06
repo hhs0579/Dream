@@ -61,44 +61,6 @@ class _JoinPageState extends State<JoinPage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthService _authJoin = AuthService();
 
-  Future<UserCredential?> signUpUserCredential(
-      {required String email, required String password}) async {
-    try {
-      return await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    } catch (e) {
-      void errorToast(String message) {
-        Fluttertoast.showToast(
-            msg: message,
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            fontSize: 16.0);
-      }
-
-      switch (e) {
-        case "email-already-in-use":
-          errorToast("이미 사용중인 이메일입니다");
-
-          break;
-        case "invalid-email":
-          errorToast("잘못된 이메일 형식입니다");
-          break;
-        case "operation-not-allowed":
-          errorToast("사용할 수 없는 방식입니다");
-
-          break;
-        case "weak-password":
-          errorToast("비밀번호 보안 수준이 너무 낮습니다");
-
-          break;
-        default:
-          errorToast("알수없는 오류가 발생했습니다");
-      }
-      return null;
-    }
-  }
-
   final _idTextEditor = TextEditingController();
   final _passwordTextEditor = TextEditingController();
   final _postTextEditor = TextEditingController();
@@ -170,6 +132,7 @@ class _JoinPageState extends State<JoinPage> {
             border: InputBorder.none,
             errorStyle: TextStyle(color: Colors.blue),
           ),
+          obscureText: true,
           onSaved: onSaved,
           validator: validator,
         ),
@@ -303,29 +266,10 @@ class _JoinPageState extends State<JoinPage> {
                         ),
                         IdTextformfield(
                             onSaved: (val) {
-                              setState(() {
-                                email = val;
-                              });
+                              email = val;
                             },
                             validator: (val) {},
                             controller: _idTextEditor),
-                        Container(
-                          width: 60,
-                          height: 35,
-                          child: TextButton(
-                            child: Text("확인"),
-                            onPressed: () {
-                              setState(() {
-                                _idTextEditor.text = "완료";
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                                primary: Colors.white,
-                                backgroundColor: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -471,9 +415,7 @@ class _JoinPageState extends State<JoinPage> {
                         ),
                         passwordTextformfield(
                             onSaved: (val) {
-                              setState(() {
-                                password = val;
-                              });
+                              password = val;
                             },
                             validator: (val) {
                               if (val.length < 8 || val.length > 12) {
@@ -482,7 +424,7 @@ class _JoinPageState extends State<JoinPage> {
                               if (val.isEmpty()) {
                                 return "비밀번호는 필수 입력사항 입니다";
                               }
-                              return null;
+                              return password;
                             },
                             controller: _passwordTextEditor),
                       ],
@@ -858,7 +800,7 @@ class _JoinPageState extends State<JoinPage> {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () async {
-//유효성 검사
+                        //유효성 검사
                         if (_formKey.currentState!.validate()) {
                           dynamic result = await _authJoin
                               .signUpWithEmailAndPassword(email, password);
@@ -868,7 +810,7 @@ class _JoinPageState extends State<JoinPage> {
                                 toastLength: Toast.LENGTH_SHORT,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.lightBlue,
-                                fontSize: 12.0);
+                                fontSize: 15.0);
                           }
                         }
                       },

@@ -1,3 +1,4 @@
+import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/repo/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -41,6 +42,11 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
+      // add this code
+      await DatabaseService(uid: user!.uid)
+          .updateUserData('$email', '$password');
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print('sign up failed');
