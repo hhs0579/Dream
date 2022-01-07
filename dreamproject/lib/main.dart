@@ -57,20 +57,16 @@ class DreamApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{};
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<UserModel?>.value(
-      value: AuthService().user,
-      initialData: null,
-      child: GetMaterialApp(
-        title: '드림기부앱',
-        initialBinding: BindingsBuilder(() {
-          Get.put(HomePageController());
-        }),
-        theme: ThemeData(
-          primarySwatch: Colors.lightBlue,
-        ),
-        home: Wrapper(),
-        routes: routes,
+    return GetMaterialApp(
+      title: '드림기부앱',
+      initialBinding: BindingsBuilder(() {
+        Get.put(HomePageController());
+      }),
+      theme: ThemeData(
+        primarySwatch: Colors.lightBlue,
       ),
+      home: Wrapper(),
+      routes: routes,
     );
   }
 }

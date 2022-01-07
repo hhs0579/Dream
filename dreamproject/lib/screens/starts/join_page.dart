@@ -119,8 +119,8 @@ class _JoinPageState extends State<JoinPage> {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      await DatabaseService(uid: user!.uid)
-          .updateUserData('$address', '$email', '$password', '$phoneNumber');
+      await DatabaseService(uid: user!.uid).updateUserData(
+          '$address', '$email', '$password', '$phoneNumber', '$name');
     } catch (e) {
       void errorToast(String message) {
         Fluttertoast.showToast(

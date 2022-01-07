@@ -1,3 +1,4 @@
+import 'package:dreamproject/data/address_model.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/starts/join2.dart';
@@ -12,9 +13,10 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+var user = FirebaseAuth.instance.currentUser;
 final AuthService _auth = AuthService();
-final _emailController = TextEditingController();
-final _passwordController = TextEditingController();
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
   @override
@@ -62,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
           try {
             UserCredential userCredential = await FirebaseAuth.instance
                 .signInWithEmailAndPassword(
-                    email: _emailController.text,
-                    password: _passwordController.text);
+                    email: emailController.text,
+                    password: passwordController.text);
           } on FirebaseAuthException catch (e) {
             if (e.code == 'user-not-found') {
               print('No user found for that email.');

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/repo/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -46,6 +47,15 @@ class AuthService {
       print('sign up failed');
       print(e.toString());
       return null;
+    }
+  }
+
+  Future signIn({required String email, required String password}) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
     }
   }
 }
