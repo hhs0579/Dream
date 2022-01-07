@@ -1,6 +1,5 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // z
-import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,6 +37,7 @@ class _JoinPageState extends State<JoinPage> {
   String? name;
   String email = '';
   String password = '';
+
   String? gender;
   String? address;
   String? postCode;
@@ -628,7 +628,7 @@ class _JoinPageState extends State<JoinPage> {
                                 child: Text(
                                   "우편번호 검색",
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 10,
                                   ),
                                 ),
                                 onPressed: () async {
@@ -723,13 +723,6 @@ class _JoinPageState extends State<JoinPage> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 6),
-                    child: Text(
-                      '010은 제외하고 입력해주세요',
-                      style: TextStyle(color: Color(0xff3AAFFC)),
-                    ),
-                  ),
-                  Container(
                     alignment: Alignment(0, 0),
                     height: 70,
                     margin: EdgeInsets.only(left: 30, right: 30, top: 15),
@@ -759,7 +752,8 @@ class _JoinPageState extends State<JoinPage> {
                             child: TextFormField(
                               controller: phoneNumber,
                               textAlign: TextAlign.right,
-                              style: TextStyle(color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.black),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                               ),
@@ -768,7 +762,7 @@ class _JoinPageState extends State<JoinPage> {
                           ),
                         ),
                         Container(
-                          width: 85,
+                          width: 90,
                           height: 30,
                           child: TextButton(
                             child: Text(
@@ -793,6 +787,7 @@ class _JoinPageState extends State<JoinPage> {
                                       (verificationFailed) async {
                                     print(verificationFailed.code);
                                     print("코드 발송 실패");
+
                                     setState(() {
                                       showLoading = false;
                                     });
@@ -899,7 +894,7 @@ class _JoinPageState extends State<JoinPage> {
                                   password: passwordController.text);
 
                               setState(() {
-                                Get.to(HomePage());
+                                Get.to(LoginPage());
                                 showLoading = false;
                               });
                             } else {
