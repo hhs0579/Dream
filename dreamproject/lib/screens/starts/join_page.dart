@@ -1,5 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // z
+import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -119,7 +120,7 @@ class _JoinPageState extends State<JoinPage> {
           email: email, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid)
-          .updateUserData('$address', '$email', '$password');
+          .updateUserData('$address', '$email', '$password', '$phoneNumber');
     } catch (e) {
       void errorToast(String message) {
         Fluttertoast.showToast(
@@ -783,7 +784,7 @@ class _JoinPageState extends State<JoinPage> {
                                   codeAutoRetrievalTimeout:
                                       (String verificationId) {},
                                   phoneNumber:
-                                      "+8210" + phoneNumber.text.trim(),
+                                      "+8210" + phoneNumber.text.substring(3),
                                   verificationCompleted:
                                       (phoneAuthCredential) async {
                                     print('otp문자옴');

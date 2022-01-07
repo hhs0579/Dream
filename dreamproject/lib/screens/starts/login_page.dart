@@ -2,6 +2,7 @@ import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/starts/join2.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'join_page.dart';
@@ -12,6 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 final AuthService _auth = AuthService();
+final _emailController = TextEditingController();
+final _passwordController = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
   @override
@@ -56,13 +59,17 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () async {
-          dynamic result = await _auth.signInAnon();
-          if (result == null) {
-            print('@@ error signing in');
-          } else {
-            print('@@ signed in');
-            print(result); // return Instance of UserModel
-            print(result.uid); // return uid value in UserModel class
+          try {
+            UserCredential userCredential = await FirebaseAuth.instance
+                .signInWithEmailAndPassword(
+                    email: _emailController.text,
+                    password: _passwordController.text);
+          } on FirebaseAuthException catch (e) {
+            if (e.code == 'user-not-found') {
+              print('No user found for that email.');
+            } else if (e.code == 'wrong-password') {
+              print('Wrong password provided for that user.');
+            }
           }
         },
         child: Text('로그인', style: TextStyle(color: Colors.white)),
