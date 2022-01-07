@@ -899,7 +899,7 @@ class _JoinPageState extends State<JoinPage> {
                                   password: passwordController.text);
 
                               setState(() {
-                                Get.to(LoginPage());
+                                Get.to(HomePage());
                                 showLoading = false;
                               });
                             } else {
