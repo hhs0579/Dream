@@ -21,7 +21,6 @@ class JoinPage extends StatefulWidget {
 class _JoinPageState extends State<JoinPage> {
   final _formKey = GlobalKey<FormState>();
 
-  VerificationStatus _verificationStatus = VerificationStatus.none;
   Color _maleButtonColor = Colors.white;
   Color _femaleButtonColor = Colors.white;
   Color _maleTextColor = Colors.blue;
@@ -37,7 +36,6 @@ class _JoinPageState extends State<JoinPage> {
   String? name;
   String email = '';
   String password = '';
-
   String? gender;
   String? address;
   String? postCode;
@@ -84,9 +82,7 @@ class _JoinPageState extends State<JoinPage> {
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
-      setState(() {
-        showLoading = false;
-      });
+
       if (authCredential.user != null) {
         setState(() {
           print("인증완료 및 로그인성공");
@@ -101,7 +97,6 @@ class _JoinPageState extends State<JoinPage> {
     } on FirebaseAuthException catch (e) {
       setState(() {
         print("인증실패..로그인실패");
-        showLoading = false;
       });
 
       await Fluttertoast.showToast(
@@ -368,7 +363,7 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
@@ -401,7 +396,7 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
@@ -483,7 +478,7 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
@@ -532,7 +527,7 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
@@ -579,12 +574,12 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 30),
                   Container(
                     alignment: Alignment(0, 0),
-                    height: 170,
+                    height: 190,
                     margin: EdgeInsets.only(left: 30, right: 30),
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                    padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -722,10 +717,11 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 30),
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                    margin: EdgeInsets.only(left: 30, right: 30),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -767,56 +763,52 @@ class _JoinPageState extends State<JoinPage> {
                           child: TextButton(
                             child: Text(
                               "인증번호 보내기",
-                              style: TextStyle(fontSize: 10),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 10),
                             ),
-                            onPressed: () async {
-                              setState(() {
-                                showLoading = true;
-                              });
-                              await _auth.verifyPhoneNumber(
-                                  timeout: const Duration(seconds: 60),
-                                  codeAutoRetrievalTimeout:
-                                      (String verificationId) {},
-                                  phoneNumber:
-                                      "+8210" + phoneNumber.text.substring(3),
-                                  verificationCompleted:
-                                      (phoneAuthCredential) async {
-                                    print('otp문자옴');
-                                  },
-                                  verificationFailed:
-                                      (verificationFailed) async {
-                                    print(verificationFailed.code);
-                                    print("코드 발송 실패");
+                            onPressed: _isAuthsms
+                                ? null
+                                : () async {
+                                    await _auth.verifyPhoneNumber(
+                                        timeout: const Duration(seconds: 120),
+                                        codeAutoRetrievalTimeout:
+                                            (String verificationId) {},
+                                        phoneNumber: "+8210" +
+                                            phoneNumber.text.substring(3),
+                                        verificationCompleted:
+                                            (phoneAuthCredential) async {
+                                          print('otp문자옴');
+                                        },
+                                        verificationFailed:
+                                            (verificationFailed) async {
+                                          print(verificationFailed.code);
 
-                                    setState(() {
-                                      showLoading = false;
-                                    });
+                                          print("코드 발송 실패");
+                                          print(phoneNumber.text.substring(3));
+                                        },
+                                        codeSent: (verificationId,
+                                            forceResendingToken) async {
+                                          print('코드 보냄');
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.lightBlue,
+                                              fontSize: 12.0);
+                                          setState(() {
+                                            _isAuthsms = true;
+                                            _timerStart();
+
+                                            FocusScope.of(context)
+                                                .requestFocus(otpFocusNode);
+
+                                            this.verificationId =
+                                                verificationId;
+                                          });
+                                        });
                                   },
-                                  codeSent: (verificationId,
-                                      forceResendingToken) async {
-                                    print('코드 보냄');
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "010${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.lightBlue,
-                                        fontSize: 12.0);
-                                    setState(() {
-                                      requestedAuth = true;
-                                      FocusScope.of(context)
-                                          .requestFocus(otpFocusNode);
-                                      showLoading = false;
-                                      this.verificationId = verificationId;
-                                    });
-                                  });
-                              setState(() {
-                                _isAuthsms = true;
-                                _timerStart();
-                              });
-                            },
                             style: TextButton.styleFrom(
-                                primary: Colors.white,
                                 backgroundColor: Colors.blue,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
@@ -825,52 +817,121 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  authOk
-                      ? SizedBox()
-                      : Visibility(
-                          visible: requestedAuth,
-                          child: Row(
-                            children: [
-                              Expanded(flex: 1, child: Text("")),
-                              Expanded(
-                                flex: 3,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: numberInsert(
-                                        editAble: true,
-                                        hintText: "6자리 입력",
-                                        focusNode: otpFocusNode,
-                                        controller: otpController,
-                                        textInputAction: TextInputAction.done,
-                                        maxLegnth: 6,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          PhoneAuthCredential
-                                              phoneAuthCredential =
-                                              PhoneAuthProvider.credential(
-                                                  verificationId:
-                                                      verificationId,
-                                                  smsCode: otpController.text);
-
-                                          signInWithPhoneAuthCredential(
-                                              phoneAuthCredential);
-                                        },
-                                        child: Text("확인")),
-                                  ],
-                                ),
+                  Container(
+                    margin: EdgeInsets.only(left: 60, top: 10),
+                    child: Visibility(
+                      visible: _isAuthsms,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 140,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black26, width: 0.5)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black26, width: 0.5)),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Container(
+                            child: Text(_viewTime(_time),
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                )),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 60,
+                            height: 30,
+                            child: TextButton(
+                              child: Text(
+                                "확인",
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              onPressed: () {
+                                PhoneAuthCredential phoneAuthCredential =
+                                    PhoneAuthProvider.credential(
+                                        verificationId: verificationId,
+                                        smsCode: otpController.text);
+
+                                signInWithPhoneAuthCredential(
+                                    phoneAuthCredential);
+                              },
+                              style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.blue,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8))),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            width: 60,
+                            height: 30,
+                            child: TextButton(
+                              child: Text(
+                                "재전송",
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _time = 120;
+                                });
+                                () async {
+                                  await _auth.verifyPhoneNumber(
+                                      timeout: const Duration(seconds: 120),
+                                      codeAutoRetrievalTimeout:
+                                          (String verificationId) {},
+                                      phoneNumber: "+8210" +
+                                          phoneNumber.text.substring(3),
+                                      verificationCompleted:
+                                          (phoneAuthCredential) async {
+                                        print('otp문자옴');
+                                      },
+                                      verificationFailed:
+                                          (verificationFailed) async {
+                                        print(verificationFailed.code);
+                                        print("코드 발송 실패");
+                                      },
+                                      codeSent: (verificationId,
+                                          forceResendingToken) async {
+                                        print('코드 보냄');
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                "${phoneNumber.text}로 인증코드를 재전송하였습니다 잠시만 기다려주세요",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.lightBlue,
+                                            fontSize: 12.0);
+                                        setState(() {
+                                          FocusScope.of(context)
+                                              .requestFocus(otpFocusNode);
+
+                                          this.verificationId = verificationId;
+                                        });
+                                      });
+                                };
+                              },
+                              style: TextButton.styleFrom(
+                                  primary: Colors.blue,
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(color: Colors.blue),
+                                      borderRadius: BorderRadius.circular(8))),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Container(
                     margin: EdgeInsets.only(
                       top: 25,
@@ -885,17 +946,12 @@ class _JoinPageState extends State<JoinPage> {
                           if (passwordController.text ==
                               verifyPasswordController.text) {
                             if (authOk) {
-                              setState(() {
-                                showLoading = true;
-                              });
-
                               await signUpUserCredential(
                                   email: emailController.text,
                                   password: passwordController.text);
 
                               setState(() {
                                 Get.to(LoginPage());
-                                showLoading = false;
                               });
                             } else {
                               Fluttertoast.showToast(
@@ -968,64 +1024,4 @@ class _JoinPageState extends State<JoinPage> {
       ),
     );
   }
-
-  Widget numberInsert({
-    bool? editAble,
-    String? hintText,
-    FocusNode? focusNode,
-    TextEditingController? controller,
-    TextInputAction? textInputAction,
-    Function? widgetFunction,
-    int? maxLegnth,
-  }) {
-    return TextFormField(
-      enabled: editAble,
-      style: TextStyle(
-        fontSize: 12,
-      ),
-      decoration: InputDecoration(
-        contentPadding:
-            new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        isDense: true,
-        counterText: "",
-        hintText: hintText,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-      ),
-      textInputAction: textInputAction,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      focusNode: focusNode,
-      controller: controller,
-      maxLength: maxLegnth,
-      onChanged: (value) {
-        if (value.length >= maxLegnth!) {
-          if (widgetFunction == null) {
-            print("noFunction");
-          } else {
-            widgetFunction();
-          }
-        }
-        setState(() {});
-      },
-      onEditingComplete: () {
-        if (widgetFunction == null) {
-          print("noFunction");
-        } else {
-          widgetFunction();
-        }
-      },
-    );
-  }
 }
-
-enum VerificationStatus { none, codeSent, verifying, verificationDone }
