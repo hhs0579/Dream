@@ -775,7 +775,9 @@ class _JoinPageState extends State<JoinPage> {
                                         codeAutoRetrievalTimeout:
                                             (String verificationId) {},
                                         phoneNumber: "+8210" +
-                                            phoneNumber.text.substring(3),
+                                            phoneNumber.text
+                                                .substring(3)
+                                                .trim(),
                                         verificationCompleted:
                                             (phoneAuthCredential) async {
                                           print('otp문자옴');
@@ -785,7 +787,7 @@ class _JoinPageState extends State<JoinPage> {
                                           print(verificationFailed.code);
 
                                           print("코드 발송 실패");
-                                          print(phoneNumber.text.substring(3));
+                                          print(phoneNumber);
                                         },
                                         codeSent: (verificationId,
                                             forceResendingToken) async {
