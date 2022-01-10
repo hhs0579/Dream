@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/address_model.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
+import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/screens/starts/join2.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'join_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,6 +20,9 @@ var user = FirebaseAuth.instance.currentUser;
 final AuthService _auth = AuthService();
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+
+String email = "";
+String password = "";
 
 class _LoginPageState extends State<LoginPage> {
   @override
@@ -33,6 +39,9 @@ class _LoginPageState extends State<LoginPage> {
     final id = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
+      onChanged: (value) {
+        email = value;
+      },
       decoration: InputDecoration(
         hintText: '아이디',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -40,9 +49,12 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final password = TextFormField(
+    final pw = TextFormField(
       autofocus: false,
       obscureText: true,
+      onChanged: (value) {
+        password = value;
+      },
       decoration: InputDecoration(
         hintText: '비밀번호',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -63,9 +75,8 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () async {
           try {
             UserCredential userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                    email: emailController.text,
-                    password: passwordController.text);
+                .signInWithEmailAndPassword(email: email, password: password);
+            Get.to(HomePage());
           } on FirebaseAuthException catch (e) {
             if (e.code == 'user-not-found') {
               print('No user found for that email.');
@@ -111,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 50.0),
             id,
             SizedBox(height: 10.0),
-            password,
+            pw,
             SizedBox(height: 25.0),
             loginButton,
             joinButton,

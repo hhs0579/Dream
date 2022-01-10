@@ -56,6 +56,7 @@ dependencies:
   fluttertoast: ^8.0.8
   rxdart: ^0.27.3
   firebase_storage: ^10.2.4
+  flutterfire_ui: ^0.1.0-dev.2
 
 #encourage_image 패키지 설치
 
