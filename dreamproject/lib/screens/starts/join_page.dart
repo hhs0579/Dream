@@ -162,14 +162,14 @@ class _JoinPageState extends State<JoinPage> {
   }
 
   void setFemaleStateOn() {
-    _femaleButtonColor = Colors.blue;
+    _femaleButtonColor = Color(0xff3AAFFC);
     _femaleTextColor = Colors.white;
     _femaleswitchState = true;
   }
 
   void setFemaleStateOff() {
     _femaleButtonColor = Colors.white;
-    _femaleTextColor = Colors.blue;
+    _femaleTextColor = Color(0xff3AAFFC);
     _femaleswitchState = false;
   }
 
@@ -178,7 +178,7 @@ class _JoinPageState extends State<JoinPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(side: BorderSide(color: Colors.blue)),
+        shape: CircleBorder(side: BorderSide(color: Color(0xff3AAFFC))),
         primary: primaryColor,
         minimumSize: Size(60, 50),
       ),
@@ -331,13 +331,13 @@ class _JoinPageState extends State<JoinPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.person, color: Colors.blue),
+                          child: Icon(Icons.person, color: Color(0xff3AAFFC)),
                         ),
                         Container(
                           width: 60,
                           child: Text("Email",
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xff3AAFFC),
                                 fontWeight: FontWeight.bold,
                               )),
                         ),
@@ -378,7 +378,8 @@ class _JoinPageState extends State<JoinPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.create_rounded, color: Colors.blue),
+                          child: Icon(Icons.create_rounded,
+                              color: Color(0xff3AAFFC)),
                         ),
                         Container(
                           width: 60,
@@ -774,7 +775,9 @@ class _JoinPageState extends State<JoinPage> {
                                         codeAutoRetrievalTimeout:
                                             (String verificationId) {},
                                         phoneNumber: "+8210" +
-                                            phoneNumber.text.substring(3),
+                                            phoneNumber.text
+                                                .substring(3)
+                                                .trim(),
                                         verificationCompleted:
                                             (phoneAuthCredential) async {
                                           print('otp문자옴');
@@ -784,7 +787,7 @@ class _JoinPageState extends State<JoinPage> {
                                           print(verificationFailed.code);
 
                                           print("코드 발송 실패");
-                                          print(phoneNumber.text.substring(3));
+                                          print(phoneNumber);
                                         },
                                         codeSent: (verificationId,
                                             forceResendingToken) async {
