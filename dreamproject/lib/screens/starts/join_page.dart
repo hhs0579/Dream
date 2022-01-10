@@ -826,6 +826,7 @@ class _JoinPageState extends State<JoinPage> {
                           Container(
                             width: 140,
                             child: TextField(
+                              controller: otpController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 enabledBorder: UnderlineInputBorder(
