@@ -57,7 +57,6 @@ class _JoinPageState extends State<JoinPage> {
   bool passwordHide = true;
   bool requestedAuth = false;
   late String verificationId;
-  bool showLoading = true;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthService _authJoin = AuthService();
@@ -76,9 +75,6 @@ class _JoinPageState extends State<JoinPage> {
 
   void signInWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
-    setState(() {
-      showLoading = true;
-    });
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
@@ -87,7 +83,7 @@ class _JoinPageState extends State<JoinPage> {
         setState(() {
           print("인증완료 및 로그인성공");
           authOk = true;
-          requestedAuth = false;
+          _isAuthsms = false;
         });
         await _auth.currentUser!.delete();
         print("auth정보삭제");
@@ -829,6 +825,7 @@ class _JoinPageState extends State<JoinPage> {
                           Container(
                             width: 140,
                             child: TextField(
+                              controller: otpController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 enabledBorder: UnderlineInputBorder(
