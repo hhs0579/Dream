@@ -91,16 +91,19 @@ class _LegalState extends State<Legal> {
                   ],
                 ),
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(336, 50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25))),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Write()));
-                  },
-                  child: Text('확인')),
+              Visibility(
+                visible: check == true,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(336, 50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25))),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Write()));
+                    },
+                    child: Text('확인')),
+              )
             ],
           ),
         ),

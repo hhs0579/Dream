@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
+import 'package:dreamproject/screens/starts/login_page.dart';
+import 'package:extended_image/extended_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,11 +23,12 @@ class _WriteState extends State<Write> {
   var pet = false;
   var poverty = false;
 
-  final ImagePicker _picker = ImagePicker();
-  XFile? _image;
+  TextEditingController postTextEditController = TextEditingController();
+  final picker = ImagePicker();
+  File? _image;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<XFile> questionImages = [];
+  List<File> questionImages = [];
 
   @override
   void initState() {
@@ -31,19 +37,51 @@ class _WriteState extends State<Write> {
   }
 
   Future _getImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
+    // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
-      if (image != null) {
-        _image = image;
-      }
+      _image = File(pickedFile!.path);
     });
-    return _image;
+  }
+
+  Future _uploadFile(BuildContext context) async {
+    try {
+      // 스토리지에 업로드할 파일 경로
+      final firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('post images') //'post'라는 folder를 만들고
+          .child('${DateTime.now().millisecondsSinceEpoch}.png');
+
+      // 파일 업로드
+      final uploadTask = firebaseStorageRef.putFile(
+          _image!, SettableMetadata(contentType: 'image/png'));
+
+      // 완료까지 기다림
+      await uploadTask.whenComplete(() => null);
+
+      // 업로드 완료 후 url
+      final downloadUrl = await firebaseStorageRef.getDownloadURL();
+
+      // 문서 작성
+      await FirebaseFirestore.instance.collection('post').add({
+        'contents': postTextEditController.text,
+        'email': user!.email,
+        'photoUrl': downloadUrl,
+        'userPhotoUrl': user!.photoURL
+      });
+    } catch (e) {
+      print(e);
+    }
+
+    // 완료 후 앞 화면으로 이동
+    Get.to(HomePage());
   }
 
   Widget _ImageBox() {
     return GestureDetector(
       onTap: () async {
-        XFile? result = await _getImage();
+        File? result = await _getImage();
         if (result != null) {
           questionImages.add(result);
         }
@@ -274,7 +312,11 @@ class _WriteState extends State<Write> {
                     SizedBox(height: 30),
                     Container(
                         margin: EdgeInsets.only(right: 20),
-                        child: TextButton(onPressed: () {}, child: Text('게시'))),
+                        child: TextButton(
+                            onPressed: () {
+                              _uploadFile;
+                            },
+                            child: Text('게시'))),
                   ],
                 )),
           ),
