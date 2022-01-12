@@ -7,15 +7,23 @@ class DatabaseService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  Future updateUserData(String _address, String _email, String _password,
-      String _phoneNumber, String _name) async {
+  Future updateUserData(
+      String _email,
+      String _name,
+      String _password,
+      String _gender,
+      String _phoneNumber,
+      String _address,
+      String _postcode) async {
     return await userCollection.doc(uid).set({
       'uid': uid,
       'email': _email,
+      'name': _name,
+      'gender': _gender,
       'password': _password,
       'address': _address,
+      'postcode': _postcode,
       'phoneNumber': _phoneNumber,
-      'name': _name
     });
   }
 

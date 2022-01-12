@@ -3,9 +3,7 @@
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
@@ -19,26 +17,18 @@ class JoinPage extends StatefulWidget {
 }
 
 class _JoinPageState extends State<JoinPage> {
-  final _formKey = GlobalKey<FormState>();
-
-  Color _maleButtonColor = Colors.white;
-  Color _femaleButtonColor = Colors.white;
-  Color _maleTextColor = Colors.blue;
-  Color _femaleTextColor = Colors.blue;
-  bool _maleswitchState = false;
-  bool _femaleswitchState = false;
   bool _isAuthsms = false;
 
   Timer? _timer;
   var _time = 0;
 
-  String? id;
-  String? name;
+  String id = '';
+  String name = '';
   String email = '';
   String password = '';
-  String? gender;
-  String? address;
-  String? postCode;
+  String gender = '';
+  String address = '';
+  String postcode = '';
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController verifyPasswordController = TextEditingController();
@@ -55,7 +45,7 @@ class _JoinPageState extends State<JoinPage> {
   bool authOk = false;
 
   bool passwordHide = true;
-  bool requestedAuth = false;
+
   late String verificationId;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -65,9 +55,8 @@ class _JoinPageState extends State<JoinPage> {
   final _passwordTextEditor = TextEditingController();
   final _postTextEditor = TextEditingController();
   final _addressTextEditor = TextEditingController();
+  final _deaddressTextEditor = TextEditingController();
   final phoneNumber = TextEditingController();
-
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final formKey = GlobalKey<FormState>();
 
@@ -96,7 +85,7 @@ class _JoinPageState extends State<JoinPage> {
       });
 
       await Fluttertoast.showToast(
-          msg: (e.code),
+          msg: '오류가 발생했습니다. 인증번호를 확인해주세요.',
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
@@ -111,7 +100,13 @@ class _JoinPageState extends State<JoinPage> {
           email: email, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid).updateUserData(
-          '$address', '$email', '$password', '$phoneNumber', '$name');
+          email,
+          name,
+          password,
+          gender,
+          phoneNumber.text,
+          address + ' ' + _deaddressTextEditor.text,
+          postcode);
     } catch (e) {
       void errorToast(String message) {
         Fluttertoast.showToast(
@@ -119,25 +114,10 @@ class _JoinPageState extends State<JoinPage> {
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
-            fontSize: 16.0);
+            fontSize: 12.0);
       }
 
       switch (e) {
-        case "email-already-in-use":
-          errorToast("이미 사용중인 이메일입니다");
-
-          break;
-        case "invalid-email":
-          errorToast("잘못된 이메일 형식입니다");
-          break;
-        case "operation-not-allowed":
-          errorToast("사용할 수 없는 방식입니다");
-
-          break;
-        case "weak-password":
-          errorToast("비밀번호 보안 수준이 너무 낮습니다");
-
-          break;
         default:
           errorToast("알수없는 오류가 발생했습니다");
       }
@@ -145,130 +125,38 @@ class _JoinPageState extends State<JoinPage> {
     }
   }
 
-  void setMaleStateOn() {
-    _maleButtonColor = Colors.blue;
-    _maleTextColor = Colors.white;
-    _maleswitchState = true;
-  }
-
-  void setMaleStateOff() {
-    _maleButtonColor = Colors.white;
-    _maleTextColor = Colors.blue;
-    _maleswitchState = false;
-  }
-
-  void setFemaleStateOn() {
-    _femaleButtonColor = Color(0xff3AAFFC);
-    _femaleTextColor = Colors.white;
-    _femaleswitchState = true;
-  }
-
-  void setFemaleStateOff() {
-    _femaleButtonColor = Colors.white;
-    _femaleTextColor = Color(0xff3AAFFC);
-    _femaleswitchState = false;
-  }
-
-  genderButton(
-      String gender, Color primaryColor, Color textColor, dynamic onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        shape: CircleBorder(side: BorderSide(color: Color(0xff3AAFFC))),
-        primary: primaryColor,
-        minimumSize: Size(60, 50),
-      ),
-      child: Text(
-        gender,
-        style: TextStyle(color: textColor),
-      ),
-    );
-  }
-
-  IdTextformfield({
-    required FormFieldSetter onSaved,
-    required FormFieldValidator validator,
-    required TextEditingController controller,
-  }) {
-    assert(onSaved != null);
-    assert(validator != null);
-
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.only(right: 10),
-        child: TextFormField(
-          textAlign: TextAlign.right,
-          style: TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            isDense: true,
-            border: InputBorder.none,
-            errorStyle: TextStyle(color: Colors.blue),
-          ),
-          textInputAction: TextInputAction.next,
-          onEditingComplete: () =>
-              FocusScope.of(context).requestFocus(passwordFocusNode),
-          keyboardType: TextInputType.emailAddress,
-          controller: emailController,
+  genderButton(gendert, onPressed) {
+    return Container(
+      width: 45,
+      height: 45,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(side: BorderSide(color: Color(0xff3AAFFC))),
+          primary: gender == gendert ? Color(0xff3AAFFC) : Colors.white,
+        ),
+        child: Text(
+          gendert,
+          style: TextStyle(
+              color: gender == gendert ? Colors.white : Color(0xff3AAFFC)),
         ),
       ),
     );
   }
 
-  Textformfield({
-    required FormFieldSetter onSaved,
-    required FormFieldValidator validator,
-  }) {
-    assert(onSaved != null);
-    assert(validator != null);
-
+  Textfield() {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(right: 10),
-        child: TextFormField(
+        child: TextField(
           textAlign: TextAlign.right,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
             border: InputBorder.none,
-            errorStyle: TextStyle(color: Colors.blue),
           ),
         ),
       ),
     );
-  }
-
-  passwordTextformfield({
-    required FormFieldSetter onSaved,
-    required FormFieldValidator validator,
-    required TextEditingController controller,
-  }) {
-    assert(onSaved != null);
-    assert(validator != null);
-
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.only(right: 10),
-        child: TextFormField(
-          textAlign: TextAlign.right,
-          style: TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            isDense: true,
-            border: InputBorder.none,
-            errorStyle: TextStyle(color: Colors.blue),
-          ),
-          textInputAction: TextInputAction.done,
-          keyboardType: TextInputType.visiblePassword,
-          focusNode: verifyPasswordFocusNode,
-          obscureText: passwordHide,
-          controller: verifyPasswordController,
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 
   void _timerStart() {
@@ -291,13 +179,13 @@ class _JoinPageState extends State<JoinPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Scaffold(
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -316,7 +204,7 @@ class _JoinPageState extends State<JoinPage> {
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                    margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -346,7 +234,7 @@ class _JoinPageState extends State<JoinPage> {
                               decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
-                                errorStyle: TextStyle(color: Colors.blue),
+                                errorStyle: TextStyle(color: Color(0xff3AAFFC)),
                               ),
                               textInputAction: TextInputAction.next,
                               onEditingComplete: () => FocusScope.of(context)
@@ -363,7 +251,7 @@ class _JoinPageState extends State<JoinPage> {
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                    margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -381,105 +269,18 @@ class _JoinPageState extends State<JoinPage> {
                           width: 60,
                           child: Text("이름",
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xff3AAFFC),
                                 fontWeight: FontWeight.bold,
                               )),
                         ),
-                        Textformfield(
-                            onSaved: (val) {
-                              name = val;
-                            },
-                            validator: (val) {}),
+                        Textfield(),
                       ],
                     ),
                   ),
                   SizedBox(height: 20),
                   Container(
-                    alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
-                    padding: EdgeInsets.only(left: 20, right: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 1.0, color: Colors.black12),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.male, color: Colors.blue),
-                        ),
-                        Container(
-                          width: 60,
-                          child: Text("성별",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        SizedBox(
-                          width: 75,
-                        ),
-                        Row(
-                          children: [
-                            genderButton("남", _maleButtonColor, _maleTextColor,
-                                () {
-                              if (_maleswitchState == false) {
-                                if (_femaleswitchState == true) {
-                                  setState(() {
-                                    setMaleStateOn();
-                                    setFemaleStateOff();
-                                    gender = '남자';
-                                  });
-                                } else {
-                                  setState(() {
-                                    setMaleStateOn();
-                                    gender = '남자';
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  setMaleStateOff();
-                                  gender = '';
-                                });
-                              }
-                              print(gender);
-                            }),
-                            SizedBox(width: 1),
-                            genderButton(
-                                "여", _femaleButtonColor, _femaleTextColor, () {
-                              if (_femaleswitchState == false) {
-                                if (_maleswitchState == true) {
-                                  setState(() {
-                                    setFemaleStateOn();
-                                    setMaleStateOff();
-                                    gender = '여자';
-                                  });
-                                } else {
-                                  setState(() {
-                                    setFemaleStateOn();
-                                    gender = '여자';
-                                  });
-                                }
-                              } else {
-                                setState(() {
-                                  setFemaleStateOff();
-                                  gender = '';
-                                });
-                              }
-                              print(gender);
-                            }),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    alignment: Alignment(0, 0),
-                    height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                    margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -490,13 +291,72 @@ class _JoinPageState extends State<JoinPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.lock, color: Colors.blue),
+                          child: Icon(Icons.male, color: Color(0xff3AAFFC)),
+                        ),
+                        Container(
+                          width: 60,
+                          child: Text("성별",
+                              style: TextStyle(
+                                color: Color(0xff3AAFFC),
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                        Container(
+                          width: 200,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              genderButton("남", () {
+                                if (gender == "남") {
+                                  setState(() {
+                                    gender = '';
+                                  });
+                                } else {
+                                  setState(() {
+                                    gender = '남';
+                                  });
+                                }
+                              }),
+                              SizedBox(width: 10),
+                              genderButton("여", () {
+                                if (gender == "여") {
+                                  setState(() {
+                                    gender = '';
+                                  });
+                                } else {
+                                  setState(() {
+                                    gender = '여';
+                                  });
+                                }
+                              }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    alignment: Alignment(0, 0),
+                    height: 70,
+                    margin: EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(width: 1.0, color: Colors.black12),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 20),
+                          child: Icon(Icons.lock, color: Color(0xff3AAFFC)),
                         ),
                         Container(
                           width: 60,
                           child: Text("비밀번호",
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xff3AAFFC),
                                 fontWeight: FontWeight.bold,
                               )),
                         ),
@@ -509,7 +369,7 @@ class _JoinPageState extends State<JoinPage> {
                               decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
-                                errorStyle: TextStyle(color: Colors.blue),
+                                errorStyle: TextStyle(color: Color(0xff3AAFFC)),
                               ),
                               textInputAction: TextInputAction.done,
                               keyboardType: TextInputType.visiblePassword,
@@ -528,7 +388,7 @@ class _JoinPageState extends State<JoinPage> {
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30, top: 15),
+                    margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -539,13 +399,13 @@ class _JoinPageState extends State<JoinPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.lock, color: Colors.blue),
+                          child: Icon(Icons.lock, color: Color(0xff3AAFFC)),
                         ),
                         Container(
                           width: 90,
                           child: Text("비밀번호 확인",
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xff3AAFFC),
                                 fontWeight: FontWeight.bold,
                               )),
                         ),
@@ -558,7 +418,7 @@ class _JoinPageState extends State<JoinPage> {
                               decoration: InputDecoration(
                                 isDense: true,
                                 border: InputBorder.none,
-                                errorStyle: TextStyle(color: Colors.blue),
+                                errorStyle: TextStyle(color: Color(0xff3AAFFC)),
                               ),
                               textInputAction: TextInputAction.done,
                               keyboardType: TextInputType.visiblePassword,
@@ -575,7 +435,6 @@ class _JoinPageState extends State<JoinPage> {
                   Container(
                     alignment: Alignment(0, 0),
                     height: 190,
-                    margin: EdgeInsets.only(left: 30, right: 30),
                     padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -588,13 +447,14 @@ class _JoinPageState extends State<JoinPage> {
                           children: [
                             Container(
                               margin: EdgeInsets.only(right: 20),
-                              child: Icon(Icons.place, color: Colors.blue),
+                              child:
+                                  Icon(Icons.place, color: Color(0xff3AAFFC)),
                             ),
                             Container(
                               width: 90,
                               child: Text("우편번호",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Color(0xff3AAFFC),
                                     fontWeight: FontWeight.bold,
                                   )),
                             ),
@@ -634,9 +494,9 @@ class _JoinPageState extends State<JoinPage> {
                                         callback: (Kpostal result) {
                                           setState(() {
                                             address = '${result.address}';
-                                            postCode = '${result.postCode}';
-                                            _addressTextEditor.text = address!;
-                                            _postTextEditor.text = postCode!;
+                                            postcode = '${result.postCode}';
+                                            _addressTextEditor.text = address;
+                                            _postTextEditor.text = postcode;
                                           });
                                         },
                                       ),
@@ -645,7 +505,7 @@ class _JoinPageState extends State<JoinPage> {
                                 },
                                 style: TextButton.styleFrom(
                                     primary: Colors.white,
-                                    backgroundColor: Colors.blue,
+                                    backgroundColor: Color(0xff3AAFFC),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(10))),
@@ -660,7 +520,7 @@ class _JoinPageState extends State<JoinPage> {
                               width: 90,
                               child: Text("주소",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Color(0xff3AAFFC),
                                     fontWeight: FontWeight.bold,
                                   )),
                             ),
@@ -690,7 +550,7 @@ class _JoinPageState extends State<JoinPage> {
                               width: 90,
                               child: Text("상세주소",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Color(0xff3AAFFC),
                                     fontWeight: FontWeight.bold,
                                   )),
                             ),
@@ -698,6 +558,7 @@ class _JoinPageState extends State<JoinPage> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 10),
                                 child: TextField(
+                                  controller: _deaddressTextEditor,
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 13),
@@ -718,7 +579,6 @@ class _JoinPageState extends State<JoinPage> {
                   Container(
                     alignment: Alignment(0, 0),
                     height: 70,
-                    margin: EdgeInsets.only(left: 30, right: 30),
                     padding: EdgeInsets.only(left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -729,13 +589,13 @@ class _JoinPageState extends State<JoinPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.call, color: Colors.blue),
+                          child: Icon(Icons.call, color: Color(0xff3AAFFC)),
                         ),
                         Container(
                           width: 60,
                           child: Text("핸드폰",
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xff3AAFFC),
                                 fontWeight: FontWeight.bold,
                               )),
                         ),
@@ -766,6 +626,13 @@ class _JoinPageState extends State<JoinPage> {
                             onPressed: _isAuthsms
                                 ? null
                                 : () async {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.lightBlue,
+                                        fontSize: 12.0);
                                     await _auth.verifyPhoneNumber(
                                         timeout: const Duration(seconds: 120),
                                         codeAutoRetrievalTimeout:
@@ -781,20 +648,18 @@ class _JoinPageState extends State<JoinPage> {
                                         verificationFailed:
                                             (verificationFailed) async {
                                           print(verificationFailed.code);
-
-                                          print("코드 발송 실패");
-                                          print(phoneNumber);
-                                        },
-                                        codeSent: (verificationId,
-                                            forceResendingToken) async {
-                                          print('코드 보냄');
                                           Fluttertoast.showToast(
-                                              msg:
-                                                  "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
+                                              msg: "코드 발송 실패했습니다. 전화번호를 확인해주세요",
                                               toastLength: Toast.LENGTH_SHORT,
                                               timeInSecForIosWeb: 1,
                                               backgroundColor: Colors.lightBlue,
                                               fontSize: 12.0);
+                                          print("코드 발송 실패");
+                                        },
+                                        codeSent: (verificationId,
+                                            forceResendingToken) async {
+                                          print('코드 보냄');
+
                                           setState(() {
                                             _isAuthsms = true;
                                             _timerStart();
@@ -808,7 +673,7 @@ class _JoinPageState extends State<JoinPage> {
                                         });
                                   },
                             style: TextButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Color(0xff3AAFFC),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                           ),
@@ -816,120 +681,70 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 60, top: 10),
-                    child: Visibility(
-                      visible: _isAuthsms,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 140,
-                            child: TextField(
-                              controller: otpController,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.zero,
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black26, width: 0.5)),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.black26, width: 0.5)),
+                  Visibility(
+                    visible: _isAuthsms,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 170,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  controller: otpController,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black26, width: 0.5)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black26, width: 0.5)),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            child: Text(_viewTime(_time),
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                )),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            child: TextButton(
-                              child: Text(
-                                "확인",
-                                style: TextStyle(fontSize: 10),
+                              SizedBox(width: 10),
+                              Container(
+                                child: Text(_viewTime(_time),
+                                    style: TextStyle(
+                                      color: Color(0xff3AAFFC),
+                                    )),
                               ),
-                              onPressed: () {
-                                PhoneAuthCredential phoneAuthCredential =
-                                    PhoneAuthProvider.credential(
-                                        verificationId: verificationId,
-                                        smsCode: otpController.text);
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                width: 60,
+                                height: 30,
+                                child: TextButton(
+                                  child: Text(
+                                    "확인",
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  onPressed: () {
+                                    PhoneAuthCredential phoneAuthCredential =
+                                        PhoneAuthProvider.credential(
+                                            verificationId: verificationId,
+                                            smsCode: otpController.text);
 
-                                signInWithPhoneAuthCredential(
-                                    phoneAuthCredential);
-                              },
-                              style: TextButton.styleFrom(
-                                  primary: Colors.white,
-                                  backgroundColor: Colors.blue,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8))),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Container(
-                            width: 60,
-                            height: 30,
-                            child: TextButton(
-                              child: Text(
-                                "재전송",
-                                style: TextStyle(fontSize: 10),
+                                    signInWithPhoneAuthCredential(
+                                        phoneAuthCredential);
+                                  },
+                                  style: TextButton.styleFrom(
+                                      primary: Colors.white,
+                                      backgroundColor: Color(0xff3AAFFC),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8))),
+                                ),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _time = 120;
-                                });
-                                () async {
-                                  await _auth.verifyPhoneNumber(
-                                      timeout: const Duration(seconds: 120),
-                                      codeAutoRetrievalTimeout:
-                                          (String verificationId) {},
-                                      phoneNumber: "+8210" +
-                                          phoneNumber.text.substring(3),
-                                      verificationCompleted:
-                                          (phoneAuthCredential) async {
-                                        print('otp문자옴');
-                                      },
-                                      verificationFailed:
-                                          (verificationFailed) async {
-                                        print(verificationFailed.code);
-                                        print("코드 발송 실패");
-                                      },
-                                      codeSent: (verificationId,
-                                          forceResendingToken) async {
-                                        print('코드 보냄');
-                                        Fluttertoast.showToast(
-                                            msg:
-                                                "${phoneNumber.text}로 인증코드를 재전송하였습니다 잠시만 기다려주세요",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.lightBlue,
-                                            fontSize: 12.0);
-                                        setState(() {
-                                          FocusScope.of(context)
-                                              .requestFocus(otpFocusNode);
-
-                                          this.verificationId = verificationId;
-                                        });
-                                      });
-                                };
-                              },
-                              style: TextButton.styleFrom(
-                                  primary: Colors.blue,
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.blue),
-                                      borderRadius: BorderRadius.circular(8))),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -1004,13 +819,13 @@ class _JoinPageState extends State<JoinPage> {
                         "뒤로가기",
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.blue,
+                          color: Color(0xff3AAFFC),
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
                         minimumSize: Size(330, 45),
-                        side: BorderSide(color: Colors.blue),
+                        side: BorderSide(color: Color(0xff3AAFFC)),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25)),
                       ),
@@ -1023,5 +838,11 @@ class _JoinPageState extends State<JoinPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
