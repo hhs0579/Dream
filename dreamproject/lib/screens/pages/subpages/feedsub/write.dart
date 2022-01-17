@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,7 +26,7 @@ class _WriteState extends State<Write> {
   var poverty = false;
 
   TextEditingController postTextEditController = TextEditingController();
-  final picker = ImagePicker();
+  final _picker = ImagePicker();
   File? _image;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -36,46 +38,37 @@ class _WriteState extends State<Write> {
     super.initState();
   }
 
+  FirebaseStorage _storage = FirebaseStorage.instance;
+
   Future _getImage() async {
-    final pickedFile = await picker.getImage(
+    // ignore: deprecated_member_use
+    final pickedFile = await _picker.getImage(
         source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
     // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
-      _image = File(pickedFile!.path);
+      if (_image == null) {
+        Get.to(Write());
+      } else {
+        _image = File(pickedFile!.path);
+      }
     });
   }
 
-  Future _uploadFile(BuildContext context) async {
+  Future<String?> _uploadImage(String uploadFileName) async {
     try {
-      // 스토리지에 업로드할 파일 경로
-      final firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('post images') //'post'라는 folder를 만들고
-          .child('${DateTime.now().millisecondsSinceEpoch}.png');
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      print(image?.path ?? 'null');
+      if (image != null) {
+        var result = await firebaseStorageController.uploadFile(
+          filePath: image.path,
+          uploadPath: uploadFileName,
+        );
 
-      // 파일 업로드
-      final uploadTask = firebaseStorageRef.putFile(
-          _image!, SettableMetadata(contentType: 'image/png'));
-
-      // 완료까지 기다림
-      await uploadTask.whenComplete(() => null);
-
-      // 업로드 완료 후 url
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-
-      // 문서 작성
-      await FirebaseFirestore.instance.collection('post').add({
-        'contents': postTextEditController.text,
-        'email': user!.email,
-        'photoUrl': downloadUrl,
-        'userPhotoUrl': user!.photoURL
-      });
+        return result;
+      }
     } catch (e) {
-      print(e);
+      print(e.toString());
     }
-
-    // 완료 후 앞 화면으로 이동
-    Get.to(HomePage());
   }
 
   Widget _ImageBox() {
@@ -96,6 +89,27 @@ class _WriteState extends State<Write> {
         ),
       ),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> _loadImages() async {
+    List<Map<String, dynamic>> files = [];
+
+    final ListResult result = await _storage.ref().list();
+    final List<Reference> allFiles = result.items;
+
+    await Future.forEach<Reference>(allFiles, (file) async {
+      final String fileUrl = await file.getDownloadURL();
+      final FullMetadata fileMeta = await file.getMetadata();
+      files.add({
+        "url": fileUrl,
+        "path": file.fullPath,
+        "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'Nobody',
+        "description":
+            fileMeta.customMetadata?['description'] ?? 'No description'
+      });
+    });
+
+    return files;
   }
 
   @override
@@ -284,6 +298,29 @@ class _WriteState extends State<Write> {
                     Row(
                       children: [
                         _ImageBox(),
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.camera_alt_rounded,
+                                          color: Colors.grey,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ]),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -314,7 +351,7 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
-                              _uploadFile;
+                              _uploadImage;
                             },
                             child: Text('게시'))),
                   ],

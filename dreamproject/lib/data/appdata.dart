@@ -53,4 +53,25 @@ class AppData extends GetxController {
     _myInfo = myInfo;
     update();
   }
+
+  // bool get isExpertMode => _isExpertMode;
+  //
+  // set isExpertMode(bool isExpertMode) {
+  //   _isExpertMode = isExpertMode;
+  //   update();
+  // }
+
+  String get userEmail => _userEmail;
+
+  set userEmail(String userEmail) {
+    _userEmail = userEmail;
+    update();
+  }
+
+  bool get isLoadingScreen => _isLoadingScreen;
+
+  set isLoadingScreen(bool isLoadingScreen) {
+    _isLoadingScreen = isLoadingScreen;
+    update();
+  }
 }
