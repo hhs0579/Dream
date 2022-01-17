@@ -1,3 +1,4 @@
+import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,7 +28,7 @@ class _JoinPageState extends State<JoinPage> {
   String gender = '';
   String address = '';
   String postcode = '';
-  final idController = TextEditingController();
+  final emailController = TextEditingController();
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final verifyPasswordController = TextEditingController();
@@ -35,16 +36,16 @@ class _JoinPageState extends State<JoinPage> {
 
   final passwordFocusNode = FocusNode();
   final verifyPasswordFocusNode = FocusNode();
-  final phoneNumberFocusNode1 = FocusNode();
-  final phoneNumberFocusNode2 = FocusNode();
   final otpFocusNode = FocusNode();
+  final deaddressFocusNode = FocusNode();
 
   bool authOk = false;
-
+  bool duplicateEmail = false;
   bool passwordHide = true;
 
   late String verificationId;
 
+  DatabaseController databaseController = DatabaseController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthService _authJoin = AuthService();
 
@@ -57,21 +58,24 @@ class _JoinPageState extends State<JoinPage> {
 
   final AuthService _authService = AuthService();
 
-  void signInWithPhoneAuthCredential(
-      PhoneAuthCredential phoneAuthCredential) async {
+  signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
     try {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
 
       if (authCredential.user != null) {
         setState(() {
-          print("인증완료");
           authOk = true;
           _isAuthsms = false;
         });
         await _auth.currentUser!.delete();
-        print("auth정보삭제");
         _auth.signOut();
+        return Fluttertoast.showToast(
+            msg: '인증이 완료되었습니다',
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            fontSize: 12.0);
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -89,13 +93,13 @@ class _JoinPageState extends State<JoinPage> {
   }
 
   Future<UserCredential?> signUpUserCredential(
-      {required String id, required String password}) async {
+      {required String email, required String password}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: id, password: password);
+          email: email, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid).updateUserData(
-          id,
+          email,
           nameController.text,
           password,
           gender,
@@ -197,7 +201,7 @@ class _JoinPageState extends State<JoinPage> {
                       ),
                       Container(
                         width: 60,
-                        child: Text("ID",
+                        child: Text("Email",
                             style: TextStyle(
                               color: Color(0xff3AAFFC),
                               fontWeight: FontWeight.bold,
@@ -206,9 +210,9 @@ class _JoinPageState extends State<JoinPage> {
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(right: 10),
-                          child: TextFormField(
+                          child: TextField(
                             textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -217,11 +221,54 @@ class _JoinPageState extends State<JoinPage> {
                             textInputAction: TextInputAction.next,
                             onEditingComplete: () => FocusScope.of(context)
                                 .requestFocus(passwordFocusNode),
-                            keyboardType: TextInputType.text,
-                            controller: idController,
+                            keyboardType: TextInputType.emailAddress,
+                            controller: emailController,
                           ),
                         ),
                       ),
+                      Container(
+                        width: 60,
+                        height: 30,
+                        child: TextButton(
+                          child: Text(
+                            "확인",
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                          onPressed: duplicateEmail == true
+                              ? null
+                              : () async {
+                                  if (vaildationemail(emailController.text) ==
+                                      null) {
+                                    if (await databaseController
+                                            .isDuplicatedEmail(
+                                                emailController.text) ==
+                                        true) {
+                                      Fluttertoast.showToast(
+                                          msg: '중복된 이메일입니다. 다시 한번 확인해주세요.',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.lightBlue,
+                                          fontSize: 12.0);
+                                    } else {
+                                      duplicateEmail = true;
+                                      Fluttertoast.showToast(
+                                          msg: '사용가능한 이메일입니다',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.lightBlue,
+                                          fontSize: 12.0);
+                                    }
+                                  }
+                                },
+                          style: TextButton.styleFrom(
+                              primary: Colors.white,
+                              backgroundColor: Color(0xff3AAFFC),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -257,7 +304,7 @@ class _JoinPageState extends State<JoinPage> {
                           child: TextField(
                             controller: nameController,
                             textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                               border: InputBorder.none,
                             ),
@@ -355,7 +402,7 @@ class _JoinPageState extends State<JoinPage> {
                           margin: EdgeInsets.only(right: 10),
                           child: TextField(
                             textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -404,7 +451,7 @@ class _JoinPageState extends State<JoinPage> {
                           margin: EdgeInsets.only(right: 10),
                           child: TextField(
                             textAlign: TextAlign.right,
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                               isDense: true,
                               border: InputBorder.none,
@@ -453,8 +500,7 @@ class _JoinPageState extends State<JoinPage> {
                               child: TextField(
                                 controller: _postTextEditor,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
+                                style: TextStyle(fontSize: 12),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                 ),
@@ -464,7 +510,7 @@ class _JoinPageState extends State<JoinPage> {
                           ),
                           Container(
                             width: 80,
-                            height: 35,
+                            height: 30,
                             child: TextButton(
                               child: Text(
                                 "우편번호 검색",
@@ -481,6 +527,7 @@ class _JoinPageState extends State<JoinPage> {
                                       kakaoKey:
                                           'e7332691953b203d499ffb8ad8a411c6',
                                       callback: (Kpostal result) {
+                                        deaddressFocusNode.requestFocus();
                                         setState(() {
                                           address = result.address;
                                           postcode = result.postCode;
@@ -518,8 +565,7 @@ class _JoinPageState extends State<JoinPage> {
                               child: TextField(
                                 controller: _addressTextEditor,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14),
+                                style: TextStyle(fontSize: 12),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                 ),
@@ -547,9 +593,9 @@ class _JoinPageState extends State<JoinPage> {
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
                                 controller: _deaddressTextEditor,
+                                focusNode: deaddressFocusNode,
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 13),
+                                style: TextStyle(fontSize: 12),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                 ),
@@ -593,7 +639,7 @@ class _JoinPageState extends State<JoinPage> {
                           child: TextFormField(
                             controller: phoneNumber,
                             textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 14, color: Colors.black),
+                            style: TextStyle(fontSize: 12),
                             decoration: InputDecoration(
                               border: InputBorder.none,
                             ),
@@ -736,26 +782,62 @@ class _JoinPageState extends State<JoinPage> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      vaildationemail(emailController.text);
-                      vaildationname(nameController.text);
-                      if (passwordController.text ==
-                          verifyPasswordController.text) {
-                        vaildationpassword(passwordController.text);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "비밀번호 확인 오류 : 비밀번호가 일치하지 않습니다.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.lightBlue,
-                            fontSize: 12.0);
-                      }
-                      if (gender == '') {
-                        Fluttertoast.showToast(
-                            msg: "성별 오류 : 성별을 선택해주세요",
-                            toastLength: Toast.LENGTH_SHORT,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.lightBlue,
-                            fontSize: 12.0);
+                      if (duplicateEmail == true) {
+                        if (vaildationname(nameController.text) == null) {
+                          if (gender == '') {
+                            Fluttertoast.showToast(
+                                msg: "성별을 선택해주세요",
+                                toastLength: Toast.LENGTH_SHORT,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.lightBlue,
+                                fontSize: 12.0);
+                          } else {
+                            if (passwordController.text !=
+                                verifyPasswordController.text) {
+                              Fluttertoast.showToast(
+                                  msg: "비밀번호가 일치하지 않습니다.",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.lightBlue,
+                                  fontSize: 12.0);
+                            } else {
+                              if (vaildationpassword(passwordController.text) ==
+                                  null) {
+                                if (_addressTextEditor.text == '') {
+                                  Fluttertoast.showToast(
+                                      msg: "주소를 입력해주세요.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.lightBlue,
+                                      fontSize: 12.0);
+                                } else {
+                                  if (_deaddressTextEditor.text == '') {
+                                    Fluttertoast.showToast(
+                                        msg: "상세주소를 입력해주세요.",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.lightBlue,
+                                        fontSize: 12.0);
+                                  } else {
+                                    if (authOk == false) {
+                                      Fluttertoast.showToast(
+                                          msg: "핸드폰 인증을 완료해주세요.",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.lightBlue,
+                                          fontSize: 12.0);
+                                    } else {
+                                      signUpUserCredential(
+                                          email: emailController.text,
+                                          password: passwordController.text);
+                                      Get.offAll(LoginPage());
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     },
                     child: Text(

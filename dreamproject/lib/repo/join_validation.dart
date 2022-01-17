@@ -25,7 +25,8 @@ vaildationemail(String value) {
   var vaildationemail = checkEmailText(value);
 
   if (value.isEmpty) {
-    Fluttertoast.showToast(
+    print(value);
+    return Fluttertoast.showToast(
         msg: "이메일을 작성해주세요",
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
@@ -33,12 +34,14 @@ vaildationemail(String value) {
         fontSize: 12.0);
   } else {
     if (vaildationemail.isEmail == false) {
-      Fluttertoast.showToast(
+      return Fluttertoast.showToast(
           msg: "잘못된 이메일 형식입니다.",
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.lightBlue,
           fontSize: 12.0);
+    } else {
+      return null;
     }
   }
 }
@@ -102,7 +105,7 @@ vaildationname(String value) {
   var vaildationname = checkNameText(value);
 
   if (value.isEmpty) {
-    Fluttertoast.showToast(
+    return Fluttertoast.showToast(
         msg: "이름을 작성해주세요",
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
@@ -110,12 +113,14 @@ vaildationname(String value) {
         fontSize: 12.0);
   } else {
     if (vaildationname.isCorrectWord == false) {
-      Fluttertoast.showToast(
+      return Fluttertoast.showToast(
           msg: "실명을 입력해주세요.",
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.lightBlue,
           fontSize: 12.0);
+    } else {
+      return null;
     }
   }
 }
@@ -179,7 +184,7 @@ vaildationpassword(String value) {
   var vaildationpassword = checkPasswordText(value);
 
   if (value.isEmpty) {
-    Fluttertoast.showToast(
+    return Fluttertoast.showToast(
         msg: "비밀번호를 작성해주세요",
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
@@ -188,20 +193,24 @@ vaildationpassword(String value) {
   } else {
     if (vaildationpassword.isCorrectWord == false) {
       if (vaildationpassword.is8Characters == false) {
-        Fluttertoast.showToast(
+        return Fluttertoast.showToast(
             msg: "8~12자리 비밀번호를 설정해주세요.",
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.lightBlue,
             fontSize: 12.0);
-      } else if (vaildationpassword.is1Symbol == false) {
-        Fluttertoast.showToast(
-            msg: "비밀번호에 특수기호를 넣어주세요.",
+      } else if (vaildationpassword.is1Symbol == false &&
+          vaildationpassword.is1Number == false &&
+          vaildationpassword.is1Letter == false) {
+        return Fluttertoast.showToast(
+            msg: "비밀번호에 문자, 숫자, 특수기호는 필수입니다.",
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.lightBlue,
             fontSize: 12.0);
       }
+    } else {
+      return null;
     }
   }
 }
