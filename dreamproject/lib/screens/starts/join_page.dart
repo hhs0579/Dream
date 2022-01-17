@@ -21,19 +21,16 @@ class _JoinPageState extends State<JoinPage> {
   Timer? _timer;
   var _time = 0;
 
-  String id = '';
-  String name = '';
   String email = '';
+  String name = '';
   String password = '';
   String gender = '';
   String address = '';
   String postcode = '';
-  final emailController = TextEditingController();
+  final idController = TextEditingController();
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final verifyPasswordController = TextEditingController();
-  final phoneNumberController1 = TextEditingController();
-  final phoneNumberController2 = TextEditingController();
   final otpController = TextEditingController();
 
   final passwordFocusNode = FocusNode();
@@ -68,7 +65,7 @@ class _JoinPageState extends State<JoinPage> {
 
       if (authCredential.user != null) {
         setState(() {
-          print("인증완료 및 로그인성공");
+          print("인증완료");
           authOk = true;
           _isAuthsms = false;
         });
@@ -78,7 +75,8 @@ class _JoinPageState extends State<JoinPage> {
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
-        print("인증실패..로그인실패");
+        print("인증실패");
+        print(e.message);
       });
 
       await Fluttertoast.showToast(
@@ -86,18 +84,18 @@ class _JoinPageState extends State<JoinPage> {
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
-          fontSize: 16.0);
+          fontSize: 12.0);
     }
   }
 
   Future<UserCredential?> signUpUserCredential(
-      {required String email, required String password}) async {
+      {required String id, required String password}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: id, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid).updateUserData(
-          email,
+          id,
           nameController.text,
           password,
           gender,
@@ -105,9 +103,9 @@ class _JoinPageState extends State<JoinPage> {
           address + ' ' + _deaddressTextEditor.text,
           postcode);
     } catch (e) {
-      void errorToast(message) {
+      void errorToast(e) {
         Fluttertoast.showToast(
-            msg: message,
+            msg: e.message,
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
@@ -116,7 +114,7 @@ class _JoinPageState extends State<JoinPage> {
 
       switch (e) {
         default:
-          errorToast('오류가 발생하였습니다. 다시 시도해 주세요.');
+          errorToast(e);
       }
       return null;
     }
@@ -199,7 +197,7 @@ class _JoinPageState extends State<JoinPage> {
                       ),
                       Container(
                         width: 60,
-                        child: Text("Email",
+                        child: Text("ID",
                             style: TextStyle(
                               color: Color(0xff3AAFFC),
                               fontWeight: FontWeight.bold,
@@ -219,8 +217,8 @@ class _JoinPageState extends State<JoinPage> {
                             textInputAction: TextInputAction.next,
                             onEditingComplete: () => FocusScope.of(context)
                                 .requestFocus(passwordFocusNode),
-                            keyboardType: TextInputType.emailAddress,
-                            controller: emailController,
+                            keyboardType: TextInputType.text,
+                            controller: idController,
                           ),
                         ),
                       ),
@@ -738,42 +736,26 @@ class _JoinPageState extends State<JoinPage> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (emailController.text.length > 1 &&
-                          passwordController.text.length > 1 &&
-                          verifyPasswordController.text.length > 1) {
-                        if (passwordController.text ==
-                            verifyPasswordController.text) {
-                          if (authOk) {
-                            await signUpUserCredential(
-                                email: emailController.text,
-                                password: passwordController.text);
-
-                            setState(() {
-                              Get.to(LoginPage());
-                            });
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "휴대폰 인증을 완료해주세요.",
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                fontSize: 16.0);
-                          }
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "비밀번호를 확인해 주세요.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              fontSize: 16.0);
-                        }
+                      vaildationemail(emailController.text);
+                      vaildationname(nameController.text);
+                      if (passwordController.text ==
+                          verifyPasswordController.text) {
+                        vaildationpassword(passwordController.text);
                       } else {
                         Fluttertoast.showToast(
-                            msg: "이메일 및 비밀번호를 입력해 주세요.",
+                            msg: "비밀번호 확인 오류 : 비밀번호가 일치하지 않습니다.",
                             toastLength: Toast.LENGTH_SHORT,
                             timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            fontSize: 16.0);
+                            backgroundColor: Colors.lightBlue,
+                            fontSize: 12.0);
+                      }
+                      if (gender == '') {
+                        Fluttertoast.showToast(
+                            msg: "성별 오류 : 성별을 선택해주세요",
+                            toastLength: Toast.LENGTH_SHORT,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.lightBlue,
+                            fontSize: 12.0);
                       }
                     },
                     child: Text(
