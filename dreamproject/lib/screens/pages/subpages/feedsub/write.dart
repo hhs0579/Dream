@@ -4,6 +4,7 @@ import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,10 +25,14 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  File? _image;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  User? _user;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  String _profileImageURL = "";
 
   TextEditingController postTextEditController = TextEditingController();
   final _picker = ImagePicker();
-  File? _image;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<File> questionImages = [];
@@ -36,9 +41,57 @@ class _WriteState extends State<Write> {
   void initState() {
     questionImages = [];
     super.initState();
+    _prepareService();
+  }
+
+  void _prepareService() async {
+    _user = await _firebaseAuth.currentUser;
   }
 
   FirebaseStorage _storage = FirebaseStorage.instance;
+// Image Picker
+  List<File> _images = [];
+
+  Future getImage(bool gallery) async {
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile;
+    // Let user select photo from gallery
+    if (gallery) {
+      pickedFile = (await picker.getImage(
+        source: ImageSource.gallery,
+      ))!;
+    }
+    // Otherwise open camera to get new photo
+    else {
+      pickedFile = (await picker.getImage(
+        source: ImageSource.camera,
+      ))!;
+    }
+
+    setState(() {
+      if (pickedFile != null) {
+        _images.add(File(pickedFile.path));
+        //_image = File(pickedFile.path); // Use if you only need a single picture
+      } else {
+        print('No image selected.');
+      }
+    });
+    
+  }
+  DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
+  Future<String> uploadFile(File _image) async {
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('sightings/${Path.basename(_image.path)}');
+   UploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    String returnURL;
+    await storageReference.getDownloadURL().then((fileURL) {
+      returnURL = fileURL;
+    });
+    return returnURL;
+  }
 
   Future _getImage() async {
     // ignore: deprecated_member_use
@@ -47,7 +100,7 @@ class _WriteState extends State<Write> {
     // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
       if (_image == null) {
-        Get.to(Write());
+        setState(() {});
       } else {
         _image = File(pickedFile!.path);
       }
@@ -57,14 +110,16 @@ class _WriteState extends State<Write> {
   Future<String?> _uploadImage(String uploadFileName) async {
     try {
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
       print(image?.path ?? 'null');
       if (image != null) {
-        var result = await firebaseStorageController.uploadFile(
-          filePath: image.path,
-          uploadPath: uploadFileName,
-        );
-
-        return result;
+        Reference storageReference =
+            _firebaseStorage.ref().child("post/${_user?.uid}");
+        UploadTask storageUploadTask = storageReference.putFile(_image!);
+        String downloadURL = await storageReference.getDownloadURL();
+        setState(() {
+          _profileImageURL = downloadURL;
+        });
       }
     } catch (e) {
       print(e.toString());
@@ -89,27 +144,6 @@ class _WriteState extends State<Write> {
         ),
       ),
     );
-  }
-
-  Future<List<Map<String, dynamic>>> _loadImages() async {
-    List<Map<String, dynamic>> files = [];
-
-    final ListResult result = await _storage.ref().list();
-    final List<Reference> allFiles = result.items;
-
-    await Future.forEach<Reference>(allFiles, (file) async {
-      final String fileUrl = await file.getDownloadURL();
-      final FullMetadata fileMeta = await file.getMetadata();
-      files.add({
-        "url": fileUrl,
-        "path": file.fullPath,
-        "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'Nobody',
-        "description":
-            fileMeta.customMetadata?['description'] ?? 'No description'
-      });
-    });
-
-    return files;
   }
 
   @override
@@ -299,8 +333,8 @@ class _WriteState extends State<Write> {
                       children: [
                         _ImageBox(),
                         SizedBox(
-                          height: 50,
-                          width: 50,
+                          height: 150,
+                          width: 150,
                           child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
@@ -314,6 +348,11 @@ class _WriteState extends State<Write> {
                                         Icon(
                                           Icons.camera_alt_rounded,
                                           color: Colors.grey,
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage:
+                                              NetworkImage(_profileImageURL),
+                                          radius: 30,
                                         ),
                                       ],
                                     ),
@@ -341,6 +380,21 @@ class _WriteState extends State<Write> {
                                           height: 45,
                                           child: Container() //이미지
                                           ),
+                                      RawMaterialButton(
+                                        fillColor:
+                                            Theme.of(context).accentColor,
+                                        child: Icon(
+                                          Icons.add_photo_alternate_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        elevation: 8,
+                                        onPressed: () {
+                                          getImage(true);
+                                        },
+                                        padding: EdgeInsets.all(15),
+                                        shape: CircleBorder(),
+                                      ),
+                                      Container(child: Image.file(_image!))
                                     ],
                                   ),
                                 );
@@ -359,4 +413,30 @@ class _WriteState extends State<Write> {
           ),
         ));
   }
+  //   void _uploadImageToStorage(ImageSource source) async {
+  //   XFile? image = await ImagePicker.pickImage(source: source);
+
+  //   if (image == null) return;
+  //   setState(() {
+  //     _image = image as File?;
+  //   });
+
+  //   // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
+  //   Reference storageReference =
+  //       _firebaseStorage.ref().child("profile/${_user?.uid}");
+
+  //   // 파일 업로드
+  //  UploadTask storageUploadTask = storageReference.putFile(_image!);
+
+  //   // 파일 업로드 완료까지 대기
+  //   await storageUploadTask.onComplete;
+
+  //   // 업로드한 사진의 URL 획득
+  //   String downloadURL = await storageReference.getDownloadURL();
+
+  //   // 업로드된 사진의 URL을 페이지에 반영
+  //   setState(() {
+  //     _profileImageURL = downloadURL;
+  //   });
+  // }
 }
