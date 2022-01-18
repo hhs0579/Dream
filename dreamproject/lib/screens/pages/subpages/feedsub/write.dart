@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,10 +25,14 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  File? _image;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  User? _user;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  String _profileImageURL = "";
 
   TextEditingController postTextEditController = TextEditingController();
-  final picker = ImagePicker();
-  File? _image;
+  final _picker = ImagePicker();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<File> questionImages = [];
@@ -34,48 +41,89 @@ class _WriteState extends State<Write> {
   void initState() {
     questionImages = [];
     super.initState();
+    _prepareService();
+  }
+
+  void _prepareService() async {
+    _user = await _firebaseAuth.currentUser;
+  }
+
+  FirebaseStorage _storage = FirebaseStorage.instance;
+// Image Picker
+  List<File> _images = [];
+
+  Future getImage(bool gallery) async {
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile;
+    // Let user select photo from gallery
+    if (gallery) {
+      pickedFile = (await picker.getImage(
+        source: ImageSource.gallery,
+      ))!;
+    }
+    // Otherwise open camera to get new photo
+    else {
+      pickedFile = (await picker.getImage(
+        source: ImageSource.camera,
+      ))!;
+    }
+
+    setState(() {
+      if (pickedFile != null) {
+        _images.add(File(pickedFile.path));
+        //_image = File(pickedFile.path); // Use if you only need a single picture
+      } else {
+        print('No image selected.');
+      }
+    });
+    
+  }
+  DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
+  Future<String> uploadFile(File _image) async {
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('sightings/${Path.basename(_image.path)}');
+   UploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    String returnURL;
+    await storageReference.getDownloadURL().then((fileURL) {
+      returnURL = fileURL;
+    });
+    return returnURL;
   }
 
   Future _getImage() async {
-    final pickedFile = await picker.getImage(
+    // ignore: deprecated_member_use
+    final pickedFile = await _picker.getImage(
         source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
     // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
     setState(() {
-      _image = File(pickedFile!.path);
+      if (_image == null) {
+        setState(() {});
+      } else {
+        _image = File(pickedFile!.path);
+      }
     });
   }
 
-  Future _uploadFile(BuildContext context) async {
+  Future<String?> _uploadImage(String uploadFileName) async {
     try {
-      // 스토리지에 업로드할 파일 경로
-      final firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child('post images') //'post'라는 folder를 만들고
-          .child('${DateTime.now().millisecondsSinceEpoch}.png');
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-      // 파일 업로드
-      final uploadTask = firebaseStorageRef.putFile(
-          _image!, SettableMetadata(contentType: 'image/png'));
-
-      // 완료까지 기다림
-      await uploadTask.whenComplete(() => null);
-
-      // 업로드 완료 후 url
-      final downloadUrl = await firebaseStorageRef.getDownloadURL();
-
-      // 문서 작성
-      await FirebaseFirestore.instance.collection('post').add({
-        'contents': postTextEditController.text,
-        'email': user!.email,
-        'photoUrl': downloadUrl,
-        'userPhotoUrl': user!.photoURL
-      });
+      print(image?.path ?? 'null');
+      if (image != null) {
+        Reference storageReference =
+            _firebaseStorage.ref().child("post/${_user?.uid}");
+        UploadTask storageUploadTask = storageReference.putFile(_image!);
+        String downloadURL = await storageReference.getDownloadURL();
+        setState(() {
+          _profileImageURL = downloadURL;
+        });
+      }
     } catch (e) {
-      print(e);
+      print(e.toString());
     }
-
-    // 완료 후 앞 화면으로 이동
-    Get.to(HomePage());
   }
 
   Widget _ImageBox() {
@@ -284,6 +332,34 @@ class _WriteState extends State<Write> {
                     Row(
                       children: [
                         _ImageBox(),
+                        SizedBox(
+                          height: 150,
+                          width: 150,
+                          child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.camera_alt_rounded,
+                                          color: Colors.grey,
+                                        ),
+                                        CircleAvatar(
+                                          backgroundImage:
+                                              NetworkImage(_profileImageURL),
+                                          radius: 30,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ]),
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -304,6 +380,21 @@ class _WriteState extends State<Write> {
                                           height: 45,
                                           child: Container() //이미지
                                           ),
+                                      RawMaterialButton(
+                                        fillColor:
+                                            Theme.of(context).accentColor,
+                                        child: Icon(
+                                          Icons.add_photo_alternate_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        elevation: 8,
+                                        onPressed: () {
+                                          getImage(true);
+                                        },
+                                        padding: EdgeInsets.all(15),
+                                        shape: CircleBorder(),
+                                      ),
+                                      Container(child: Image.file(_image!))
                                     ],
                                   ),
                                 );
@@ -314,7 +405,7 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
-                              _uploadFile;
+                              _uploadImage;
                             },
                             child: Text('게시'))),
                   ],
@@ -322,4 +413,30 @@ class _WriteState extends State<Write> {
           ),
         ));
   }
+  //   void _uploadImageToStorage(ImageSource source) async {
+  //   XFile? image = await ImagePicker.pickImage(source: source);
+
+  //   if (image == null) return;
+  //   setState(() {
+  //     _image = image as File?;
+  //   });
+
+  //   // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
+  //   Reference storageReference =
+  //       _firebaseStorage.ref().child("profile/${_user?.uid}");
+
+  //   // 파일 업로드
+  //  UploadTask storageUploadTask = storageReference.putFile(_image!);
+
+  //   // 파일 업로드 완료까지 대기
+  //   await storageUploadTask.onComplete;
+
+  //   // 업로드한 사진의 URL 획득
+  //   String downloadURL = await storageReference.getDownloadURL();
+
+  //   // 업로드된 사진의 URL을 페이지에 반영
+  //   setState(() {
+  //     _profileImageURL = downloadURL;
+  //   });
+  // }
 }
