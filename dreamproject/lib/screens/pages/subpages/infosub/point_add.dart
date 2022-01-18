@@ -22,7 +22,7 @@ class _PointAddState extends State<PointAdd> {
         height: 35,
         child: TextButton(
           onPressed: onPressed,
-          child: Text(text, style: TextStyle(fontSize: 11)),
+          child: Text(text, style: TextStyle(fontSize: 10)),
           style: TextButton.styleFrom(
             elevation: 0,
             primary: Colors.blue,
@@ -178,7 +178,7 @@ class _PointAddState extends State<PointAdd> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 220),
+                  SizedBox(height: 320),
                   Container(
                     width: 320,
                     height: 1,

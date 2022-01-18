@@ -74,7 +74,7 @@ class _JoinPageState extends State<JoinPage> {
             msg: '인증이 완료되었습니다',
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.lightBlue,
             fontSize: 12.0);
       }
     } on FirebaseAuthException catch (e) {
@@ -236,32 +236,28 @@ class _JoinPageState extends State<JoinPage> {
                               fontSize: 10,
                             ),
                           ),
-                          onPressed: duplicateEmail == true
-                              ? null
-                              : () async {
-                                  if (vaildationemail(emailController.text) ==
-                                      null) {
-                                    if (await databaseController
-                                            .isDuplicatedEmail(
-                                                emailController.text) ==
-                                        true) {
-                                      Fluttertoast.showToast(
-                                          msg: '중복된 이메일입니다. 다시 한번 확인해주세요.',
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.lightBlue,
-                                          fontSize: 12.0);
-                                    } else {
-                                      duplicateEmail = true;
-                                      Fluttertoast.showToast(
-                                          msg: '사용가능한 이메일입니다',
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.lightBlue,
-                                          fontSize: 12.0);
-                                    }
-                                  }
-                                },
+                          onPressed: () async {
+                            if (vaildationemail(emailController.text) == null) {
+                              if (await databaseController.isDuplicatedEmail(
+                                      emailController.text) ==
+                                  true) {
+                                Fluttertoast.showToast(
+                                    msg: '중복된 이메일입니다. 다시 한번 확인해주세요.',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              } else {
+                                duplicateEmail = true;
+                                Fluttertoast.showToast(
+                                    msg: '사용가능한 이메일입니다',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              }
+                            }
+                          },
                           style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor: Color(0xff3AAFFC),
@@ -782,11 +778,18 @@ class _JoinPageState extends State<JoinPage> {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (duplicateEmail == true) {
+                      if (duplicateEmail == false) {
+                        Fluttertoast.showToast(
+                            msg: '이메일 인증을 완료해 주세요.',
+                            toastLength: Toast.LENGTH_SHORT,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.lightBlue,
+                            fontSize: 12.0);
+                      } else {
                         if (vaildationname(nameController.text) == null) {
                           if (gender == '') {
                             Fluttertoast.showToast(
-                                msg: "성별을 선택해주세요",
+                                msg: "성별을 선택해주세요.",
                                 toastLength: Toast.LENGTH_SHORT,
                                 timeInSecForIosWeb: 1,
                                 backgroundColor: Colors.lightBlue,
@@ -795,7 +798,7 @@ class _JoinPageState extends State<JoinPage> {
                             if (passwordController.text !=
                                 verifyPasswordController.text) {
                               Fluttertoast.showToast(
-                                  msg: "비밀번호가 일치하지 않습니다.",
+                                  msg: "비밀번호가 일치하지 않습니다. 다시 확인해주세요.",
                                   toastLength: Toast.LENGTH_SHORT,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: Colors.lightBlue,
