@@ -78,6 +78,20 @@ class _WriteState extends State<Write> {
       }
     });
   }
+  // DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
+  // Future<String> uploadFile(File _image) async {
+  //   Reference storageReference = FirebaseStorage.instance
+  //       .ref()
+  //       .child('sightings/${Path.basename(_image.path)}');
+  //  UploadTask uploadTask = storageReference.putFile(_image);
+  //   await uploadTask.onComplete;
+  //   print('File Uploaded');
+  //   String returnURL;
+  //   await storageReference.getDownloadURL().then((fileURL) {
+  //     returnURL = fileURL;
+  //   });
+  //   return returnURL;
+  // }
 
   Future _getImage() async {
     // ignore: deprecated_member_use
