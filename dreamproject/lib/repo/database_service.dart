@@ -10,20 +10,29 @@ class DatabaseService {
   Future updateUserData(
       String _email,
       String _name,
-      String _password,
       String _gender,
       String _phoneNumber,
+      List<dynamic> _myposts,
+      List<dynamic> _empathyposts,
+      List<dynamic> _myclubs,
       String _address,
-      String _postcode) async {
+      String _postcode,
+      String _point,
+      String _totaldonationpoint,
+      String _totaldonationnumber) async {
     return await userCollection.doc(uid).set({
-      'uid': uid,
       'email': _email,
       'name': _name,
       'gender': _gender,
-      'password': _password,
+      'mypost': _myposts,
+      'empathypost': _empathyposts,
+      'myclub': _myclubs,
       'address': _address,
       'postcode': _postcode,
       'phoneNumber': _phoneNumber,
+      'point': _point,
+      'totaldonationpoint': _totaldonationpoint,
+      'totaldonationnumber': _totaldonationnumber
     });
   }
 

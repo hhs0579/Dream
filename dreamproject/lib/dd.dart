@@ -21,12 +21,10 @@ Future getImage(bool gallery) async {
     ))!;
   }
 
-  setState(() {
-    if (pickedFile != null) {
-      _images.add(File(pickedFile.path));
-      //_image = File(pickedFile.path); // Use if you only need a single picture
-    } else {
-      print('No image selected.');
-    }
-  });
+  if (pickedFile != null) {
+    _images.add(File(pickedFile.path));
+    //_image = File(pickedFile.path); // Use if you only need a single picture
+  } else {
+    print('No image selected.');
+  }
 }
