@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
 
 class Write extends StatefulWidget {
   Write({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class Write extends StatefulWidget {
 }
 
 class _WriteState extends State<Write> {
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
   var old = false;
   var child = false;
   var disorder = false;
@@ -30,7 +32,6 @@ class _WriteState extends State<Write> {
   User? _user;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
-
   TextEditingController postTextEditController = TextEditingController();
   final _picker = ImagePicker();
 
@@ -76,21 +77,6 @@ class _WriteState extends State<Write> {
         print('No image selected.');
       }
     });
-    
-  }
-  DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
-  Future<String> uploadFile(File _image) async {
-    Reference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('sightings/${Path.basename(_image.path)}');
-   UploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    print('File Uploaded');
-    String returnURL;
-    await storageReference.getDownloadURL().then((fileURL) {
-      returnURL = fileURL;
-    });
-    return returnURL;
   }
 
   Future _getImage() async {
@@ -321,6 +307,7 @@ class _WriteState extends State<Write> {
                         textAlignVertical: TextAlignVertical.top,
                         textAlign: TextAlign.start,
                         maxLines: 15,
+                        controller: postTextEditController,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(10),
                           hintText: '내용작성',
@@ -405,7 +392,11 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
-                              _uploadImage;
+                              String postKey = randomString(16);
+                              fireStore.collection('post').doc(postKey).set({
+                                'key': postKey,
+                                'post': postTextEditController.text
+                              });
                             },
                             child: Text('게시'))),
                   ],
