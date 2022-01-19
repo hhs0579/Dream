@@ -1,5 +1,6 @@
 MyInfo? myInfo;
 
+// d
 class MyInfo {
   String email;
   String image;
@@ -33,7 +34,12 @@ class MyInfo {
         gender = json['gender'],
         name = json['name'],
         phone = json['phone'],
-        point = json['point'] ?? 0;
+        myposts = json['myposts'],
+        myempathyposts = json['myempathyposts'],
+        myclubs = json['myclubs'],
+        point = json['point'] ?? 0,
+        totaldonatepoint = json['totaldonatepoint'] ?? 0,
+        totaldonatenumber = json['totaldonaenumber'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -41,6 +47,11 @@ class MyInfo {
         'gender': gender,
         'name': name,
         'phone': phone,
+        'myposts': myposts,
+        'myempathyposts': myempathyposts,
+        'myclubs': myclubs,
         'point': point,
+        'totaldonatepoint': totaldonatepoint,
+        'totaldonatenumber': totaldonatenumber
       };
 }
