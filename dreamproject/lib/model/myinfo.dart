@@ -1,6 +1,5 @@
 MyInfo? myInfo;
 
-// d
 class MyInfo {
   String email;
   String image;
@@ -47,11 +46,6 @@ class MyInfo {
         'gender': gender,
         'name': name,
         'phone': phone,
-        'myposts': myposts,
-        'myempathyposts': myempathyposts,
-        'myclubs': myclubs,
         'point': point,
-        'totaldonatepoint': totaldonatepoint,
-        'totaldonatenumber': totaldonatenumber
       };
 }

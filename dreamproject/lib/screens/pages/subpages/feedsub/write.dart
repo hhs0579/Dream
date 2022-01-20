@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
+import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
@@ -21,6 +22,8 @@ class Write extends StatefulWidget {
 
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   var old = false;
   var child = false;
   var disorder = false;
@@ -406,10 +409,20 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
+                              final User? user = auth.currentUser;
+                              final uid = user?.uid;
                               String postKey = randomString(16);
-                              fireStore.collection('post').doc(postKey).set({
+                              fireStore.collection('post').doc(uid).set({
                                 'key': postKey,
-                                'post': postTextEditController.text
+                                'post': postTextEditController.text,
+                                'image': _image,
+                                'uid': uid,
+                                'old': old,
+                                'child': child,
+                                'disorder': disorder,
+                                'multiculture': multiculture,
+                                'pet': pet,
+                                'poverty': poverty,
                               });
                             },
                             child: Text('게시'))),
