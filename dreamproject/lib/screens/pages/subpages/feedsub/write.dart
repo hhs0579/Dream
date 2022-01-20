@@ -55,21 +55,22 @@ class _WriteState extends State<Write> {
   FirebaseStorage _storage = FirebaseStorage.instance;
 // Image Picker
   List<File> _images = [];
+  // Image Picker
 
   Future getImage(bool gallery) async {
     ImagePicker picker = ImagePicker();
-    PickedFile pickedFile;
+    PickedFile? pickedFile;
     // Let user select photo from gallery
     if (gallery) {
-      pickedFile = (await picker.getImage(
+      pickedFile = await picker.getImage(
         source: ImageSource.gallery,
-      ))!;
+      );
     }
     // Otherwise open camera to get new photo
     else {
-      pickedFile = (await picker.getImage(
+      pickedFile = await picker.getImage(
         source: ImageSource.camera,
-      ))!;
+      );
     }
 
     setState(() {
@@ -81,6 +82,7 @@ class _WriteState extends State<Write> {
       }
     });
   }
+
   // DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
   // Future<String> uploadFile(File _image) async {
   //   Reference storageReference = FirebaseStorage.instance
@@ -112,13 +114,14 @@ class _WriteState extends State<Write> {
 
   Future<String?> _uploadImage(String uploadFileName) async {
     try {
-      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      File? image =
+          (await _picker.pickImage(source: ImageSource.gallery)) as File?;
 
       print(image?.path ?? 'null');
       if (image != null) {
         Reference storageReference =
             _firebaseStorage.ref().child("post/${_user?.uid}");
-        UploadTask storageUploadTask = storageReference.putFile(_image!);
+        UploadTask storageUploadTask = storageReference.putFile(image);
         String downloadURL = await storageReference.getDownloadURL();
         setState(() {
           _profileImageURL = downloadURL;
@@ -411,11 +414,10 @@ class _WriteState extends State<Write> {
                             onPressed: () {
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-                              String postKey = randomString(16);
+
                               fireStore.collection('post').doc(uid).set({
-                                'key': postKey,
                                 'post': postTextEditController.text,
-                                'image': _image,
+                                'image': _uploadImage(_profileImageURL),
                                 'uid': uid,
                                 'old': old,
                                 'child': child,
