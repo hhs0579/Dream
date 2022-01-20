@@ -10,18 +10,19 @@ class AppData extends GetxController {
   String _userEmail = '';
   // bool _isExpertMode = false;
   MyInfo _myInfo = MyInfo(
-    email: '',
-    image: '',
-    gender: '',
-    name: '',
-    phone: '',
-    myposts: [],
-    myempathyposts: [],
-    myclubs: [],
-    point: 0,
-    totaldonatepoint: 0,
-    totaldonatenumber: 0,
-  );
+      email: '',
+      image: '',
+      gender: '',
+      name: '',
+      phone: '',
+      address: '',
+      myposts: [],
+      myempathyposts: [],
+      myclubs: [],
+      point: 0,
+      totaldonatepoint: 0,
+      totaldonatenumber: 0,
+      pushToken: '');
   List<String> adsImage = [];
   List<String> adsLink = [];
 

@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:dreamproject/classes/right_drawer.dart';
+import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
+import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,14 +19,13 @@ class MyInfoPage extends StatefulWidget {
   State<MyInfoPage> createState() => _MyInfoPageState();
 }
 
-final AuthService _auth = AuthService();
-
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   // PickedFile? _image;
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
+  AppData appdata = Get.find();
 
   var _member = 0;
   var _donation = 0;
@@ -100,34 +102,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
       children: [
         Scaffold(
           key: _scaffoldKey,
-          endDrawer: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: Drawer(
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    title: Text('드림소개', textAlign: TextAlign.center),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: Text('이용방법', textAlign: TextAlign.center),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: Text('''카카오톡 플친
-        전화 010-0000-0000''', textAlign: TextAlign.center),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: Text('로그아웃', textAlign: TextAlign.center),
-                    onTap: () async {
-                      await _auth.signOut();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+          endDrawer: drawer(context),
           appBar: AppBar(
             title: Text(
               '내 정보',
@@ -164,20 +139,24 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           children: [
                             _profileImage(),
                             Container(
+                              width: 55,
                               margin:
                                   EdgeInsets.only(top: 10, left: 15, right: 30),
-                              child: Text("홍길동",
+                              child: Text(appdata.myInfo.name,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(
-                              height: 5,
+                              height: 8,
                             ),
                             Container(
+                                width: 120,
                                 margin: EdgeInsets.only(left: 15, right: 30),
-                                child: Text("San Francisco, CA",
-                                    style: TextStyle(fontSize: 12)))
+                                child: Text(appdata.myInfo.address,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10)))
                           ],
                         ),
                         Container(
@@ -202,7 +181,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "500,000",
+                                    appdata.myInfo.point.toString(),
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -251,7 +230,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "500,000",
+                                    appdata.myInfo.totaldonatepoint.toString(),
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -282,7 +261,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "1,000",
+                                    appdata.myInfo.totaldonatenumber.toString(),
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,

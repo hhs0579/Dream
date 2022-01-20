@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/controller/auth_controller.dart';
 import 'package:dreamproject/data/address_model.dart';
+import 'package:dreamproject/data/appdata.dart';
+import 'package:dreamproject/controller/database_controller.dart';
+import 'package:dreamproject/controller/local_storage_controller.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
-import 'package:dreamproject/repo/database_service.dart';
-import 'package:dreamproject/screens/starts/join2.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'join_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -73,17 +73,8 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () async {
-          try {
-            UserCredential userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(email: email, password: password);
-            Get.to(HomePage());
-          } on FirebaseAuthException catch (e) {
-            if (e.code == 'user-not-found') {
-              print('No user found for that email.');
-            } else if (e.code == 'wrong-password') {
-              print('Wrong password provided for that user.');
-            }
-          }
+          await authController.authUser(email, password);
+          Get.offAll(HomePage());
         },
         child: Text('로그인', style: TextStyle(color: Colors.white)),
       ),

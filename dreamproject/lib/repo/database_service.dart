@@ -8,31 +8,28 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   Future updateUserData(
-      String _email,
-      String _name,
-      String _gender,
-      String _phoneNumber,
-      List<dynamic> _myposts,
-      List<dynamic> _empathyposts,
-      List<dynamic> _myclubs,
-      String _address,
-      String _postcode,
-      String _point,
-      String _totaldonationpoint,
-      String _totaldonationnumber) async {
+    String _email,
+    String _name,
+    String _gender,
+    String _phone,
+    String _address,
+    String _postcode,
+  ) async {
     return await userCollection.doc(uid).set({
       'email': _email,
       'name': _name,
+      'image': '',
       'gender': _gender,
-      'mypost': _myposts,
-      'empathypost': _empathyposts,
-      'myclub': _myclubs,
+      'myposts': [],
+      'myempathyposts': [],
+      'myclubs': [],
       'address': _address,
       'postcode': _postcode,
-      'phoneNumber': _phoneNumber,
-      'point': _point,
-      'totaldonationpoint': _totaldonationpoint,
-      'totaldonationnumber': _totaldonationnumber
+      'phone': _phone,
+      'point': 0,
+      'totaldonatepoint': 0,
+      'totaldonatenumber': 0,
+      'pushToken': ''
     });
   }
 

@@ -99,18 +99,13 @@ class _JoinPageState extends State<JoinPage> {
           email: email, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid).updateUserData(
-          email,
-          nameController.text,
-          gender,
-          phoneNumber.text,
-          [],
-          [],
-          [3],
-          address + ' ' + _deaddressTextEditor.text,
-          postcode,
-          '0',
-          '0',
-          '0');
+        email,
+        nameController.text,
+        gender,
+        phoneNumber.text,
+        address + ' ' + _deaddressTextEditor.text,
+        postcode,
+      );
     } catch (e) {
       void errorToast(e) {
         Fluttertoast.showToast(
