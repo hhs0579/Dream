@@ -54,48 +54,6 @@ class _WriteState extends State<Write> {
   }
 
   FirebaseStorage _storage = FirebaseStorage.instance;
-// Image Picker
-
-  // Image Picker
-
-  // DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
-  // Future<String> uploadFile(File _image) async {
-  //   Reference storageReference = FirebaseStorage.instance
-  //       .ref()
-  //       .child('sightings/${Path.basename(_image.path)}');
-  //  UploadTask uploadTask = storageReference.putFile(_image);
-  //   await uploadTask.onComplete;
-  //   print('File Uploaded');
-  //   String returnURL;
-  //   await storageReference.getDownloadURL().then((fileURL) {
-  //     returnURL = fileURL;
-  //   });
-  //   return returnURL;
-  // }
-
-  Future _getImage() async {
-    // ignore: deprecated_member_use
-    final pickedFile = await _picker.getImage(
-        source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
-    // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
-    setState(() {
-      if (_image == null) {
-        setState(() {});
-      } else {
-        _image = File(pickedFile!.path);
-      }
-    });
-  }
-
-  Future<String> _uploadphotofile() async {
-    final Reference storageReference =
-        FirebaseStorage.instance.ref().child("products");
-    UploadTask uploadTask =
-        storageReference.child("post/${user?.uid}").putFile(_image!);
-
-    String url = await (await uploadTask).ref.getDownloadURL();
-    return url;
-  }
 
   void _uploadImageToStorage() async {
     XFile? result = await _picker.pickImage(source: ImageSource.gallery);
@@ -105,19 +63,13 @@ class _WriteState extends State<Write> {
       _image = File(result.path);
     });
 
-    // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
     Reference storageReference =
         _firebaseStorage.ref().child("post/${_user?.uid}");
 
-    // 파일 업로드
     UploadTask storageUploadTask = storageReference.putFile(_image!);
 
-    // 파일 업로드 완료까지 대기
-
-    // 업로드한 사진의 URL 획득
     String downloadURL = await storageReference.getDownloadURL();
 
-    // 업로드된 사진의 URL을 페이지에 반영
     setState(() {
       _profileImageURL = downloadURL;
     });
@@ -141,26 +93,6 @@ class _WriteState extends State<Write> {
     } catch (e) {
       print(e.toString());
     }
-  }
-
-  Widget _ImageBox() {
-    return GestureDetector(
-      onTap: () async {
-        File? result = await _getImage();
-        if (result != null) {
-          questionImages.add(result);
-        }
-      },
-      child: SizedBox(
-        width: 45,
-        height: 45,
-        child: Stack(
-          children: [
-            Center(child: Icon(Icons.attach_file, color: Color(0xff3AAFFC))),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -443,49 +375,5 @@ class _WriteState extends State<Write> {
                 )),
           ),
         ));
-  }
-  //   void _uploadImageToStorage(ImageSource source) async {
-  //   XFile? image = await ImagePicker.pickImage(source: source);
-
-  //   if (image == null) return;
-  //   setState(() {
-  //     _image = image as File?;
-  //   });
-
-  //   // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
-  //   Reference storageReference =
-  //       _firebaseStorage.ref().child("profile/${_user?.uid}");
-
-  //   // 파일 업로드
-  //  UploadTask storageUploadTask = storageReference.putFile(_image!);
-
-  //   // 파일 업로드 완료까지 대기
-  //   await storageUploadTask.onComplete;
-
-  //   // 업로드한 사진의 URL 획득
-  //   String downloadURL = await storageReference.getDownloadURL();
-
-  //   // 업로드된 사진의 URL을 페이지에 반영
-  //   setState(() {
-  //     _profileImageURL = downloadURL;
-  //   });
-  // }
-
-}
-
-class FireStoreDataBase {
-  String? downloadURL;
-  Future getData() async {
-    try {
-      await downloadURLExample();
-      return downloadURL;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future downloadURLExample() async {
-    downloadURL =
-        await FirebaseStorage.instance.ref().child("image").getDownloadURL();
   }
 }
