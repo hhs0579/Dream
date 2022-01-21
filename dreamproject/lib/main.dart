@@ -3,7 +3,6 @@ import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/user.dart';
 import 'package:dreamproject/splash_screen.dart';
-import 'package:dreamproject/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

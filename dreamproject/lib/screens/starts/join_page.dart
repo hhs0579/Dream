@@ -314,7 +314,7 @@ class _JoinPageState extends State<JoinPage> {
                 Container(
                   height: 70,
                   margin: EdgeInsets.only(top: 15),
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(left: 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -335,7 +335,7 @@ class _JoinPageState extends State<JoinPage> {
                             )),
                       ),
                       Container(
-                        width: 200,
+                        width: 190,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
