@@ -3,6 +3,7 @@ import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
+import 'package:dreamproject/screens/pages/subpages/feedsub/qq.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +24,7 @@ class Write extends StatefulWidget {
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  FileStorage _fileStoarge = Get.put(FileStorage());
   var old = false;
   var child = false;
   var disorder = false;
@@ -54,34 +55,8 @@ class _WriteState extends State<Write> {
 
   FirebaseStorage _storage = FirebaseStorage.instance;
 // Image Picker
-  List<File> _images = [];
+
   // Image Picker
-
-  Future getImage(bool gallery) async {
-    ImagePicker picker = ImagePicker();
-    PickedFile? pickedFile;
-    // Let user select photo from gallery
-    if (gallery) {
-      pickedFile = await picker.getImage(
-        source: ImageSource.gallery,
-      );
-    }
-    // Otherwise open camera to get new photo
-    else {
-      pickedFile = await picker.getImage(
-        source: ImageSource.camera,
-      );
-    }
-
-    setState(() {
-      if (pickedFile != null) {
-        _images.add(File(pickedFile.path));
-        //_image = File(pickedFile.path); // Use if you only need a single picture
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
 
   // DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
   // Future<String> uploadFile(File _image) async {
@@ -109,6 +84,42 @@ class _WriteState extends State<Write> {
       } else {
         _image = File(pickedFile!.path);
       }
+    });
+  }
+
+  Future<String> _uploadphotofile() async {
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child("products");
+    UploadTask uploadTask =
+        storageReference.child("post/${user?.uid}").putFile(_image!);
+
+    String url = await (await uploadTask).ref.getDownloadURL();
+    return url;
+  }
+
+  void _uploadImageToStorage() async {
+    XFile? result = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (result == null) return;
+    setState(() {
+      _image = File(result.path);
+    });
+
+    // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
+    Reference storageReference =
+        _firebaseStorage.ref().child("post/${_user?.uid}");
+
+    // 파일 업로드
+    UploadTask storageUploadTask = storageReference.putFile(_image!);
+
+    // 파일 업로드 완료까지 대기
+
+    // 업로드한 사진의 URL 획득
+    String downloadURL = await storageReference.getDownloadURL();
+
+    // 업로드된 사진의 URL을 페이지에 반영
+    setState(() {
+      _profileImageURL = downloadURL;
     });
   }
 
@@ -338,7 +349,9 @@ class _WriteState extends State<Write> {
                     ),
                     Row(
                       children: [
-                        _ImageBox(),
+                        IconButton(
+                            onPressed: _uploadImageToStorage,
+                            icon: Icon(Icons.shopping_bag)),
                         SizedBox(
                           height: 150,
                           width: 150,
@@ -352,9 +365,10 @@ class _WriteState extends State<Write> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.camera_alt_rounded,
-                                          color: Colors.grey,
+                                        IconButton(
+                                          icon: Icon(Icons.camera_alt_rounded,
+                                              color: Colors.grey),
+                                          onPressed: () {},
                                         ),
                                         CircleAvatar(
                                           backgroundImage:
@@ -395,13 +409,10 @@ class _WriteState extends State<Write> {
                                           color: Colors.white,
                                         ),
                                         elevation: 8,
-                                        onPressed: () {
-                                          getImage(true);
-                                        },
+                                        onPressed: () {},
                                         padding: EdgeInsets.all(15),
                                         shape: CircleBorder(),
                                       ),
-                                      Container(child: Image.file(_image!))
                                     ],
                                   ),
                                 );
@@ -417,7 +428,7 @@ class _WriteState extends State<Write> {
 
                               fireStore.collection('post').doc(uid).set({
                                 'post': postTextEditController.text,
-                                'image': _uploadImage(_profileImageURL),
+                                'image': _profileImageURL,
                                 'uid': uid,
                                 'old': old,
                                 'child': child,
@@ -459,4 +470,22 @@ class _WriteState extends State<Write> {
   //     _profileImageURL = downloadURL;
   //   });
   // }
+
+}
+
+class FireStoreDataBase {
+  String? downloadURL;
+  Future getData() async {
+    try {
+      await downloadURLExample();
+      return downloadURL;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future downloadURLExample() async {
+    downloadURL =
+        await FirebaseStorage.instance.ref().child("image").getDownloadURL();
+  }
 }
