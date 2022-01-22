@@ -40,11 +40,11 @@ class _WriteState extends State<Write> {
   final _picker = ImagePicker();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<File> questionImages = [];
+  List<File> Images = [];
 
   @override
   void initState() {
-    questionImages = [];
+    Images = [];
     super.initState();
     _prepareService();
   }
@@ -283,7 +283,7 @@ class _WriteState extends State<Write> {
                       children: [
                         IconButton(
                             onPressed: _uploadImageToStorage,
-                            icon: Icon(Icons.shopping_bag)),
+                            icon: Icon(Icons.attach_file)),
                         SizedBox(
                           height: 150,
                           width: 150,
@@ -297,11 +297,6 @@ class _WriteState extends State<Write> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        IconButton(
-                                          icon: Icon(Icons.camera_alt_rounded,
-                                              color: Colors.grey),
-                                          onPressed: () {},
-                                        ),
                                         CircleAvatar(
                                           backgroundImage:
                                               NetworkImage(_profileImageURL),
@@ -318,11 +313,11 @@ class _WriteState extends State<Write> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 45,
-                      child: questionImages.isEmpty
+                      child: Images.isEmpty
                           ? Container()
                           : ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: questionImages.length,
+                              itemCount: Images.length,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -357,7 +352,6 @@ class _WriteState extends State<Write> {
                             onPressed: () {
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-
                               fireStore.collection('post').doc(uid).set({
                                 'post': postTextEditController.text,
                                 'image': _profileImageURL,
@@ -369,6 +363,29 @@ class _WriteState extends State<Write> {
                                 'pet': pet,
                                 'poverty': poverty,
                               });
+                              if ((child ||
+                                      old ||
+                                      pet ||
+                                      disorder ||
+                                      multiculture ||
+                                      poverty) ==
+                                  false) {
+                                Fluttertoast.showToast(
+                                    msg: "카테고리를 하나이상 선택해주세요.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              } else if (postTextEditController.text == "") {
+                                Fluttertoast.showToast(
+                                    msg: "작성 내용을 입력해주세요.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              } else {
+                                Get.to(HomePage());
+                              }
                             },
                             child: Text('게시'))),
                   ],
