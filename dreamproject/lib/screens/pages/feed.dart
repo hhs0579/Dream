@@ -23,41 +23,29 @@ class _FeedState extends State<Feed> {
     return Stack(
       children: [
         Scaffold(
-          key: _scaffoldKey,
-          endDrawer: drawer(context),
-          appBar: AppBar(
-            title: Text(
-              'FEED',
-              style: TextStyle(color: Colors.black),
+            key: _scaffoldKey,
+            endDrawer: drawer(context),
+            appBar: AppBar(
+              title: Text(
+                'FEED',
+                style: TextStyle(color: Colors.black),
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              leading: IconButton(
+                  icon: Icon(Icons.receipt_long,
+                      color: Color(0xff3AAFFC), size: 30),
+                  onPressed: () {}),
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.more_vert,
+                        color: Color(0xff3AAFFC), size: 30),
+                    onPressed: () =>
+                        _scaffoldKey.currentState!.openEndDrawer()),
+              ],
             ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            leading: IconButton(
-                icon: Icon(Icons.receipt_long,
-                    color: Color(0xff3AAFFC), size: 30),
-                onPressed: () {}),
-            actions: <Widget>[
-              IconButton(
-                  icon:
-                      Icon(Icons.more_vert, color: Color(0xff3AAFFC), size: 30),
-                  onPressed: () => _scaffoldKey.currentState!.openEndDrawer()),
-            ],
-          ),
-          body: Container(
-            child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  // return PostCard();
-                  return Container();
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 20,
-                  );
-                },
-                itemCount: 30),
-          ),
-        ),
+            body: Container(child: PostCard())),
         Align(
           alignment: Alignment.bottomRight,
           child: Container(

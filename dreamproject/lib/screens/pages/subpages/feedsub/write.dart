@@ -25,12 +25,15 @@ class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
   FileStorage _fileStoarge = Get.put(FileStorage());
+
   var old = false;
   var child = false;
   var disorder = false;
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  var date = DateTime.now().toUtc();
+
   File? _image;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? _user;
@@ -350,9 +353,20 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
+                              var key = randomString(16);
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-                              fireStore.collection('post').doc(uid).set({
+                              var name = '';
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc('${user?.uid}')
+                                  .get()
+                                  .then((value) => {
+                                        name = value['name'],
+                                      });
+
+                              fireStore.collection('post').doc(key).set({
+                                'key': key,
                                 'post': postTextEditController.text,
                                 'image': _profileImageURL,
                                 'uid': uid,
@@ -362,6 +376,8 @@ class _WriteState extends State<Write> {
                                 'multiculture': multiculture,
                                 'pet': pet,
                                 'poverty': poverty,
+                                'date': date,
+                                'name': name,
                               });
                               if ((child ||
                                       old ||
