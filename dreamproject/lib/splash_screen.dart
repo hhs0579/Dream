@@ -16,6 +16,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  void initState() {
+    Timer(Duration(milliseconds: 1500), () {
+      _checkDatabase();
+    });
+  }
+
   _checkDatabase() {
     _checkLocalInfo();
   }
@@ -23,10 +29,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void _checkLocalInfo() async {
     String? userEmail = await localStorageController.getUserEmail();
     if (userEmail == null) {
-      Get.off(LoginPage());
+      Get.off(() => LoginPage());
     } else {
-      if (userEmail.isEmpty) {
-        Get.off(LoginPage());
+      if (userEmail == '') {
+        Get.off(() => LoginPage());
       } else {
         AppData appData = Get.find();
         appData.userEmail = userEmail;
@@ -39,15 +45,9 @@ class _SplashScreenState extends State<SplashScreen> {
           );
         }
         print('success');
-        Get.off(HomePage());
+        Get.off(() => HomePage());
       }
     }
-  }
-
-  void initState() {
-    Timer(Duration(milliseconds: 1500), () {
-      _checkDatabase();
-    });
   }
 
   @override

@@ -53,8 +53,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
             child: Container(
                 width: 65,
                 height: 65,
-                child:
-                    _image == null ? _profileImageOff() : _profileImageOn())),
+                child: appdata.myInfo.image == ''
+                    ? _profileImageOff()
+                    : _profileImageOn())),
         Positioned(
             right: 22,
             top: 60,
@@ -128,9 +129,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
+                    width: Get.width,
                     height: 180,
                     margin: EdgeInsets.only(top: 20, bottom: 25),
                     child: Row(
@@ -289,6 +290,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                   ),
                   SizedBox(height: 20),
                   Container(
+                    width: Get.width,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
