@@ -1,9 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/controller/auth_controller.dart';
-import 'package:dreamproject/data/address_model.dart';
-import 'package:dreamproject/data/appdata.dart';
-import 'package:dreamproject/controller/database_controller.dart';
-import 'package:dreamproject/controller/local_storage_controller.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +14,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var user = FirebaseAuth.instance.currentUser;
-  final AuthService _auth = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 

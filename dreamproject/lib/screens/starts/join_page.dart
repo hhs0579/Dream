@@ -8,7 +8,6 @@ import 'package:dreamproject/repo/join_validation.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
 import 'dart:async';
-
 import 'login_page.dart';
 
 class JoinPage extends StatefulWidget {
@@ -87,7 +86,7 @@ class _JoinPageState extends State<JoinPage> {
           msg: '오류가 발생했습니다. 인증번호를 확인해주세요.',
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.lightBlue,
           fontSize: 12.0);
     }
   }
@@ -654,6 +653,7 @@ class _JoinPageState extends State<JoinPage> {
                           onPressed: _isAuthsms
                               ? null
                               : () async {
+                                  FocusScope.of(context).unfocus();
                                   Fluttertoast.showToast(
                                       msg:
                                           "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
@@ -664,7 +664,18 @@ class _JoinPageState extends State<JoinPage> {
                                   await _auth.verifyPhoneNumber(
                                       timeout: const Duration(seconds: 120),
                                       codeAutoRetrievalTimeout:
-                                          (String verificationId) {},
+                                          (String verificationId) {
+                                        setState(() {
+                                          _isAuthsms = false;
+                                          _timer?.cancel();
+                                        });
+                                        Fluttertoast.showToast(
+                                            msg: "인증번호가 만료되었습니다. 다시 시도해 주세요.",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.lightBlue,
+                                            fontSize: 12.0);
+                                      },
                                       phoneNumber: "+8210" +
                                           phoneNumber.text.substring(3).trim(),
                                       verificationCompleted:
@@ -688,12 +699,10 @@ class _JoinPageState extends State<JoinPage> {
                                           _isAuthsms = true;
                                           _timerStart();
 
-                                          FocusScope.of(context)
-                                              .requestFocus(otpFocusNode);
-
                                           this.verificationId = verificationId;
                                         });
                                       });
+                                  otpFocusNode.requestFocus();
                                 },
                           style: TextButton.styleFrom(
                               backgroundColor: Color(0xff3AAFFC),
@@ -705,7 +714,7 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                 ),
                 Visibility(
-                  visible: _isAuthsms,
+                  visible: authOk == false,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -718,6 +727,7 @@ class _JoinPageState extends State<JoinPage> {
                               child: TextField(
                                 keyboardType: TextInputType.number,
                                 controller: otpController,
+                                focusNode: otpFocusNode,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.zero,
                                   enabledBorder: UnderlineInputBorder(
@@ -748,6 +758,7 @@ class _JoinPageState extends State<JoinPage> {
                                   style: TextStyle(fontSize: 10),
                                 ),
                                 onPressed: () {
+                                  FocusScope.of(context).unfocus();
                                   PhoneAuthCredential phoneAuthCredential =
                                       PhoneAuthProvider.credential(
                                           verificationId: verificationId,

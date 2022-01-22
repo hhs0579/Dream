@@ -6,7 +6,6 @@ import 'screens/pages/donate.dart';
 import 'screens/pages/empathy.dart';
 import 'screens/pages/feed.dart';
 import 'screens/pages/my_info.dart';
-import 'screens/pages/subpages/feedsub/legal.dart';
 
 class HomePage extends GetView<HomePageController> {
   HomePage({Key? key}) : super(key: key);
@@ -20,7 +19,6 @@ class HomePage extends GetView<HomePageController> {
           body: IndexedStack(
             index: controller.homePageIndex.value,
             children: [
-              //버튼 눌렀을때 다른 페이지로 넘어가는지
               Navigator(
                 key: controller.navigatorKey,
                 onGenerateRoute: (routeSettings) {

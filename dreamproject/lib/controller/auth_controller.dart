@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-
 import 'local_storage_controller.dart';
 
 AuthController authController = AuthController();
