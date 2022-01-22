@@ -351,9 +351,11 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
+                              var key = randomString(16);
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-                              fireStore.collection('post').doc(uid).set({
+                              fireStore.collection('post').doc(key).set({
+                                'key': key,
                                 'post': postTextEditController.text,
                                 'image': _profileImageURL,
                                 'uid': uid,
