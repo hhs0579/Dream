@@ -39,6 +39,7 @@ class _JoinPageState extends State<JoinPage> {
   final deaddressFocusNode = FocusNode();
 
   bool authOk = false;
+  bool isotpconfirm = false;
   bool duplicateEmail = false;
   bool passwordHide = true;
 
@@ -66,6 +67,7 @@ class _JoinPageState extends State<JoinPage> {
         setState(() {
           authOk = true;
           _isAuthsms = false;
+          isotpconfirm = false;
         });
         await _auth.currentUser!.delete();
         _auth.signOut();
@@ -697,6 +699,7 @@ class _JoinPageState extends State<JoinPage> {
 
                                         setState(() {
                                           _isAuthsms = true;
+                                          isotpconfirm = true;
                                           _timerStart();
 
                                           this.verificationId = verificationId;
@@ -714,7 +717,7 @@ class _JoinPageState extends State<JoinPage> {
                   ),
                 ),
                 Visibility(
-                  visible: authOk == false,
+                  visible: isotpconfirm,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
