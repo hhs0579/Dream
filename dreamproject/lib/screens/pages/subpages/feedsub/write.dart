@@ -25,6 +25,7 @@ class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
   FileStorage _fileStoarge = Get.put(FileStorage());
+
   var old = false;
   var child = false;
   var disorder = false;
@@ -32,6 +33,7 @@ class _WriteState extends State<Write> {
   var pet = false;
   var poverty = false;
   var date = DateTime.now().toUtc();
+
   File? _image;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? _user;
@@ -354,6 +356,15 @@ class _WriteState extends State<Write> {
                               var key = randomString(16);
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
+                              var name = '';
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc('${user?.uid}')
+                                  .get()
+                                  .then((value) => {
+                                        name = value['name'],
+                                      });
+
                               fireStore.collection('post').doc(key).set({
                                 'key': key,
                                 'post': postTextEditController.text,
@@ -365,7 +376,8 @@ class _WriteState extends State<Write> {
                                 'multiculture': multiculture,
                                 'pet': pet,
                                 'poverty': poverty,
-                                'date': date
+                                'date': date,
+                                'name': name,
                               });
                               if ((child ||
                                       old ||
