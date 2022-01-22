@@ -31,6 +31,7 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  var date = DateTime.now().toUtc();
   File? _image;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? _user;
@@ -362,6 +363,7 @@ class _WriteState extends State<Write> {
                                 'multiculture': multiculture,
                                 'pet': pet,
                                 'poverty': poverty,
+                                'date': date
                               });
                               if ((child ||
                                       old ||
@@ -383,9 +385,8 @@ class _WriteState extends State<Write> {
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Colors.lightBlue,
                                     fontSize: 12.0);
-                              } else {
-                                Get.to(HomePage());
                               }
+                              Get.to(HomePage());
                             },
                             child: Text('게시'))),
                   ],
