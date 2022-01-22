@@ -1,18 +1,11 @@
 import 'package:dreamproject/data/appdata.dart';
-import 'package:dreamproject/home_page.dart';
-import 'package:dreamproject/repo/auth_service.dart';
-import 'package:dreamproject/repo/user.dart';
 import 'package:dreamproject/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/homepage_controller.dart';
-import 'screens/pages/feed.dart';
-import 'screens/starts/login_page.dart';
-import 'screens/starts/join_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

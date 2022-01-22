@@ -3,6 +3,7 @@ import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
+import 'package:dreamproject/screens/pages/subpages/feedsub/qq.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,7 +24,7 @@ class Write extends StatefulWidget {
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  FileStorage _fileStoarge = Get.put(FileStorage());
   var old = false;
   var child = false;
   var disorder = false;
@@ -39,11 +40,11 @@ class _WriteState extends State<Write> {
   final _picker = ImagePicker();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<File> questionImages = [];
+  List<File> Images = [];
 
   @override
   void initState() {
-    questionImages = [];
+    Images = [];
     super.initState();
     _prepareService();
   }
@@ -53,62 +54,24 @@ class _WriteState extends State<Write> {
   }
 
   FirebaseStorage _storage = FirebaseStorage.instance;
-// Image Picker
-  List<File> _images = [];
-  // Image Picker
 
-  Future getImage(bool gallery) async {
-    ImagePicker picker = ImagePicker();
-    PickedFile? pickedFile;
-    // Let user select photo from gallery
-    if (gallery) {
-      pickedFile = await picker.getImage(
-        source: ImageSource.gallery,
-      );
-    }
-    // Otherwise open camera to get new photo
-    else {
-      pickedFile = await picker.getImage(
-        source: ImageSource.camera,
-      );
-    }
+  void _uploadImageToStorage() async {
+    XFile? result = await _picker.pickImage(source: ImageSource.gallery);
 
+    if (result == null) return;
     setState(() {
-      if (pickedFile != null) {
-        _images.add(File(pickedFile.path));
-        //_image = File(pickedFile.path); // Use if you only need a single picture
-      } else {
-        print('No image selected.');
-      }
+      _image = File(result.path);
     });
-  }
 
-  // DocumentReference sightingRef = FirebaseFirestore.instance.collection("post image").doc();
-  // Future<String> uploadFile(File _image) async {
-  //   Reference storageReference = FirebaseStorage.instance
-  //       .ref()
-  //       .child('sightings/${Path.basename(_image.path)}');
-  //  UploadTask uploadTask = storageReference.putFile(_image);
-  //   await uploadTask.onComplete;
-  //   print('File Uploaded');
-  //   String returnURL;
-  //   await storageReference.getDownloadURL().then((fileURL) {
-  //     returnURL = fileURL;
-  //   });
-  //   return returnURL;
-  // }
+    Reference storageReference =
+        _firebaseStorage.ref().child("post/${_user?.uid}");
 
-  Future _getImage() async {
-    // ignore: deprecated_member_use
-    final pickedFile = await _picker.getImage(
-        source: ImageSource.gallery, maxWidth: 650, maxHeight: 100);
-    // 사진의 크기를 지정 650*100 이유: firebase는 유료이다.
+    UploadTask storageUploadTask = storageReference.putFile(_image!);
+
+    String downloadURL = await storageReference.getDownloadURL();
+
     setState(() {
-      if (_image == null) {
-        setState(() {});
-      } else {
-        _image = File(pickedFile!.path);
-      }
+      _profileImageURL = downloadURL;
     });
   }
 
@@ -130,26 +93,6 @@ class _WriteState extends State<Write> {
     } catch (e) {
       print(e.toString());
     }
-  }
-
-  Widget _ImageBox() {
-    return GestureDetector(
-      onTap: () async {
-        File? result = await _getImage();
-        if (result != null) {
-          questionImages.add(result);
-        }
-      },
-      child: SizedBox(
-        width: 45,
-        height: 45,
-        child: Stack(
-          children: [
-            Center(child: Icon(Icons.attach_file, color: Color(0xff3AAFFC))),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -338,7 +281,9 @@ class _WriteState extends State<Write> {
                     ),
                     Row(
                       children: [
-                        _ImageBox(),
+                        IconButton(
+                            onPressed: _uploadImageToStorage,
+                            icon: Icon(Icons.attach_file)),
                         SizedBox(
                           height: 150,
                           width: 150,
@@ -352,10 +297,6 @@ class _WriteState extends State<Write> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.camera_alt_rounded,
-                                          color: Colors.grey,
-                                        ),
                                         CircleAvatar(
                                           backgroundImage:
                                               NetworkImage(_profileImageURL),
@@ -372,11 +313,11 @@ class _WriteState extends State<Write> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: 45,
-                      child: questionImages.isEmpty
+                      child: Images.isEmpty
                           ? Container()
                           : ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: questionImages.length,
+                              itemCount: Images.length,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8),
@@ -395,13 +336,10 @@ class _WriteState extends State<Write> {
                                           color: Colors.white,
                                         ),
                                         elevation: 8,
-                                        onPressed: () {
-                                          getImage(true);
-                                        },
+                                        onPressed: () {},
                                         padding: EdgeInsets.all(15),
                                         shape: CircleBorder(),
                                       ),
-                                      Container(child: Image.file(_image!))
                                     ],
                                   ),
                                 );
@@ -414,10 +352,9 @@ class _WriteState extends State<Write> {
                             onPressed: () {
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-
                               fireStore.collection('post').doc(uid).set({
                                 'post': postTextEditController.text,
-                                'image': _uploadImage(_profileImageURL),
+                                'image': _profileImageURL,
                                 'uid': uid,
                                 'old': old,
                                 'child': child,
@@ -426,6 +363,29 @@ class _WriteState extends State<Write> {
                                 'pet': pet,
                                 'poverty': poverty,
                               });
+                              if ((child ||
+                                      old ||
+                                      pet ||
+                                      disorder ||
+                                      multiculture ||
+                                      poverty) ==
+                                  false) {
+                                Fluttertoast.showToast(
+                                    msg: "카테고리를 하나이상 선택해주세요.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              } else if (postTextEditController.text == "") {
+                                Fluttertoast.showToast(
+                                    msg: "작성 내용을 입력해주세요.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.lightBlue,
+                                    fontSize: 12.0);
+                              } else {
+                                Get.to(HomePage());
+                              }
                             },
                             child: Text('게시'))),
                   ],
@@ -433,30 +393,4 @@ class _WriteState extends State<Write> {
           ),
         ));
   }
-  //   void _uploadImageToStorage(ImageSource source) async {
-  //   XFile? image = await ImagePicker.pickImage(source: source);
-
-  //   if (image == null) return;
-  //   setState(() {
-  //     _image = image as File?;
-  //   });
-
-  //   // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
-  //   Reference storageReference =
-  //       _firebaseStorage.ref().child("profile/${_user?.uid}");
-
-  //   // 파일 업로드
-  //  UploadTask storageUploadTask = storageReference.putFile(_image!);
-
-  //   // 파일 업로드 완료까지 대기
-  //   await storageUploadTask.onComplete;
-
-  //   // 업로드한 사진의 URL 획득
-  //   String downloadURL = await storageReference.getDownloadURL();
-
-  //   // 업로드된 사진의 URL을 페이지에 반영
-  //   setState(() {
-  //     _profileImageURL = downloadURL;
-  //   });
-  // }
 }
