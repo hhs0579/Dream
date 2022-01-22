@@ -47,7 +47,8 @@ class _FeedState extends State<Feed> {
           body: Container(
             child: ListView.separated(
                 itemBuilder: (BuildContext context, int index) {
-                  return PostCard();
+                  // return PostCard();
+                  return Container();
                 },
                 separatorBuilder: (BuildContext context, int index) {
                   return SizedBox(

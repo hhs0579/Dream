@@ -1,45 +1,45 @@
-import 'dart:async';
+// import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dreamproject/screens/starts/login_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PostCard extends StatefulWidget {
-  const PostCard({Key? key}) : super(key: key);
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
 
-  @override
-  _PostCardState createState() => _PostCardState();
-}
+// class PostCard extends StatefulWidget {
+//   const PostCard({Key? key}) : super(key: key);
 
-final FirebaseAuth auth = FirebaseAuth.instance;
-final User? user = auth.currentUser;
-final uid = user?.uid;
-Stream UserColectionStream =
-    FirebaseFirestore.instance.collection('users').snapshots();
-Stream UserdocumentStream =
-    FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
-Stream PostColectionStream =
-    FirebaseFirestore.instance.collection('post').snapshots();
-Stream PostdocumentStream =
-    FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
-final StreamController<bool> streamController = StreamController<bool>();
+//   @override
+//   _PostCardState createState() => _PostCardState();
+// }
 
-class _PostCardState extends State<PostCard> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: StreamBuilder(
-          stream: streamController.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text("${snapshot.data}");
-            } else {
-              return CircularProgressIndicator();
-            }
-            ;
-          }),
-    );
+// final FirebaseAuth auth = FirebaseAuth.instance;
+// final User? user = auth.currentUser;
+// final uid = user?.uid;
+// Stream UserColectionStream =
+//     FirebaseFirestore.instance.collection('users').snapshots();
+// Stream UserdocumentStream =
+//     FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+// Stream PostColectionStream =
+//     FirebaseFirestore.instance.collection('post').snapshots();
+// Stream PostdocumentStream =
+//     FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+// final StreamController<bool> streamController = StreamController<bool>();
+
+// class _PostCardState extends State<PostCard> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: StreamBuilder(
+//           stream: streamController.stream,
+//           builder: (context, snapshot) {
+//             if (snapshot.hasData) {
+//               return Text("${snapshot.data}");
+//             } else {
+//               return CircularProgressIndicator();
+//             }
+            
+//           }),
+//     );
 //     return Container(
 //       padding: EdgeInsets.symmetric(horizontal: 30),
 //       child: Column(
@@ -301,5 +301,5 @@ class _PostCardState extends State<PostCard> {
 //           )
 //         ]
 //       )Date.now().toUtc()
-  }
-}
+//   }
+// }

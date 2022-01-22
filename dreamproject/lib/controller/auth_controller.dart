@@ -15,7 +15,7 @@ class AuthController {
         email: email,
         password: password,
       );
-      _saveLocalStorage(userCredential);
+      await _saveLocalStorage(userCredential);
       String? pushToken = await getToken();
       if (pushToken != null) {
         databaseController.updatePushToken(
@@ -34,7 +34,7 @@ class AuthController {
         return '비밀번호를 다시 한번 확인해주세요..';
       } else {
         print(e);
-        return '잘못된 이메일 형식입니다.';
+        return e.code.toString();
       }
     }
     return null;
@@ -52,14 +52,6 @@ class AuthController {
   Future<void> handleSignOut() async {
     await localStorageController.setUserEmail('');
     await FirebaseAuth.instance.signOut();
-  }
-
-  Future<bool> isSigned() async {
-    if (FirebaseAuth.instance.currentUser?.uid == null) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   Future<String?> getToken() async {

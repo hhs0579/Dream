@@ -66,7 +66,7 @@ class _JoinPageState extends State<JoinPage> {
       if (authCredential.user != null) {
         setState(() {
           authOk = true;
-          _isAuthsms = false;
+          _isAuthsms = true;
           isotpconfirm = false;
         });
         await _auth.currentUser!.delete();
@@ -145,7 +145,7 @@ class _JoinPageState extends State<JoinPage> {
   }
 
   void _timerStart() {
-    _time = 120;
+    _time = 10;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         _time--;
@@ -664,11 +664,12 @@ class _JoinPageState extends State<JoinPage> {
                                       backgroundColor: Colors.lightBlue,
                                       fontSize: 12.0);
                                   await _auth.verifyPhoneNumber(
-                                      timeout: const Duration(seconds: 120),
+                                      timeout: const Duration(seconds: 10),
                                       codeAutoRetrievalTimeout:
                                           (String verificationId) {
                                         setState(() {
                                           _isAuthsms = false;
+                                          isotpconfirm = false;
                                           _timer?.cancel();
                                         });
                                         Fluttertoast.showToast(

@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/data/appdata.dart';
-import 'package:dreamproject/repo/auth_service.dart';
+import 'package:dreamproject/repo/image_service.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
-import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import 'subpages/infosub/fix_info.dart';
 
@@ -22,24 +18,12 @@ class MyInfoPage extends StatefulWidget {
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  // PickedFile? _image;
-  final ImagePicker _picker = ImagePicker();
-  XFile? _image;
   AppData appdata = Get.find();
 
   var _member = 0;
   var _donation = 0;
 
   bool isProfile = false;
-
-  Future _getImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (image != null) {
-        _image = image;
-      }
-    });
-  }
 
   _profileImage() {
     return Stack(
@@ -51,8 +35,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
               right: 30,
             ),
             child: Container(
-                width: 65,
-                height: 65,
+                width: 70,
+                height: 70,
                 child: appdata.myInfo.image == ''
                     ? _profileImageOff()
                     : _profileImageOn())),
@@ -60,13 +44,13 @@ class _MyInfoPageState extends State<MyInfoPage> {
             right: 22,
             top: 60,
             child: Container(
-              width: 22,
-              height: 22,
+              width: 25,
+              height: 25,
               child: CircleAvatar(
                 backgroundColor: Colors.blue,
                 child: IconButton(
-                  onPressed: () {
-                    _getImage();
+                  onPressed: () async {
+                    imageservice.uploadImageToStorage();
                   },
                   icon: Icon(Icons.edit, color: Colors.white),
                   iconSize: 15,
@@ -83,16 +67,16 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   _profileImageOn() {
     return Container(
-        width: 65,
-        height: 65,
+        width: 70,
+        height: 70,
         child: CircleAvatar(
-            radius: 40, backgroundImage: FileImage(File(_image!.path))));
+            radius: 40, backgroundImage: NetworkImage(appdata.myInfo.image)));
   }
 
   _profileImageOff() {
     return Container(
-      width: 65,
-      height: 65,
+      width: 70,
+      height: 70,
       child: CircleAvatar(backgroundImage: AssetImage('assets/imgs/basic.png')),
     );
   }
