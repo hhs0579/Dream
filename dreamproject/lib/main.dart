@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
       Get.put(AppData());
       return DreamApp();
     } else {
+      Get.put(AppData());
       return DreamApp();
     }
   }

@@ -8,6 +8,7 @@ import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'join_page.dart';
 
@@ -16,15 +17,22 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-var user = FirebaseAuth.instance.currentUser;
-final AuthService _auth = AuthService();
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-
-String email = "";
-String password = "";
-
 class _LoginPageState extends State<LoginPage> {
+  var user = FirebaseAuth.instance.currentUser;
+  final AuthService _auth = AuthService();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  String email = "";
+  String password = "";
+
+  @override
+  void initState() {
+    emailController.text = '';
+    passwordController.text = '';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -37,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final id = TextFormField(
+      controller: emailController,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       onChanged: (value) {
@@ -50,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final pw = TextFormField(
+      controller: passwordController,
       autofocus: false,
       obscureText: true,
       onChanged: (value) {
@@ -73,8 +83,34 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.all(12),
         ),
         onPressed: () async {
-          await authController.authUser(email, password);
-          Get.offAll(HomePage());
+          if (emailController.text == '') {
+            Fluttertoast.showToast(
+                msg: "이메일을 입력해주세요.",
+                toastLength: Toast.LENGTH_SHORT,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.lightBlue,
+                fontSize: 12.0);
+          } else {
+            if (passwordController.text == '') {
+              Fluttertoast.showToast(
+                  msg: "비밀번호를 입력해주세요.",
+                  toastLength: Toast.LENGTH_SHORT,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.lightBlue,
+                  fontSize: 12.0);
+            } else {
+              if (await authController.authUser(email, password) == null) {
+                Get.offAll(() => HomePage());
+              } else {
+                Fluttertoast.showToast(
+                    msg: await authController.authUser(email, password),
+                    toastLength: Toast.LENGTH_SHORT,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.lightBlue,
+                    fontSize: 12.0);
+              }
+            }
+          }
         },
         child: Text('로그인', style: TextStyle(color: Colors.white)),
       ),

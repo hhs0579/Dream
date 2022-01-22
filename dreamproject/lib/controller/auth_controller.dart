@@ -11,14 +11,14 @@ import 'local_storage_controller.dart';
 AuthController authController = AuthController();
 
 class AuthController {
-  Future<String?> authUser(String email, String password) async {
+  Future authUser(String email, String password) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      localStorageController.setUserEmail(email);
+      _saveLocalStorage(userCredential);
       String? pushToken = await getToken();
       if (pushToken != null) {
         databaseController.updatePushToken(
@@ -26,22 +26,33 @@ class AuthController {
           pushToken: pushToken,
         );
       }
-      await databaseController.fetchMyInfo(email);
+      AppData appData = Get.find();
+      await databaseController.fetchMyInfo(appData.myInfo.email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
-        return 'No user found for that email.';
+        return '잘못된 이메일 입니다.';
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
-        return 'Wrong password provided for that user.';
+        return '비밀번호를 다시 한번 확인해주세요..';
       } else {
         print(e);
-        return e.toString();
+        return '잘못된 이메일 형식입니다.';
       }
     }
+    return null;
   }
 
-  Future<Null> handleSignOut() async {
+  Future<void> _saveLocalStorage(UserCredential userCredential) async {
+    AppData appData = Get.find();
+    appData.userEmail = userCredential.user?.email ?? 'null';
+    appData.myInfo.email = appData.userEmail;
+    // appData.isExpertMode =
+    //     await databaseController.isExpertMode(appData.userEmail);
+    localStorageController.setUserEmail(appData.userEmail);
+  }
+
+  Future<void> handleSignOut() async {
     await localStorageController.setUserEmail('');
     await FirebaseAuth.instance.signOut();
   }

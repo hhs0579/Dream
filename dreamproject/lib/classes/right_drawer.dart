@@ -29,7 +29,7 @@ drawer(BuildContext context) {
             title: Text('로그아웃', textAlign: TextAlign.center),
             onTap: () async {
               await authController.handleSignOut();
-              Get.offAll(LoginPage());
+              Get.offAll(() => LoginPage());
             },
           ),
         ],
