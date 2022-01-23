@@ -56,13 +56,6 @@ class AppData extends GetxController {
     update();
   }
 
-  // bool get isExpertMode => _isExpertMode;
-  //
-  // set isExpertMode(bool isExpertMode) {
-  //   _isExpertMode = isExpertMode;
-  //   update();
-  // }
-
   String get userEmail => _userEmail;
 
   set userEmail(String userEmail) {

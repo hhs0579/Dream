@@ -1,8 +1,10 @@
 import 'package:dreamproject/classes/right_drawer.dart';
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/repo/image_service.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,7 @@ class MyInfoPage extends StatefulWidget {
 
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   AppData appdata = Get.find();
 
@@ -24,8 +27,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
   var _donation = 0;
 
   bool isProfile = false;
+  bool ischangeimage = false;
 
-  _profileImage() {
+  _profileImage(context) {
     return Stack(
       children: [
         Container(
@@ -39,7 +43,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                 height: 70,
                 child: appdata.myInfo.image == ''
                     ? _profileImageOff()
-                    : _profileImageOn())),
+                    : _profileImageOn(context))),
         Positioned(
             right: 22,
             top: 60,
@@ -47,10 +51,12 @@ class _MyInfoPageState extends State<MyInfoPage> {
               width: 25,
               height: 25,
               child: CircleAvatar(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(0xff3AAFFC),
                 child: IconButton(
-                  onPressed: () async {
-                    imageservice.uploadImageToStorage();
+                  onPressed: () {
+                    setState(() {
+                      ischangeimage = true;
+                    });
                   },
                   icon: Icon(Icons.edit, color: Colors.white),
                   iconSize: 15,
@@ -65,12 +71,35 @@ class _MyInfoPageState extends State<MyInfoPage> {
     );
   }
 
-  _profileImageOn() {
-    return Container(
-        width: 70,
-        height: 70,
-        child: CircleAvatar(
-            radius: 40, backgroundImage: NetworkImage(appdata.myInfo.image)));
+  _profileImageOn(context) {
+    return ischangeimage
+        ? FutureBuilder(
+            future: imageservice.uploadImageToStorage(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                toastMessage('프로필 사진 변경이 완료되었습니다.');
+                return Container(
+                    width: 70,
+                    height: 70,
+                    child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 40,
+                        backgroundImage:
+                            NetworkImage(snapshot.data.toString())));
+              } else {
+                return Container(
+                  width: 70,
+                  height: 70,
+                  child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/imgs/basic.png')),
+                );
+              }
+            })
+        : Container(
+            width: 70,
+            height: 70,
+            child: CircleAvatar(
+                backgroundImage: NetworkImage(appdata.myInfo.image)));
   }
 
   _profileImageOff() {
@@ -122,7 +151,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       children: [
                         Column(
                           children: [
-                            _profileImage(),
+                            _profileImage(context),
                             Container(
                               width: 55,
                               margin:
