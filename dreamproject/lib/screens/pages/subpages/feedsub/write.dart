@@ -1,13 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/firebase_storage.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/database_service.dart';
+import 'package:dreamproject/repo/image_helper.dart';
+import 'package:dreamproject/repo/image_service.dart';
 import 'package:dreamproject/screens/pages/feed.dart';
-import 'package:dreamproject/screens/pages/subpages/feedsub/qq.dart';
+
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -24,7 +30,6 @@ class Write extends StatefulWidget {
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  FileStorage _fileStoarge = Get.put(FileStorage());
 
   var old = false;
   var child = false;
@@ -32,16 +37,16 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
-  var date = DateTime.now().toUtc();
-
-  File? _image;
+  var date = DateTime.now();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
   User? _user;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
   TextEditingController postTextEditController = TextEditingController();
   final _picker = ImagePicker();
-
+  bool uploading = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<File> Images = [];
 
@@ -56,50 +61,76 @@ class _WriteState extends State<Write> {
     _user = _firebaseAuth.currentUser;
   }
 
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('post');
   FirebaseStorage _storage = FirebaseStorage.instance;
 
   void _uploadImageToStorage() async {
     XFile? result = await _picker.pickImage(source: ImageSource.gallery);
 
     if (result == null) return;
-    setState(() {
-      _image = File(result.path);
-    });
-
+    File image = File(result.path);
     Reference storageReference =
         _firebaseStorage.ref().child("post/${_user?.uid}");
 
-    UploadTask storageUploadTask = storageReference.putFile(_image!);
+    final File resultImage = await compute(getResizedImage, image);
+
+    UploadTask storageUploadTask = storageReference.putFile(image);
 
     String downloadURL = await storageReference.getDownloadURL();
+    await userCollection.doc(_user?.uid).update({'image': downloadURL});
 
     setState(() {
       _profileImageURL = downloadURL;
     });
   }
 
-  Future<String?> _uploadImage(String uploadFileName) async {
-    try {
-      File? image =
-          (await _picker.pickImage(source: ImageSource.gallery)) as File?;
-
-      print(image?.path ?? 'null');
-      if (image != null) {
-        Reference storageReference =
-            _firebaseStorage.ref().child("post/${_user?.uid}");
-        UploadTask storageUploadTask = storageReference.putFile(image);
-        String downloadURL = await storageReference.getDownloadURL();
-        setState(() {
-          _profileImageURL = downloadURL;
-        });
-      }
-    } catch (e) {
-      print(e.toString());
+  List<XFile>? imageFileList = [];
+  Future<void> _pickImg() async {
+    final List<XFile>? imgs = await _picker.pickMultiImage();
+    if (imgs != null) {
+      setState(() {
+        imageFileList = imgs;
+      });
     }
   }
 
+  Imageservice imageservice = Imageservice();
   @override
   Widget build(BuildContext context) {
+    bool isPadMode = MediaQuery.of(context).size.width > 700;
+
+    List<Widget> _boxContents = [
+      IconButton(
+          onPressed: () {
+            _pickImg();
+          },
+          icon: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.6), shape: BoxShape.circle),
+              child: Icon(
+                CupertinoIcons.camera,
+                color: Theme.of(context).colorScheme.primary,
+              ))),
+      Container(),
+      Container(),
+      imageFileList!.length <= 4
+          ? Container()
+          : FittedBox(
+              child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.6),
+                      shape: BoxShape.circle),
+                  child: Text(
+                    '+${(imageFileList!.length - 4).toString()}',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ))),
+    ];
     return Scaffold(
         key: _scaffoldKey,
         endDrawer: Container(
@@ -313,40 +344,30 @@ class _WriteState extends State<Write> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 45,
-                      child: Images.isEmpty
-                          ? Container()
-                          : ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: Images.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                          width: 45,
-                                          height: 45,
-                                          child: Container() //이미지
-                                          ),
-                                      RawMaterialButton(
-                                        fillColor:
-                                            Theme.of(context).accentColor,
-                                        child: Icon(
-                                          Icons.add_photo_alternate_rounded,
-                                          color: Colors.white,
-                                        ),
-                                        elevation: 8,
-                                        onPressed: () {},
-                                        padding: EdgeInsets.all(15),
-                                        shape: CircleBorder(),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                    GridView.count(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.all(2),
+                      crossAxisCount: isPadMode ? 4 : 2,
+                      mainAxisSpacing: 5,
+                      crossAxisSpacing: 5,
+                      children: List.generate(
+                          4,
+                          (index) => DottedBorder(
+                              child: Container(
+                                child: Center(child: _boxContents[index]),
+                                decoration: index <= imageFileList!.length - 1
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: FileImage(File(
+                                                imageFileList![index].path))))
+                                    : null,
+                              ),
+                              color: Colors.grey,
+                              dashPattern: [5, 3],
+                              borderType: BorderType.RRect,
+                              radius: Radius.circular(10))).toList(),
                     ),
                     SizedBox(height: 30),
                     Container(

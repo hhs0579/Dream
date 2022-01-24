@@ -98,8 +98,8 @@ class _PostCardState extends State<PostCard> {
                         width: MediaQuery.of(context).size.width,
                         color: Colors.white,
                         child: Center(
-                            child:
-                                Image.network('${data.docs[index]['image']}'))),
+                            child: Image.network('${data.docs[index]['image']}',
+                                fit: BoxFit.cover))),
                     Container(
                         padding: EdgeInsets.only(top: 10),
                         height: 50,
@@ -126,10 +126,7 @@ class _PostCardState extends State<PostCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           //작성하기 글 가져오기
-                          Text('''강림면 노인인구가 41% 로 이중 독거노인이 32%
-를 차지하는 초고령사회에 해당하고, 독거노인
-중 거동이 불편하거나 관절 등의 문제로
-좌식 식사가 어려운 어르신들에게 입식 식탁을'''),
+                          Text('${data.docs[index]['post']}'),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -159,7 +156,7 @@ class _PostCardState extends State<PostCard> {
                         width: MediaQuery.of(context).size.width,
                         color: Colors.white,
                         child: Row(children: [
-                          Text('게시기간: 2021.05.27~2021.06.27',
+                          Text('게시기간: {${data.docs[index]['date']}',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15))
                         ])),

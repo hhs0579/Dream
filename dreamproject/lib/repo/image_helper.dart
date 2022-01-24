@@ -11,12 +11,12 @@ File getResizedProfileImage(File originImage) {
   return resizedFile;
 }
 
-File getResizedImage(File originImage, int size, int quality) {
+File getResizedImage(File originImage) {
   Image? image = decodeImage(originImage.readAsBytesSync());
-  Image resizedImage = copyResizeCropSquare(image!, size);
+  Image resizedImage = copyResizeCropSquare(image!, 400);
 
   File resizedFile =
       File(originImage.path.substring(0, originImage.path.length));
-  resizedFile.writeAsBytesSync(encodeJpg(resizedImage, quality: quality));
+  resizedFile.writeAsBytesSync(encodeJpg(resizedImage, quality: 50));
   return resizedFile;
 }
