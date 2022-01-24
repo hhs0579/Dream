@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/firebase_storage.dart';
@@ -48,7 +49,7 @@ class _WriteState extends State<Write> {
   final _picker = ImagePicker();
   bool uploading = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<File> Images = [];
+  List<String> Images = [];
 
   @override
   void initState() {
@@ -86,13 +87,25 @@ class _WriteState extends State<Write> {
   }
 
   List<XFile>? imageFileList = [];
-  Future<void> _pickImg() async {
+  Future<void> _pickedImgs() async {
     final List<XFile>? imgs = await _picker.pickMultiImage();
     if (imgs != null) {
       setState(() {
         imageFileList = imgs;
       });
     }
+  }
+
+  List<String> imagesUrls = [];
+  Future<List<String>> uploadFiles(List imageFileList) async {
+    imageFileList.forEach((image) async {
+      Reference storageReference = FirebaseStorage.instance.ref().child('post');
+      UploadTask uploadTask = storageReference.putFile(image);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      imagesUrls.add(await taskSnapshot.ref.getDownloadURL());
+    });
+    print(imagesUrls);
+    return imagesUrls;
   }
 
   Imageservice imageservice = Imageservice();
@@ -103,7 +116,7 @@ class _WriteState extends State<Write> {
     List<Widget> _boxContents = [
       IconButton(
           onPressed: () {
-            _pickImg();
+            _pickedImgs();
           },
           icon: Container(
               alignment: Alignment.center,
@@ -358,7 +371,7 @@ class _WriteState extends State<Write> {
                               fireStore.collection('post').doc(key).set({
                                 'key': key,
                                 'post': postTextEditController.text,
-                                'image': _profileImageURL,
+                                'image': imagesUrls,
                                 'uid': uid,
                                 'old': old,
                                 'child': child,
