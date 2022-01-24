@@ -31,7 +31,7 @@ class Write extends StatefulWidget {
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  var key = randomString(16);
   var old = false;
   var child = false;
   var disorder = false;
@@ -49,11 +49,9 @@ class _WriteState extends State<Write> {
   final _picker = ImagePicker();
   bool uploading = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<String> Images = [];
 
   @override
   void initState() {
-    Images = [];
     super.initState();
     _prepareService();
   }
@@ -62,38 +60,40 @@ class _WriteState extends State<Write> {
     _user = _firebaseAuth.currentUser;
   }
 
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('post');
-  FirebaseStorage _storage = FirebaseStorage.instance;
-
-  void _uploadImageToStorage() async {
-    XFile? result = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (result == null) return;
-    File image = File(result.path);
-    Reference storageReference =
-        _firebaseStorage.ref().child("post/${_user?.uid}");
-
-    final File resultImage = await compute(getResizedImage, image);
-
-    UploadTask storageUploadTask = storageReference.putFile(image);
-
-    String downloadURL = await storageReference.getDownloadURL();
-    await userCollection.doc(_user?.uid).update({'image': downloadURL});
-
-    setState(() {
-      _profileImageURL = downloadURL;
-    });
-  }
-
+  List<String> _arrImageUrls = [];
+  List<String> aa = [];
   List<XFile>? imageFileList = [];
   Future<void> _pickedImgs() async {
-    final List<XFile>? imgs = await _picker.pickMultiImage();
-    if (imgs != null) {
-      setState(() {
-        imageFileList = imgs;
-      });
+    if (imageFileList != null) {
+      imageFileList?.clear();
     }
+    try {
+      final List<XFile>? imgs = await _picker.pickMultiImage();
+      if (imgs!.isNotEmpty) {
+        imageFileList!.addAll(imgs);
+      }
+      print(imgs.length.toString());
+    } catch (e) {
+      print(e.toString());
+    }
+    setState(() {});
+  }
+
+  String an = "";
+  void uploadFunction(List<XFile> _images) {
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = uploadFile(_images[i]);
+      _arrImageUrls.add(imageUrl.toString());
+    }
+  }
+
+  Future<String> uploadFile(XFile _image) async {
+    Reference reference =
+        FirebaseStorage.instance.ref().child('post').child(_image.name);
+
+    UploadTask uploadTask = reference.putFile(File(_image.path));
+    await uploadTask.whenComplete(() {});
+    return await reference.getDownloadURL();
   }
 
   List<String> imagesUrls = [];
@@ -356,7 +356,6 @@ class _WriteState extends State<Write> {
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
-                              var key = randomString(16);
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
                               var name = '';
@@ -371,7 +370,7 @@ class _WriteState extends State<Write> {
                               fireStore.collection('post').doc(key).set({
                                 'key': key,
                                 'post': postTextEditController.text,
-                                'image': imagesUrls,
+                                'image': _arrImageUrls,
                                 'uid': uid,
                                 'old': old,
                                 'child': child,
@@ -403,7 +402,7 @@ class _WriteState extends State<Write> {
                                     backgroundColor: Colors.lightBlue,
                                     fontSize: 12.0);
                               } else {
-                                Get.to(HomePage());
+                                uploadFunction(imageFileList!);
                               }
                             },
                             child: Text('게시'))),
