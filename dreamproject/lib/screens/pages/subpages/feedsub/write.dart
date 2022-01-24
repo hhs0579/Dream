@@ -313,37 +313,6 @@ class _WriteState extends State<Write> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: _uploadImageToStorage,
-                            icon: Icon(Icons.attach_file)),
-                        SizedBox(
-                          height: 150,
-                          width: 150,
-                          child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(_profileImageURL),
-                                          radius: 30,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ]),
-                        ),
-                      ],
-                    ),
                     GridView.count(
                       shrinkWrap: true,
                       padding: EdgeInsets.all(2),
