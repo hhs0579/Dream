@@ -28,7 +28,7 @@ class Imageservice {
       Reference storageReference =
           firebaseStorage.ref().child("profile/${_user?.uid}");
 
-      final File resultImage = await compute(getResizedImage, image);
+      final File resultImage = await compute(getResizedProfileImage, image);
 
       final UploadTask uploadTask = storageReference.putFile(resultImage);
 
