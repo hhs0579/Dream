@@ -5,6 +5,7 @@ import 'package:dreamproject/repo/image_service.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/club_add.dart';
 import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,10 +22,12 @@ class MyInfoPage extends StatefulWidget {
 class _MyInfoPageState extends State<MyInfoPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   AppData appdata = Get.find();
   final _picker = ImagePicker();
   String resultURL = '';
+  String defaultURl = '';
   bool isProfile = false;
   var _member = 0;
   var _donation = 0;
@@ -44,12 +47,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
               left: 15,
               right: 30,
             ),
-            child: Container(
-                width: 70,
-                height: 70,
-                child: appdata.myInfo.image == ''
-                    ? _profileImageOff()
-                    : _profileImageOn())),
+            child: Container(width: 70, height: 70, child: _profileImageOn())),
         Positioned(
             right: 22,
             top: 60,
@@ -68,6 +66,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       toastMessage('프로필 사진이 변경되었습니다.');
                     } catch (e) {
                       toastMessage('오류가 발생했습니다.');
+                      print(e);
                     }
                     setState(() {});
                   },
@@ -85,21 +84,21 @@ class _MyInfoPageState extends State<MyInfoPage> {
   }
 
   _profileImageOn() {
-    return Container(
-        width: 70,
-        height: 70,
-        child: CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 40,
-            backgroundImage: NetworkImage(resultURL)));
-  }
-
-  _profileImageOff() {
-    return Container(
-      width: 70,
-      height: 70,
-      child: CircleAvatar(backgroundImage: AssetImage('assets/imgs/basic.png')),
-    );
+    return resultURL == ''
+        ? Container(
+            width: 70,
+            height: 70,
+            child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 40,
+                backgroundImage: AssetImage('assets/imgs/basic.png')))
+        : Container(
+            width: 70,
+            height: 70,
+            child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 40,
+                backgroundImage: NetworkImage(resultURL)));
   }
 
   @override
@@ -319,7 +318,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Get.to(FixInfo());
+                            Get.to(() => FixInfo());
                           },
                           child: Text(
                             "개인정보 설정",

@@ -35,7 +35,8 @@ class DatabaseService {
       'point': 0,
       'totaldonatepoint': 0,
       'totaldonatenumber': 0,
-      'pushToken': ''
+      'pushToken': '',
+      'uid': uid
     });
   }
 
@@ -48,19 +49,15 @@ class DatabaseService {
     String _addressdetail,
     String _postcode,
   ) async {
-    await userCollection
-        .doc(uid)
-        .update({
-          'name': _name,
-          'password': _password,
-          'gender': _gender,
-          'address': _address,
-          'addressdetail': _addressdetail,
-          'postcode': _postcode,
-          'phone': _phone,
-        })
-        .then((value) => toastMessage('업데이트 완료'))
-        .catchError((err) => toastMessage('업데이트 실패'));
+    await userCollection.doc(uid).update({
+      'name': _name,
+      'password': _password,
+      'gender': _gender,
+      'address': _address,
+      'addressdetail': _addressdetail,
+      'postcode': _postcode,
+      'phone': _phone,
+    });
   }
 
   Stream<QuerySnapshot> get users {

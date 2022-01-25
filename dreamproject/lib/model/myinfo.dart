@@ -17,25 +17,26 @@ class MyInfo {
   int totaldonatepoint;
   int totaldonatenumber;
   String pushToken;
+  String uid;
 
-  MyInfo({
-    required this.email,
-    required this.image,
-    required this.gender,
-    required this.password,
-    required this.name,
-    required this.phone,
-    required this.address,
-    required this.addressdetail,
-    required this.postcode,
-    required this.myposts,
-    required this.myempathyposts,
-    required this.myclubs,
-    required this.point,
-    required this.totaldonatepoint,
-    required this.totaldonatenumber,
-    required this.pushToken,
-  });
+  MyInfo(
+      {required this.email,
+      required this.image,
+      required this.gender,
+      required this.password,
+      required this.name,
+      required this.phone,
+      required this.address,
+      required this.addressdetail,
+      required this.postcode,
+      required this.myposts,
+      required this.myempathyposts,
+      required this.myclubs,
+      required this.point,
+      required this.totaldonatepoint,
+      required this.totaldonatenumber,
+      required this.pushToken,
+      required this.uid});
 
   MyInfo.fromJson(Map<String, dynamic> json)
       : email = json['email'],
@@ -53,7 +54,8 @@ class MyInfo {
         point = json['point'] ?? 0,
         totaldonatepoint = json['totaldonatepoint'] ?? 0,
         totaldonatenumber = json['totaldonaenumber'] ?? 0,
-        pushToken = json['pushToken'] ?? '';
+        pushToken = json['pushToken'] ?? '',
+        uid = json['uid'];
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -71,6 +73,7 @@ class MyInfo {
         'point': point,
         'totaldonatepoint': totaldonatepoint,
         'totaldonatenumber': totaldonatenumber,
-        'pushToken': pushToken
+        'pushToken': pushToken,
+        'uid': uid
       };
 }

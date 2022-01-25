@@ -1,3 +1,4 @@
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,20 +27,10 @@ vaildationemail(String value) {
 
   if (value.isEmpty) {
     print(value);
-    return Fluttertoast.showToast(
-        msg: "이메일을 작성해주세요",
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.lightBlue,
-        fontSize: 12.0);
+    toastMessage("이메일을 작성해주세요");
   } else {
     if (vaildationemail.isEmail == false) {
-      return Fluttertoast.showToast(
-          msg: "잘못된 이메일 형식입니다.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage("잘못된 이메일 형식입니다.");
     } else {
       return null;
     }
@@ -97,32 +88,14 @@ vaildationname(String value) {
   var vaildationname = checkNameText(value);
 
   if (value.isEmpty) {
-    return Fluttertoast.showToast(
-        msg: "이름을 작성해주세요",
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.lightBlue,
-        fontSize: 12.0);
+    toastMessage("이름을 작성해주세요");
   } else {
     if (vaildationname.isCharacters == false) {
-      return Fluttertoast.showToast(
-          msg: "이름은 2~5자 사이로 입력해주세요.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage("이름은 2~5자 사이로 입력해주세요.");
     } else if (vaildationname.is1Number == false ||
         vaildationname.is1Letter == false ||
         vaildationname.is1Symbol == false) {
-      print(vaildationname.is1Number);
-      print(vaildationname.is1Letter);
-      print(vaildationname.is1Symbol);
-      return Fluttertoast.showToast(
-          msg: "실명을 입력해주세요.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage("실명을 입력해주세요.");
     } else {
       return null;
     }
@@ -181,34 +154,59 @@ vaildationpassword(String value) {
   var vaildationpassword = checkPasswordText(value);
 
   if (value.isEmpty) {
-    return Fluttertoast.showToast(
-        msg: "비밀번호를 작성해주세요",
-        toastLength: Toast.LENGTH_SHORT,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.lightBlue,
-        fontSize: 12.0);
+    toastMessage("비밀번호를 작성해주세요");
   } else {
     if (vaildationpassword.is8Characters == false) {
-      return Fluttertoast.showToast(
-          msg: "8~12자 비밀번호를 설정해주세요.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage("8~12자 비밀번호를 설정해주세요.");
     } else if (vaildationpassword.is1Number == false ||
         vaildationpassword.is1Letter == false ||
         vaildationpassword.is1Symbol == false) {
-      print(vaildationpassword.is1Number);
-      print(vaildationpassword.is1Letter);
-      print(vaildationpassword.is1Symbol);
-      return Fluttertoast.showToast(
-          msg: "비밀번호에 숫자, 문자, 특수문자는 필수입니다.",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage("비밀번호에 숫자, 문자, 특수문자는 필수입니다.");
     } else {
       return null;
+    }
+  }
+}
+
+class PossiblePhoneNumber {
+  bool is11Characters;
+  bool is1Symbol;
+  PossiblePhoneNumber({this.is11Characters = false, this.is1Symbol = false});
+}
+
+PossiblePhoneNumber checkPhoneNumberText(String value) {
+  var possiblePhoneNumber = PossiblePhoneNumber();
+  final validSpecial = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+  if (value.length == 11) {
+    possiblePhoneNumber.is11Characters = true;
+  } else {
+    possiblePhoneNumber.is11Characters = false;
+  }
+
+  if (!validSpecial.hasMatch(value)) {
+    possiblePhoneNumber.is1Symbol = true;
+  } else {
+    possiblePhoneNumber.is1Symbol = false;
+  }
+
+  return possiblePhoneNumber;
+}
+
+vaildationPhoneNumber(String value) {
+  var vaildationPhoneNumber = checkPhoneNumberText(value);
+
+  if (value.isEmpty) {
+    toastMessage("전화번호를 입력해주세요.");
+  } else {
+    if (vaildationPhoneNumber.is11Characters == false) {
+      toastMessage("전화번호를 11자리를 입력해주세요.");
+    } else {
+      if (vaildationPhoneNumber.is1Symbol == false) {
+        toastMessage("특수문자없이 숫자만 입력해주세요.");
+      } else {
+        return null;
+      }
     }
   }
 }

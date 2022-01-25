@@ -10,8 +10,8 @@ toastMessage(String message) {
       fontSize: 12.0);
 }
 
-void errorToast(e) {
-  Fluttertoast.showToast(
+errorToast(e) {
+  return Fluttertoast.showToast(
       msg: e.toString(),
       toastLength: Toast.LENGTH_SHORT,
       timeInSecForIosWeb: 1,

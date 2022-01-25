@@ -642,58 +642,51 @@ class _JoinPageState extends State<JoinPage> {
                           onPressed: _isAuthsms
                               ? null
                               : () async {
-                                  FocusScope.of(context).unfocus();
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.lightBlue,
-                                      fontSize: 12.0);
-                                  await _auth.verifyPhoneNumber(
-                                      timeout: const Duration(seconds: 120),
-                                      codeAutoRetrievalTimeout:
-                                          (String verificationId) {
-                                        setState(() {
-                                          _isAuthsms = false;
-                                          isotpconfirm = false;
-                                          _timer?.cancel();
-                                        });
-                                        Fluttertoast.showToast(
-                                            msg: "인증번호가 만료되었습니다. 다시 시도해 주세요.",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.lightBlue,
-                                            fontSize: 12.0);
-                                      },
-                                      phoneNumber: "+8210" +
-                                          phoneNumber.text.substring(3).trim(),
-                                      verificationCompleted:
-                                          (phoneAuthCredential) async {},
-                                      verificationFailed:
-                                          (verificationFailed) async {
-                                        print(verificationFailed.code);
-                                        Fluttertoast.showToast(
-                                            msg: "코드 발송 실패했습니다. 전화번호를 확인해주세요",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.lightBlue,
-                                            fontSize: 12.0);
-                                        print("코드 발송 실패");
-                                      },
-                                      codeSent: (verificationId,
-                                          forceResendingToken) async {
-                                        print('코드 보냄');
+                                  if (vaildationPhoneNumber(phoneNumber.text) ==
+                                      null) {
+                                    FocusScope.of(context).unfocus();
+                                    toastMessage(
+                                        "${phoneNumber.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요");
+                                    await _auth.verifyPhoneNumber(
+                                        timeout: const Duration(seconds: 120),
+                                        codeAutoRetrievalTimeout:
+                                            (String verificationId) {
+                                          setState(() {
+                                            _isAuthsms = false;
+                                            isotpconfirm = false;
+                                            _timer?.cancel();
+                                          });
+                                          toastMessage(
+                                              "인증번호가 만료되었습니다. 다시 시도해 주세요.");
+                                        },
+                                        phoneNumber: "+8210" +
+                                            phoneNumber.text
+                                                .substring(3)
+                                                .trim(),
+                                        verificationCompleted:
+                                            (phoneAuthCredential) async {},
+                                        verificationFailed:
+                                            (verificationFailed) async {
+                                          print(verificationFailed.code);
+                                          toastMessage(
+                                              "코드 발송 실패했습니다. 전화번호를 확인해주세요");
+                                          print("코드 발송 실패");
+                                        },
+                                        codeSent: (verificationId,
+                                            forceResendingToken) async {
+                                          print('코드 보냄');
 
-                                        setState(() {
-                                          _isAuthsms = true;
-                                          isotpconfirm = true;
-                                          _timerStart();
+                                          setState(() {
+                                            _isAuthsms = true;
+                                            isotpconfirm = true;
+                                            _timerStart();
 
-                                          this.verificationId = verificationId;
+                                            this.verificationId =
+                                                verificationId;
+                                          });
                                         });
-                                      });
-                                  otpFocusNode.requestFocus();
+                                    otpFocusNode.requestFocus();
+                                  }
                                 },
                           style: TextButton.styleFrom(
                               backgroundColor: Color(0xff3AAFFC),
@@ -781,56 +774,26 @@ class _JoinPageState extends State<JoinPage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (duplicateEmail == false) {
-                        Fluttertoast.showToast(
-                            msg: '이메일 인증을 완료해 주세요.',
-                            toastLength: Toast.LENGTH_SHORT,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.lightBlue,
-                            fontSize: 12.0);
+                        toastMessage('이메일 인증을 완료해 주세요.');
                       } else {
                         if (vaildationname(nameController.text) == null) {
                           if (gender == '') {
-                            Fluttertoast.showToast(
-                                msg: "성별을 선택해주세요.",
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.lightBlue,
-                                fontSize: 12.0);
+                            toastMessage("성별을 선택해주세요.");
                           } else {
                             if (passwordController.text !=
                                 verifyPasswordController.text) {
-                              Fluttertoast.showToast(
-                                  msg: "비밀번호가 일치하지 않습니다. 다시 확인해주세요.",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.lightBlue,
-                                  fontSize: 12.0);
+                              toastMessage("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
                             } else {
                               if (vaildationpassword(passwordController.text) ==
                                   null) {
                                 if (_addressTextEditor.text == '') {
-                                  Fluttertoast.showToast(
-                                      msg: "주소를 입력해주세요.",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.lightBlue,
-                                      fontSize: 12.0);
+                                  toastMessage("주소를 입력해주세요.");
                                 } else {
                                   if (_deaddressTextEditor.text == '') {
-                                    Fluttertoast.showToast(
-                                        msg: "상세주소를 입력해주세요.",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.lightBlue,
-                                        fontSize: 12.0);
+                                    toastMessage("상세주소를 입력해주세요.");
                                   } else {
                                     if (authOk == false) {
-                                      Fluttertoast.showToast(
-                                          msg: "핸드폰 인증을 완료해주세요.",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.lightBlue,
-                                          fontSize: 12.0);
+                                      toastMessage("핸드폰 인증을 완료해주세요.");
                                     } else {
                                       signUpUserCredential(
                                           email: emailController.text,

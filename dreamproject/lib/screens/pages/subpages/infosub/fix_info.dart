@@ -1,12 +1,9 @@
 import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/data/appdata.dart';
-import 'package:dreamproject/home_page.dart';
-import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dreamproject/repo/join_validation.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
@@ -18,11 +15,6 @@ class FixInfo extends StatefulWidget {
 }
 
 class _FixInfoState extends State<FixInfo> {
-  bool _isAuthsms = false;
-
-  Timer? _timer;
-  var _time = 0;
-
   String email = '';
   String name = '';
   String password = '';
@@ -35,91 +27,51 @@ class _FixInfoState extends State<FixInfo> {
   final passwordController = TextEditingController();
   final verifyPasswordController = TextEditingController();
   final otpController = TextEditingController();
-  final postTextEditor = TextEditingController();
-  final addressTextEditor = TextEditingController();
-  final deaddressTextEditor = TextEditingController();
+  final postController = TextEditingController();
+  final addressController = TextEditingController();
+  final deaddressController = TextEditingController();
   final phoneNumberController = TextEditingController();
-
   final passwordFocusNode = FocusNode();
   final verifyPasswordFocusNode = FocusNode();
   final otpFocusNode = FocusNode();
   final deaddressFocusNode = FocusNode();
 
-  bool authOk = false;
-  bool isotpconfirm = false;
-  bool duplicateEmail = false;
   bool passwordHide = true;
-
-  late String verificationId;
 
   DatabaseController databaseController = DatabaseController();
   FirebaseAuth _auth = FirebaseAuth.instance;
-  final AuthService _authJoin = AuthService();
 
-  final formKey = GlobalKey<FormState>();
   final AppData appdata = Get.find();
-
-  final AuthService _authService = AuthService();
 
   void initState() {
     setState(() {
-      emailController.text = appdata.myInfo.email;
       nameController.text = appdata.myInfo.name;
       passwordController.text = appdata.myInfo.password;
       verifyPasswordController.text = appdata.myInfo.password;
-      addressTextEditor.text = appdata.myInfo.address;
       gender = appdata.myInfo.gender;
-      deaddressTextEditor.text = appdata.myInfo.addressdetail;
+      addressController.text = appdata.myInfo.address;
+      deaddressController.text = appdata.myInfo.addressdetail;
       phoneNumberController.text = appdata.myInfo.phone;
-      postTextEditor.text = appdata.myInfo.postcode;
+      postController.text = appdata.myInfo.postcode;
     });
     super.initState();
   }
 
-  signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
-    try {
-      final authCredential =
-          await _auth.signInWithCredential(phoneAuthCredential);
-
-      if (authCredential.user != null) {
-        setState(() {
-          authOk = true;
-          _isAuthsms = true;
-          isotpconfirm = false;
-        });
-        await _auth.currentUser!.delete();
-        _auth.signOut();
-        return Fluttertoast.showToast(
-            msg: '인증이 완료되었습니다',
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.lightBlue,
-            fontSize: 12.0);
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        print("인증실패");
-        print(e.message);
-      });
-
-      toastMessage('오류가 발생했습니다. 인증번호를 확인해주세요.');
-    }
-  }
-
   Future<UserCredential?> UpdateUserCredential() async {
-    User? user = _auth.currentUser;
+    String uid = appdata.myInfo.uid;
     try {
-      await DatabaseService(uid: user!.uid).updateUserData(
+      await DatabaseService(uid: uid).updateUserData(
         nameController.text,
+        passwordController.text,
         gender,
-        password,
         phoneNumberController.text,
-        address,
-        deaddressTextEditor.text,
-        postcode,
+        addressController.text,
+        deaddressController.text,
+        postController.text,
       );
     } catch (e) {
       errorToast(e);
+      print(e);
     }
   }
 
@@ -140,24 +92,6 @@ class _FixInfoState extends State<FixInfo> {
         ),
       ),
     );
-  }
-
-  void _timerStart() {
-    _time = 120;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        _time--;
-        if (_time <= 0) {
-          _time = 0;
-        }
-      });
-    });
-  }
-
-  String _viewTime(int time) {
-    final minutes = ((time / 60) % 60).floor().toString();
-    final seconds = (time % 60).floor().toString().padLeft(2, '0');
-    return '$minutes:$seconds';
   }
 
   @override
@@ -407,7 +341,7 @@ class _FixInfoState extends State<FixInfo> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
-                                controller: postTextEditor,
+                                controller: postController,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(fontSize: 12),
                                 decoration: InputDecoration(
@@ -440,8 +374,8 @@ class _FixInfoState extends State<FixInfo> {
                                         setState(() {
                                           address = result.address;
                                           postcode = result.postCode;
-                                          addressTextEditor.text = address;
-                                          postTextEditor.text = postcode;
+                                          addressController.text = address;
+                                          postController.text = postcode;
                                         });
                                       },
                                     ),
@@ -472,7 +406,7 @@ class _FixInfoState extends State<FixInfo> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
-                                controller: addressTextEditor,
+                                controller: addressController,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(fontSize: 12),
                                 decoration: InputDecoration(
@@ -501,7 +435,7 @@ class _FixInfoState extends State<FixInfo> {
                             child: Container(
                               margin: EdgeInsets.only(right: 10),
                               child: TextField(
-                                controller: deaddressTextEditor,
+                                controller: deaddressController,
                                 focusNode: deaddressFocusNode,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(fontSize: 12),
@@ -556,138 +490,6 @@ class _FixInfoState extends State<FixInfo> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: 90,
-                        height: 30,
-                        child: TextButton(
-                          child: Text(
-                            "인증번호 보내기",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          ),
-                          onPressed: _isAuthsms
-                              ? null
-                              : () async {
-                                  FocusScope.of(context).unfocus();
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          "${phoneNumberController.text}로 인증코드를 발송하였습니다 잠시만 기다려주세요",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.lightBlue,
-                                      fontSize: 12.0);
-                                  await _auth.verifyPhoneNumber(
-                                      timeout: const Duration(seconds: 120),
-                                      codeAutoRetrievalTimeout:
-                                          (String verificationId) {
-                                        setState(() {
-                                          _isAuthsms = false;
-                                          isotpconfirm = false;
-                                          _timer?.cancel();
-                                        });
-                                        toastMessage(
-                                            "인증번호가 만료되었습니다. 다시 시도해 주세요.");
-                                      },
-                                      phoneNumber: "+8210" +
-                                          phoneNumberController.text
-                                              .substring(3)
-                                              .trim(),
-                                      verificationCompleted:
-                                          (phoneAuthCredential) async {},
-                                      verificationFailed:
-                                          (verificationFailed) async {
-                                        print(verificationFailed.code);
-                                        toastMessage(
-                                            "코드 발송 실패했습니다. 전화번호를 확인해주세요");
-                                        print("코드 발송 실패");
-                                      },
-                                      codeSent: (verificationId,
-                                          forceResendingToken) async {
-                                        print('코드 보냄');
-
-                                        setState(() {
-                                          _isAuthsms = true;
-                                          isotpconfirm = true;
-                                          _timerStart();
-
-                                          this.verificationId = verificationId;
-                                        });
-                                      });
-                                  otpFocusNode.requestFocus();
-                                },
-                          style: TextButton.styleFrom(
-                              backgroundColor: Color(0xff3AAFFC),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: isotpconfirm,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 170,
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                controller: otpController,
-                                focusNode: otpFocusNode,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black26, width: 0.5)),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black26, width: 0.5)),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              child: Text(_viewTime(_time),
-                                  style: TextStyle(
-                                    color: Color(0xff3AAFFC),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 60,
-                              height: 30,
-                              child: TextButton(
-                                child: Text(
-                                  "확인",
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                onPressed: () {
-                                  FocusScope.of(context).unfocus();
-                                  PhoneAuthCredential phoneAuthCredential =
-                                      PhoneAuthProvider.credential(
-                                          verificationId: verificationId,
-                                          smsCode: otpController.text);
-
-                                  signInWithPhoneAuthCredential(
-                                      phoneAuthCredential);
-                                },
-                                style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                    backgroundColor: Color(0xff3AAFFC),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -698,52 +500,28 @@ class _FixInfoState extends State<FixInfo> {
                   width: 330,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if (vaildationname(nameController.text) == null) {
                         if (gender == '') {
-                          Fluttertoast.showToast(
-                              msg: "성별을 선택해주세요.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.lightBlue,
-                              fontSize: 12.0);
+                          toastMessage("성별을 선택해주세요.");
                         } else {
                           if (passwordController.text !=
                               verifyPasswordController.text) {
-                            Fluttertoast.showToast(
-                                msg: "비밀번호가 일치하지 않습니다. 다시 확인해주세요.",
-                                toastLength: Toast.LENGTH_SHORT,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.lightBlue,
-                                fontSize: 12.0);
+                            toastMessage("비밀번호가 일치하지 않습니다. 다시 확인해주세요.");
                           } else {
                             if (vaildationpassword(passwordController.text) ==
                                 null) {
-                              if (addressTextEditor.text == '') {
-                                Fluttertoast.showToast(
-                                    msg: "주소를 입력해주세요.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.lightBlue,
-                                    fontSize: 12.0);
+                              if (addressController.text == '') {
+                                toastMessage("주소를 입력해주세요.");
                               } else {
-                                if (deaddressTextEditor.text == '') {
-                                  Fluttertoast.showToast(
-                                      msg: "상세주소를 입력해주세요.",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.lightBlue,
-                                      fontSize: 12.0);
+                                if (deaddressController.text == '') {
+                                  toastMessage("상세주소를 입력해주세요.");
                                 } else {
-                                  if (authOk == false) {
-                                    Fluttertoast.showToast(
-                                        msg: "핸드폰 인증을 완료해주세요.",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.lightBlue,
-                                        fontSize: 12.0);
-                                  } else {
+                                  if (vaildationPhoneNumber(
+                                          phoneNumberController.text) ==
+                                      null) {
                                     UpdateUserCredential();
+                                    toastMessage('수정이 완료되었습니다.');
                                     Get.back();
                                   }
                                 }
@@ -797,11 +575,5 @@ class _FixInfoState extends State<FixInfo> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
   }
 }
