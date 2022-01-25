@@ -41,7 +41,6 @@ class _WriteState extends State<Write> {
   var date = DateTime.now();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-
   User? _user;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
@@ -69,6 +68,7 @@ class _WriteState extends State<Write> {
     }
     try {
       final List<XFile>? imgs = await _picker.pickMultiImage();
+
       if (imgs!.isNotEmpty) {
         imageFileList!.addAll(imgs);
       }
@@ -77,14 +77,6 @@ class _WriteState extends State<Write> {
       print(e.toString());
     }
     setState(() {});
-  }
-
-  String an = "";
-  void uploadFunction(List<XFile> _images) {
-    for (int i = 0; i < _images.length; i++) {
-      var imageUrl = uploadFile(_images[i]);
-      _arrImageUrls.add(imageUrl.toString());
-    }
   }
 
   Future<String> uploadFile(XFile _image) async {
@@ -96,16 +88,11 @@ class _WriteState extends State<Write> {
     return await reference.getDownloadURL();
   }
 
-  List<String> imagesUrls = [];
-  Future<List<String>> uploadFiles(List imageFileList) async {
-    imageFileList.forEach((image) async {
-      Reference storageReference = FirebaseStorage.instance.ref().child('post');
-      UploadTask uploadTask = storageReference.putFile(image);
-      TaskSnapshot taskSnapshot = await uploadTask;
-      imagesUrls.add(await taskSnapshot.ref.getDownloadURL());
-    });
-    print(imagesUrls);
-    return imagesUrls;
+  Future uploadFunction(List<XFile> _images) async {
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = await uploadFile(_images[i]);
+      _arrImageUrls.add(imageUrl.toString());
+    }
   }
 
   Imageservice imageservice = Imageservice();
@@ -353,6 +340,14 @@ class _WriteState extends State<Write> {
                     ),
                     SizedBox(height: 30),
                     Container(
+                      child: TextButton(
+                        onPressed: () {
+                          uploadFunction(imageFileList!);
+                        },
+                        child: Text("업로드"),
+                      ),
+                    ),
+                    Container(
                         margin: EdgeInsets.only(right: 20),
                         child: TextButton(
                             onPressed: () {
@@ -366,7 +361,6 @@ class _WriteState extends State<Write> {
                                   .then((value) => {
                                         name = value['name'],
                                       });
-
                               fireStore.collection('post').doc(key).set({
                                 'key': key,
                                 'post': postTextEditController.text,
@@ -401,9 +395,7 @@ class _WriteState extends State<Write> {
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Colors.lightBlue,
                                     fontSize: 12.0);
-                              } else {
-                                uploadFunction(imageFileList!);
-                              }
+                              } else {}
                             },
                             child: Text('게시'))),
                   ],

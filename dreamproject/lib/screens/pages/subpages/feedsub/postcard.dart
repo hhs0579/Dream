@@ -98,7 +98,8 @@ class _PostCardState extends State<PostCard> {
                         width: MediaQuery.of(context).size.width,
                         color: Colors.white,
                         child: Center(
-                            child: Image.network('${data.docs[index]['image']}',
+                            child: Image.network(
+                                '${data.docs[index]['image'][0]}',
                                 fit: BoxFit.cover))),
                     Container(
                         padding: EdgeInsets.only(top: 10),
