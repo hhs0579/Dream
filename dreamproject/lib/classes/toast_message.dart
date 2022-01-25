@@ -9,3 +9,12 @@ toastMessage(String message) {
       backgroundColor: Colors.lightBlue,
       fontSize: 12.0);
 }
+
+void errorToast(e) {
+  Fluttertoast.showToast(
+      msg: e.toString(),
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      fontSize: 12.0);
+}

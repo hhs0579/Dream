@@ -7,6 +7,7 @@ import 'package:dreamproject/screens/pages/subpages/infosub/point_add.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'subpages/infosub/fix_info.dart';
 
@@ -22,12 +23,17 @@ class _MyInfoPageState extends State<MyInfoPage> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   AppData appdata = Get.find();
-
+  final _picker = ImagePicker();
+  String resultURL = '';
+  bool isProfile = false;
   var _member = 0;
   var _donation = 0;
 
-  bool isProfile = false;
-  bool ischangeimage = false;
+  @override
+  void initState() {
+    resultURL = appdata.myInfo.image;
+    super.initState();
+  }
 
   _profileImage(context) {
     return Stack(
@@ -43,7 +49,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                 height: 70,
                 child: appdata.myInfo.image == ''
                     ? _profileImageOff()
-                    : _profileImageOn(context))),
+                    : _profileImageOn())),
         Positioned(
             right: 22,
             top: 60,
@@ -53,10 +59,17 @@ class _MyInfoPageState extends State<MyInfoPage> {
               child: CircleAvatar(
                 backgroundColor: Color(0xff3AAFFC),
                 child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      ischangeimage = true;
-                    });
+                  onPressed: () async {
+                    try {
+                      XFile? result =
+                          await _picker.pickImage(source: ImageSource.gallery);
+                      resultURL =
+                          await imageservice.uploadImageToStorage(result!);
+                      toastMessage('프로필 사진이 변경되었습니다.');
+                    } catch (e) {
+                      toastMessage('오류가 발생했습니다.');
+                    }
+                    setState(() {});
                   },
                   icon: Icon(Icons.edit, color: Colors.white),
                   iconSize: 15,
@@ -71,35 +84,14 @@ class _MyInfoPageState extends State<MyInfoPage> {
     );
   }
 
-  _profileImageOn(context) {
-    return ischangeimage
-        ? FutureBuilder(
-            future: imageservice.uploadImageToStorage(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                toastMessage('프로필 사진 변경이 완료되었습니다.');
-                return Container(
-                    width: 70,
-                    height: 70,
-                    child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 40,
-                        backgroundImage:
-                            NetworkImage(snapshot.data.toString())));
-              } else {
-                return Container(
-                  width: 70,
-                  height: 70,
-                  child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/imgs/basic.png')),
-                );
-              }
-            })
-        : Container(
-            width: 70,
-            height: 70,
-            child: CircleAvatar(
-                backgroundImage: NetworkImage(appdata.myInfo.image)));
+  _profileImageOn() {
+    return Container(
+        width: 70,
+        height: 70,
+        child: CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 40,
+            backgroundImage: NetworkImage(resultURL)));
   }
 
   _profileImageOff() {

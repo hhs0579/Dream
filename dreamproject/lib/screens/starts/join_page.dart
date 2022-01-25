@@ -1,3 +1,4 @@
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
@@ -71,12 +72,7 @@ class _JoinPageState extends State<JoinPage> {
         });
         await _auth.currentUser!.delete();
         _auth.signOut();
-        return Fluttertoast.showToast(
-            msg: '인증이 완료되었습니다',
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.lightBlue,
-            fontSize: 12.0);
+        toastMessage('인증이 완료되었습니다');
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -99,28 +95,19 @@ class _JoinPageState extends State<JoinPage> {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      await DatabaseService(uid: user!.uid).updateUserData(
+      await DatabaseService(uid: user!.uid).setUserData(
         email,
         nameController.text,
         gender,
+        password,
         phoneNumber.text,
-        address + ' ' + _deaddressTextEditor.text,
+        address,
+        _deaddressTextEditor.text,
         postcode,
       );
     } catch (e) {
-      void errorToast(e) {
-        Fluttertoast.showToast(
-            msg: e.message,
-            toastLength: Toast.LENGTH_SHORT,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            fontSize: 12.0);
-      }
+      errorToast(e);
 
-      switch (e) {
-        default:
-          errorToast(e);
-      }
       return null;
     }
   }
@@ -145,7 +132,7 @@ class _JoinPageState extends State<JoinPage> {
   }
 
   void _timerStart() {
-    _time = 10;
+    _time = 120;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         _time--;
@@ -664,7 +651,7 @@ class _JoinPageState extends State<JoinPage> {
                                       backgroundColor: Colors.lightBlue,
                                       fontSize: 12.0);
                                   await _auth.verifyPhoneNumber(
-                                      timeout: const Duration(seconds: 10),
+                                      timeout: const Duration(seconds: 120),
                                       codeAutoRetrievalTimeout:
                                           (String verificationId) {
                                         setState(() {

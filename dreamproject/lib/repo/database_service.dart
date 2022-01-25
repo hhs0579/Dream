@@ -1,31 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class DatabaseService {
   final String uid;
-  String? downloadURL;
   DatabaseService({required this.uid});
 
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  Future updateUserData(
+  Future setUserData(
     String _email,
     String _name,
     String _gender,
+    String _password,
     String _phone,
     String _address,
+    String _addressdetail,
     String _postcode,
   ) async {
-    return await userCollection.doc(uid).set({
+    await userCollection.doc(uid).set({
       'email': _email,
       'name': _name,
+      'password': _password,
       'image': '',
       'gender': _gender,
       'myposts': [],
       'myempathyposts': [],
       'myclubs': [],
       'address': _address,
+      'addressdetail': _addressdetail,
       'postcode': _postcode,
       'phone': _phone,
       'point': 0,
@@ -33,6 +37,30 @@ class DatabaseService {
       'totaldonatenumber': 0,
       'pushToken': ''
     });
+  }
+
+  Future updateUserData(
+    String _name,
+    String _password,
+    String _gender,
+    String _phone,
+    String _address,
+    String _addressdetail,
+    String _postcode,
+  ) async {
+    await userCollection
+        .doc(uid)
+        .update({
+          'name': _name,
+          'password': _password,
+          'gender': _gender,
+          'address': _address,
+          'addressdetail': _addressdetail,
+          'postcode': _postcode,
+          'phone': _phone,
+        })
+        .then((value) => toastMessage('업데이트 완료'))
+        .catchError((err) => toastMessage('업데이트 실패'));
   }
 
   Stream<QuerySnapshot> get users {
