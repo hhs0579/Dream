@@ -1,3 +1,4 @@
+import 'package:dreamproject/data/appdata.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,7 +10,7 @@ class PointAdd extends StatefulWidget {
 }
 
 class _PointAddState extends State<PointAdd> {
-  var _point = 500000;
+  AppData appdata = Get.find();
 
   var resultPoint = 0;
   var inputText = '0';
@@ -37,11 +38,6 @@ class _PointAddState extends State<PointAdd> {
     double result = double.parse(point);
     result += result / 10;
     return result.floor().toString();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -86,7 +82,7 @@ class _PointAddState extends State<PointAdd> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('$_point',
+                      Text(appdata.myInfo.point.toString(),
                           style: TextStyle(
                             fontSize: 18,
                           )),

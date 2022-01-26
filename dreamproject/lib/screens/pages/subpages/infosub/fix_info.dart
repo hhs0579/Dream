@@ -1,4 +1,5 @@
 import 'package:dreamproject/classes/toast_message.dart';
+import 'package:dreamproject/controller/auth_controller.dart';
 import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/repo/database_service.dart';
@@ -500,7 +501,7 @@ class _FixInfoState extends State<FixInfo> {
                   width: 330,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (vaildationname(nameController.text) == null) {
                         if (gender == '') {
                           toastMessage("성별을 선택해주세요.");
@@ -521,7 +522,10 @@ class _FixInfoState extends State<FixInfo> {
                                           phoneNumberController.text) ==
                                       null) {
                                     UpdateUserCredential();
+                                    await databaseController
+                                        .fetchMyInfo(appdata.myInfo.email);
                                     toastMessage('수정이 완료되었습니다.');
+                                    setState(() {});
                                     Get.back();
                                   }
                                 }

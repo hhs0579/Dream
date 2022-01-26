@@ -1,3 +1,4 @@
+import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/auth_controller.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/auth_service.dart';
@@ -78,30 +79,13 @@ class _LoginPageState extends State<LoginPage> {
         ),
         onPressed: () async {
           if (emailController.text == '') {
-            Fluttertoast.showToast(
-                msg: "이메일을 입력해주세요.",
-                toastLength: Toast.LENGTH_SHORT,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.lightBlue,
-                fontSize: 12.0);
+            toastMessage("이메일을 입력해주세요.");
           } else {
             if (passwordController.text == '') {
-              Fluttertoast.showToast(
-                  msg: "비밀번호를 입력해주세요.",
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.lightBlue,
-                  fontSize: 12.0);
+              toastMessage("비밀번호를 입력해주세요.");
             } else {
               if (await authController.authUser(email, password) == null) {
                 Get.offAll(() => HomePage());
-              } else {
-                Fluttertoast.showToast(
-                    msg: await authController.authUser(email, password),
-                    toastLength: Toast.LENGTH_SHORT,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.lightBlue,
-                    fontSize: 12.0);
               }
             }
           }
