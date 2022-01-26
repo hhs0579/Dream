@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/firebase_storage.dart';
+import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/repo/image_helper.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
 
 class Write extends StatefulWidget {
@@ -38,7 +40,9 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
-  var date = DateTime.now();
+  List<String> select = [];
+
+  String name = "";
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   User? _user;
@@ -48,9 +52,10 @@ class _WriteState extends State<Write> {
   final _picker = ImagePicker();
   bool uploading = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
+  AppData appdata = Get.find();
   @override
   void initState() {
+    name = appdata.myInfo.name;
     super.initState();
     _prepareService();
   }
@@ -67,7 +72,10 @@ class _WriteState extends State<Write> {
       imageFileList?.clear();
     }
     try {
-      final List<XFile>? imgs = await _picker.pickMultiImage();
+      final List<XFile>? imgs = await _picker.pickMultiImage(
+        imageQuality: 70,
+        maxWidth: 1440,
+      );
 
       if (imgs!.isNotEmpty) {
         imageFileList!.addAll(imgs);
@@ -98,6 +106,15 @@ class _WriteState extends State<Write> {
   Imageservice imageservice = Imageservice();
   @override
   Widget build(BuildContext context) {
+    var now = DateTime.now();
+
+    var month = now.add(const Duration(days: 30));
+
+    String formatDate = DateFormat('yyyy/MM/dd - HH:mm:ss').format(now);
+    String yearmonthdate = DateFormat('yyyy.MM.dd').format(now);
+
+    String future = DateFormat('yyyy.MM.dd').format(month);
+
     bool isPadMode = MediaQuery.of(context).size.width > 700;
 
     List<Widget> _boxContents = [
@@ -200,6 +217,7 @@ class _WriteState extends State<Write> {
                                         onChanged: (value) {
                                           setState(() {
                                             old = value!;
+                                            return select.add("노인");
                                           });
                                         }),
                                   ),
@@ -220,10 +238,11 @@ class _WriteState extends State<Write> {
                                         onChanged: (value) {
                                           setState(() {
                                             child = value!;
+                                            return select.add("아동");
                                           });
                                         }),
                                   ),
-                                  Text('아동'),
+                                  Text('아동', style: TextStyle(fontSize: 12)),
                                 ],
                               ),
                             ),
@@ -240,6 +259,7 @@ class _WriteState extends State<Write> {
                                         onChanged: (value) {
                                           setState(() {
                                             disorder = value!;
+                                            return select.add("장애");
                                           });
                                         }),
                                   ),
@@ -261,6 +281,7 @@ class _WriteState extends State<Write> {
                                   onChanged: (value) {
                                     setState(() {
                                       multiculture = value!;
+                                      return select.add("다문화");
                                     });
                                   }),
                             ),
@@ -274,6 +295,7 @@ class _WriteState extends State<Write> {
                                   onChanged: (value) {
                                     setState(() {
                                       pet = value!;
+                                      return select.add("유기동물");
                                     });
                                   }),
                             ),
@@ -287,6 +309,7 @@ class _WriteState extends State<Write> {
                                   onChanged: (value) {
                                     setState(() {
                                       poverty = value!;
+                                      return select.add("빈곤");
                                     });
                                   }),
                             ),
@@ -353,14 +376,7 @@ class _WriteState extends State<Write> {
                             onPressed: () {
                               final User? user = auth.currentUser;
                               final uid = user?.uid;
-                              var name = '';
-                              FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc('${user?.uid}')
-                                  .get()
-                                  .then((value) => {
-                                        name = value['name'],
-                                      });
+
                               fireStore.collection('post').doc(key).set({
                                 'key': key,
                                 'post': postTextEditController.text,
@@ -372,8 +388,11 @@ class _WriteState extends State<Write> {
                                 'multiculture': multiculture,
                                 'pet': pet,
                                 'poverty': poverty,
-                                'date': date,
+                                'date': formatDate,
+                                'now': yearmonthdate,
+                                'future': future,
                                 'name': name,
+                                'select': select,
                               });
                               if ((child ||
                                       old ||
