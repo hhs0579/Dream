@@ -67,7 +67,10 @@ class _WriteState extends State<Write> {
       imageFileList?.clear();
     }
     try {
-      final List<XFile>? imgs = await _picker.pickMultiImage();
+      final List<XFile>? imgs = await _picker.pickMultiImage(
+        imageQuality: 70,
+        maxWidth: 1440,
+      );
 
       if (imgs!.isNotEmpty) {
         imageFileList!.addAll(imgs);

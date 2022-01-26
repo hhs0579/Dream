@@ -12,6 +12,8 @@ class PostCard extends StatefulWidget {
   _PostCardState createState() => _PostCardState();
 }
 
+List<String> bb = [];
+
 final Stream<QuerySnapshot> post =
     FirebaseFirestore.instance.collection('post').snapshots();
 final Stream<QuerySnapshot> user =
@@ -97,10 +99,22 @@ class _PostCardState extends State<PostCard> {
                         height: 200,
                         width: MediaQuery.of(context).size.width,
                         color: Colors.white,
-                        child: Center(
-                            child: Image.network(
-                                '${data.docs[index]['image'][0]}',
-                                fit: BoxFit.cover))),
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: data.size,
+                            itemBuilder: (BuildContext context, int index) {
+                              for (int i = 0;
+                                  i < data.docs[index]['image'].length;
+                                  i++) {
+                                data.docs[index]['image'][i];
+                                return Image.network(
+                                    "${data.docs[index]['image'][i]}");
+                              }
+                              return Container(
+                                  child: Image.network(
+                                      "${data.docs[index]['image']}"));
+                            })),
                     Container(
                         padding: EdgeInsets.only(top: 10),
                         height: 50,
