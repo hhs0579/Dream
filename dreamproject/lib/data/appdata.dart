@@ -10,6 +10,7 @@ class AppData extends GetxController {
   String _userEmail = '';
   // bool _isExpertMode = false;
   MyInfo _myInfo = MyInfo(
+    date: DateTime.now(),
     email: '',
     image: '',
     gender: '',

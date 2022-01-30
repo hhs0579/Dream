@@ -96,6 +96,7 @@ class _JoinPageState extends State<JoinPage> {
           email: email, password: password);
       User? user = result.user;
       await DatabaseService(uid: user!.uid).setUserData(
+        DateTime.now(),
         email,
         nameController.text,
         gender,

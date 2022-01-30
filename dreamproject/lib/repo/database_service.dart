@@ -9,7 +9,11 @@ class DatabaseService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
+  final CollectionReference clubCollection =
+      FirebaseFirestore.instance.collection('clubs');
+
   Future setUserData(
+    DateTime date,
     String _email,
     String _name,
     String _gender,
@@ -20,6 +24,7 @@ class DatabaseService {
     String _postcode,
   ) async {
     await userCollection.doc(uid).set({
+      'date': date,
       'email': _email,
       'name': _name,
       'password': _password,
@@ -57,6 +62,25 @@ class DatabaseService {
       'addressdetail': _addressdetail,
       'postcode': _postcode,
       'phone': _phone,
+    });
+  }
+
+  Future setClubData(
+    DateTime _date,
+    String _name,
+    String _image,
+    List<dynamic> _clubuserlist,
+    List<dynamic> _clubuser,
+    int _clubdonatepoint,
+  ) async {
+    await clubCollection.doc(_name).set({
+      'date': _date,
+      'name': _name,
+      'image': '',
+      'clubmaster': uid,
+      'clubuserlist': [],
+      'clubuser': [],
+      'clubdonatepoint': 0,
     });
   }
 

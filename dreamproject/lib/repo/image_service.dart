@@ -33,11 +33,4 @@ class Imageservice {
 
     return downloadURL;
   }
-
-  getdefaultImage() async {
-    return await firebaseStorage
-        .ref()
-        .child("profile/basic.png")
-        .getDownloadURL();
-  }
 }

@@ -476,58 +476,61 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 20),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(14),
-                                    bottomRight: Radius.circular(14),
+                                SizedBox(height: 12),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(14),
+                                      bottomRight: Radius.circular(14),
+                                    ),
+                                    child: Container(
+                                        width: 98,
+                                        height: 35,
+                                        color: Colors.blue,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 35,
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: EdgeInsets.all(6),
+                                                  primary: Colors.blue,
+                                                  elevation: 0,
+                                                ),
+                                                child: Text("탈퇴",
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.white,
+                                                    )),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 0.5,
+                                              height: 22,
+                                              color: Colors.white54,
+                                            ),
+                                            Container(
+                                              width: 57.5,
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: EdgeInsets.all(6),
+                                                  primary: Colors.blue,
+                                                  elevation: 0,
+                                                ),
+                                                child: Text("로고변경",
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.white,
+                                                    )),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                                   ),
-                                  child: Container(
-                                      width: 98,
-                                      height: 35,
-                                      color: Colors.blue,
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 40,
-                                            height: 35,
-                                            child: ElevatedButton(
-                                              onPressed: () {},
-                                              style: ElevatedButton.styleFrom(
-                                                padding: EdgeInsets.all(6),
-                                                primary: Colors.blue,
-                                                elevation: 0,
-                                              ),
-                                              child: Text("탈퇴",
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.white,
-                                                  )),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 0.5,
-                                            height: 22,
-                                            color: Colors.white54,
-                                          ),
-                                          Container(
-                                            width: 57.5,
-                                            child: ElevatedButton(
-                                              onPressed: () {},
-                                              style: ElevatedButton.styleFrom(
-                                                padding: EdgeInsets.all(6),
-                                                primary: Colors.blue,
-                                                elevation: 0,
-                                              ),
-                                              child: Text("로고변경",
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.white,
-                                                  )),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
                                 )
                               ],
                             ),
@@ -629,19 +632,30 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 21.5),
+                                SizedBox(height: 15),
                                 Container(
-                                  width: 120,
-                                  height: 1,
-                                  color: Colors.blue,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 10, bottom: 9),
-                                  child: Text("승인 대기중",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.blue,
-                                      )),
+                                    width: Get.width,
+                                    height: 1,
+                                    color: Colors.blue),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(14),
+                                      bottomRight: Radius.circular(14),
+                                    ),
+                                    child: Container(
+                                      width: 98,
+                                      height: 35,
+                                      child: Center(
+                                        child: Text('승인 대기중',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.blue,
+                                            )),
+                                      ),
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
@@ -682,16 +696,19 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                         fontSize: 15, color: Colors.black54),
                                   ),
                                 ),
-                                SizedBox(height: 72),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(14),
-                                    bottomRight: Radius.circular(14),
-                                  ),
-                                  child: Container(
-                                    width: 98,
-                                    height: 35,
-                                    color: Color(0xffd6d6d6),
+                                SizedBox(height: 70),
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(14),
+                                      bottomRight: Radius.circular(14),
+                                    ),
+                                    child: Container(
+                                      width: 98,
+                                      height: 35,
+                                      color: Color(0xffd6d6d6),
+                                    ),
                                   ),
                                 )
                               ],

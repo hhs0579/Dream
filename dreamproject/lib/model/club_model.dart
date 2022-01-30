@@ -1,6 +1,7 @@
 ClubModel? clubmodel;
 
 class ClubModel {
+  DateTime date;
   String name;
   String image;
   String clubmaster;
@@ -9,7 +10,8 @@ class ClubModel {
   int clubdonatepoint;
 
   ClubModel(
-      {required this.name,
+      {required this.date,
+      required this.name,
       required this.image,
       required this.clubmaster,
       required this.clubuserlist,
@@ -17,7 +19,8 @@ class ClubModel {
       required this.clubdonatepoint});
 
   ClubModel.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
+      : date = json["date"].toDate(),
+        name = json['name'],
         image = json['image'],
         clubmaster = json['clubmaster'],
         clubuserlist = json['clubuserlist'],
@@ -25,6 +28,7 @@ class ClubModel {
         clubdonatepoint = json['clubdonatepoint'];
 
   Map<String, dynamic> toJson() => {
+        'date': date,
         'name': name,
         'image': image,
         'clubmaster': clubmaster,

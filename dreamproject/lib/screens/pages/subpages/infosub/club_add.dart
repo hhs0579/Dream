@@ -14,7 +14,6 @@ class ClubAddPage extends StatefulWidget {
 
 class _ClubAddPageState extends State<ClubAddPage> {
   bool _isClubcreate = false;
-  bool _isClubName = true;
   List<ClubTest> _clubList = [];
 
   var _selectindex = null;
@@ -69,7 +68,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
   _clubeCreateOn() {
     return Container(
         width: Get.width,
-        height: 315,
+        height: 300,
         decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             border: Border.all(
@@ -89,7 +88,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
                           _clubNameController.text = '';
                           _image = null;
                           _isClubcreate = false;
-                          _isClubName = true;
                         });
                       },
                       icon: Icon(Icons.close,
@@ -123,7 +121,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
                       ),
                     )
                   ]),
-                  _clubNameError(),
                   SizedBox(
                     height: 25,
                   ),
@@ -145,7 +142,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                     bottomRight: Radius.circular(23)),
                 child: Container(
                   width: 370,
-                  height: 50,
+                  height: 60,
                   child: ElevatedButton(
                     onPressed: _isEnabldcheck()
                         ? () {
@@ -156,15 +153,10 @@ class _ClubAddPageState extends State<ClubAddPage> {
                               _clubList.add(clubtest);
                               setState(() {
                                 _isClubcreate = false;
-                                _isClubName = true;
                                 _clubNameController.text = '';
                                 _image = null;
                               });
-                            } else {
-                              setState(() {
-                                _isClubName = false;
-                              });
-                            }
+                            } else {}
                           }
                         : null,
                     style: ElevatedButton.styleFrom(primary: Color(0xff3AAFFC)),
@@ -319,22 +311,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
               ));
   }
 
-  _clubNameError() {
-    if (_isClubName == false) {
-      return Container(
-        width: Get.width,
-        margin: EdgeInsets.only(top: 8),
-        child: Text('클럽 이름을 입력해 주세요.',
-            textAlign: TextAlign.right,
-            style: TextStyle(fontSize: 12, color: Color(0xff3AAFFC))),
-      );
-    } else {
-      return Container(
-        height: 26,
-      );
-    }
-  }
-
   _isEnabldcheck() {
     if (_clubNameController.text.isEmpty == false || _image != null) {
       return true;
@@ -388,9 +364,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  setState(() {
-                                    _isClubName = true;
-                                  });
+                                  setState(() {});
                                 },
                                 icon: Icon(Icons.search,
                                     color: Color(0xff3AAFFC), size: 30))
