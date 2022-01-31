@@ -115,7 +115,7 @@ class _WriteState extends State<Write> {
 
     String future = DateFormat('yyyy.MM.dd').format(month);
 
-    bool isPadMode = MediaQuery.of(context).size.width > 700;
+    bool isPadMode = MediaQuery.of(context).size.width > 300;
 
     List<Widget> _boxContents = [
       IconButton(
