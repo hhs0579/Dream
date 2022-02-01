@@ -19,6 +19,7 @@ String resultName = '';
 final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
 AppData appdata = Get.find();
+
 void initState() {
   _prepareService();
   resultURL = appdata.myInfo.image;
@@ -52,8 +53,7 @@ class _CommentsState extends State<Comments> {
                       color: Colors.blue,
                       borderRadius: new BorderRadius.all(Radius.circular(50))),
                   child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(data[i]['pic'] + "$i")),
+                      radius: 50, backgroundImage: NetworkImage(resultURL)),
                 ),
               ),
               title: Text(
@@ -98,9 +98,12 @@ class _CommentsState extends State<Comments> {
             },
             errorText: '댓글 내용이 없습니다',
             labelText: '댓글을 입력해주세요',
-            sendWidgets: Icon(Icons.send_sharp, size: 30, color: Colors.white),
+            sendWidgets:
+                Icon(Icons.send_sharp, size: 30, color: Colors.lightBlue),
             backgroundColor: Colors.lightBlue,
-            textColor: Colors.black),
+            commentController: commentController,
+            formKey: formKey,
+            textColor: Colors.grey),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,10 @@ class CommentBox extends StatelessWidget {
   String resultURL = '';
   final FirebaseAuth auth = FirebaseAuth.instance;
   User? _user;
+  final Stream<QuerySnapshot> post =
+      FirebaseFirestore.instance.collection('post').snapshots();
+  final Stream<QuerySnapshot> user =
+      FirebaseFirestore.instance.collection('users').snapshots();
   void initState() {
     _prepareService();
     resultURL = appdata.myInfo.image;
@@ -55,7 +60,7 @@ class CommentBox extends StatelessWidget {
                 borderRadius: new BorderRadius.all(Radius.circular(50))),
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(resultURL),
+              backgroundImage: NetworkImage(Image),
             ),
           ),
           title: Form(
