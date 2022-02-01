@@ -353,130 +353,125 @@ class _ClubAddPageState extends State<ClubAddPage> {
         .snapshots();
     return GetBuilder(
         builder: (AppData appdata) => Loading(
-                child: Stack(
-              children: [
-                Scaffold(
-                    appBar: AppBar(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        centerTitle: true,
-                        leading: IconButton(
-                            onPressed: () {
-                              Get.back();
-                            },
-                            icon: Icon(Icons.arrow_back,
-                                color: Color(0xff3AAFFC))),
-                        title: Text('클럽 추가',
-                            style: TextStyle(
-                              fontSize: 15,
-                            ))),
-                    body: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 15),
-                              width: Get.width,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 300,
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 5),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xff3AAFFC),
-                                                  width: 2))),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    fit: FlexFit.loose,
-                                    child: IconButton(
-                                        onPressed: () {
-                                          setState(() {});
-                                        },
-                                        icon: Icon(Icons.search,
-                                            color: Color(0xff3AAFFC),
-                                            size: 30)),
-                                  )
-                                ],
+            child: Scaffold(
+                appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    centerTitle: true,
+                    leading: IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.arrow_back, color: Color(0xff3AAFFC))),
+                    title: Text('클럽 추가',
+                        style: TextStyle(
+                          fontSize: 15,
+                        ))),
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 15),
+                          width: Get.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 300,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xff3AAFFC),
+                                              width: 2))),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 15),
-                            Container(
-                                child: _isClubcreate == false
-                                    ? _clubeCreateOff()
-                                    : _clubeCreateOn()),
-                            SizedBox(height: 10),
-                            StreamBuilder<QuerySnapshot>(
-                                stream: _clubStream,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    print(snapshot.error);
-                                    return Center(child: Text('오류가 발생했습니다.'));
-                                  }
-
-                                  if (snapshot.data == null) {
-                                    return Container();
-                                  }
-
-                                  List<ClubModel> clubmodels = [];
-
-                                  for (var value in snapshot.data!.docs) {
-                                    ClubModel clubmodel = ClubModel.fromJson(
-                                        value.data() as Map<String, dynamic>);
-                                    clubmodels.add(clubmodel);
-                                  }
-
-                                  clubmodels = clubmodels.reversed.toList();
-
-                                  return Container(
-                                    height: Get.height,
-                                    child: ListView.builder(
-                                        itemCount: clubmodels.length,
-                                        itemBuilder: (context, index) {
-                                          ClubModel clubmodel =
-                                              clubmodels.elementAt(index);
-                                          return _ClubItem(
-                                              clubmodel.name,
-                                              clubmodel.image,
-                                              clubmodel.clubuser,
-                                              clubmodel.clubdonatepoint,
-                                              index);
-                                        }),
-                                  );
-                                }),
-                          ],
-                        ),
-                      ),
-                    )),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                      width: 400,
-                      height: 50,
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            shadowColor: Colors.black,
-                            primary: Color(0xff3AAFFC),
-                            side: BorderSide(color: Colors.white, width: 2),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25)),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: IconButton(
+                                    onPressed: () {
+                                      setState(() {});
+                                    },
+                                    icon: Icon(Icons.search,
+                                        color: Color(0xff3AAFFC), size: 30)),
+                              )
+                            ],
                           ),
-                          child: Text('선택한 클럽 추가하기',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                              )))),
-                )
-              ],
-            )));
+                        ),
+                        SizedBox(height: 15),
+                        Container(
+                            child: _isClubcreate == false
+                                ? _clubeCreateOff()
+                                : _clubeCreateOn()),
+                        SizedBox(height: 10),
+                        StreamBuilder<QuerySnapshot>(
+                            stream: _clubStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                print(snapshot.error);
+                                return Center(child: Text('오류가 발생했습니다.'));
+                              }
+
+                              if (snapshot.data == null) {
+                                return Container();
+                              }
+
+                              List<ClubModel> clubmodels = [];
+
+                              for (var value in snapshot.data!.docs) {
+                                ClubModel clubmodel = ClubModel.fromJson(
+                                    value.data() as Map<String, dynamic>);
+                                clubmodels.add(clubmodel);
+                              }
+
+                              clubmodels = clubmodels.reversed.toList();
+
+                              return Container(
+                                height: MediaQuery.of(context).size.height,
+                                child: ListView.builder(
+                                    itemCount: clubmodels.length,
+                                    itemBuilder: (context, index) {
+                                      ClubModel clubmodel =
+                                          clubmodels.elementAt(index);
+                                      return _ClubItem(
+                                          clubmodel.name,
+                                          clubmodel.image,
+                                          clubmodel.clubuser,
+                                          clubmodel.clubdonatepoint,
+                                          index);
+                                    }),
+                              );
+                            }),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            width: 400,
+                            height: 50,
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shadowColor: Colors.black,
+                                  primary: Color(0xff3AAFFC),
+                                  side:
+                                      BorderSide(color: Colors.white, width: 2),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25)),
+                                ),
+                                child: Text('선택한 클럽 추가하기',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    ))))
+                      ],
+                    ),
+                  ),
+                ))));
   }
 }
