@@ -47,6 +47,7 @@ class _FeedState extends State<Feed> {
             ),
             body: Container(child: PostCard())),
         Align(
+          //dddsdsfafdsa
           alignment: Alignment.bottomRight,
           child: Container(
             width: 60,
