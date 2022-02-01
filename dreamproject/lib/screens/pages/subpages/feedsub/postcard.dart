@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/comment.dart';
+import 'package:dreamproject/screens/pages/subpages/feedsub/commentall.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ final Stream<QuerySnapshot> user =
     FirebaseFirestore.instance.collection('users').snapshots();
 
 final FirebaseAuth auth = FirebaseAuth.instance;
-
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
 // Stream UserdocumentStream =
@@ -39,7 +39,6 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 // //           .toString();
 // //   return data1;
 // // }
-
 // final Stream<QuerySnapshot> _usersStream =
 //     FirebaseFirestore.instance.collection('post').snapshots();
 
@@ -252,7 +251,9 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         Row(children: [
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(Comments());
+                            },
                             child: Text('댓글 모두보기'),
                           )
                         ]),
