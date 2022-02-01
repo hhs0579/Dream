@@ -16,7 +16,10 @@ class Imageservice {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  Future<String> uploadImageToStorage(XFile result) async {
+  final CollectionReference clubCollection =
+      FirebaseFirestore.instance.collection('clubs');
+
+  Future<String> uploadProfileImageToStorage(XFile result) async {
     User? _user = _firebaseAuth.currentUser;
 
     File image = File(result.path);
@@ -34,10 +37,18 @@ class Imageservice {
     return downloadURL;
   }
 
-  getdefaultImage() async {
-    return await firebaseStorage
-        .ref()
-        .child("profile/basic.png")
-        .getDownloadURL();
+  Future<String> uploadClubImageToStorage(String name, XFile result) async {
+    User? _user = _firebaseAuth.currentUser;
+
+    File image = File(result.path);
+    Reference storageReference = firebaseStorage.ref().child("club/$name");
+
+    final File resultImage = await compute(getResizedProfileImage, image);
+
+    final UploadTask uploadTask = storageReference.putFile(resultImage);
+
+    String downloadURL = await (await uploadTask).ref.getDownloadURL();
+
+    return downloadURL;
   }
 }

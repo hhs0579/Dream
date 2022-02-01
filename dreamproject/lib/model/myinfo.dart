@@ -1,6 +1,7 @@
 MyInfo? myInfo;
 
 class MyInfo {
+  DateTime date;
   String email;
   String image;
   String name;
@@ -20,7 +21,8 @@ class MyInfo {
   String uid;
 
   MyInfo(
-      {required this.email,
+      {required this.date,
+      required this.email,
       required this.image,
       required this.gender,
       required this.password,
@@ -39,7 +41,8 @@ class MyInfo {
       required this.uid});
 
   MyInfo.fromJson(Map<String, dynamic> json)
-      : email = json['email'],
+      : date = json['date'].toDate(),
+        email = json['email'],
         image = json['image'],
         gender = json['gender'],
         password = json['password'],
@@ -58,6 +61,7 @@ class MyInfo {
         uid = json['uid'];
 
   Map<String, dynamic> toJson() => {
+        'date': date,
         'email': email,
         'image': image,
         'gender': gender,

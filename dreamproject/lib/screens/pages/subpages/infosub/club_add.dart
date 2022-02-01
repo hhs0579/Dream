@@ -1,8 +1,13 @@
-import 'package:dreamproject/model/clubtest.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/classes/toast_message.dart';
+import 'package:dreamproject/data/appdata.dart';
+import 'package:dreamproject/model/club_model.dart';
+import 'package:dreamproject/repo/database_service.dart';
+import 'package:dreamproject/repo/image_service.dart';
+import 'package:dreamproject/utils/loading.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ClubAddPage extends StatefulWidget {
@@ -14,8 +19,8 @@ class ClubAddPage extends StatefulWidget {
 
 class _ClubAddPageState extends State<ClubAddPage> {
   bool _isClubcreate = false;
-  bool _isClubName = true;
-  List<ClubTest> _clubList = [];
+  String resultURL = '';
+  AppData appdata = Get.find();
 
   var _selectindex = null;
   TextEditingController _clubNameController = TextEditingController();
@@ -24,7 +29,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
   XFile? _image;
 
   void initState() {
-    _clubList = [];
     _selectindex = null;
     super.initState();
   }
@@ -69,7 +73,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
   _clubeCreateOn() {
     return Container(
         width: Get.width,
-        height: 315,
+        height: 300,
         decoration: BoxDecoration(
             shape: BoxShape.rectangle,
             border: Border.all(
@@ -89,7 +93,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
                           _clubNameController.text = '';
                           _image = null;
                           _isClubcreate = false;
-                          _isClubName = true;
                         });
                       },
                       icon: Icon(Icons.close,
@@ -115,7 +118,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                         child: TextField(
                             controller: _clubNameController,
                             textAlign: TextAlign.right,
-                            maxLength: 8,
+                            maxLength: 7,
                             decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -123,7 +126,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
                       ),
                     )
                   ]),
-                  _clubNameError(),
                   SizedBox(
                     height: 25,
                   ),
@@ -145,25 +147,33 @@ class _ClubAddPageState extends State<ClubAddPage> {
                     bottomRight: Radius.circular(23)),
                 child: Container(
                   width: 370,
-                  height: 50,
+                  height: 60,
                   child: ElevatedButton(
                     onPressed: _isEnabldcheck()
-                        ? () {
-                            if (_clubNameController.text.isEmpty == false) {
-                              ClubTest clubtest = ClubTest(
-                                  clubname: _clubNameController.text,
-                                  image: _image);
-                              _clubList.add(clubtest);
-                              setState(() {
-                                _isClubcreate = false;
-                                _isClubName = true;
-                                _clubNameController.text = '';
-                                _image = null;
-                              });
-                            } else {
-                              setState(() {
-                                _isClubName = false;
-                              });
+                        ? () async {
+                            try {
+                              if (_clubNameController.text.length < 2) {
+                                toastMessage('클럽 이름은 2글자 이상 입력해주세요.');
+                              } else {
+                                appdata.isLoadingScreen = true;
+                                resultURL =
+                                    await imageservice.uploadClubImageToStorage(
+                                        _clubNameController.text, _image!);
+                                DatabaseService(uid: appdata.myInfo.uid)
+                                    .setClubData(
+                                        _clubNameController.text, resultURL);
+
+                                toastMessage('클럽 생성이 완료되었습니다.');
+                                appdata.isLoadingScreen = false;
+                                setState(() {
+                                  _isClubcreate = false;
+                                  _clubNameController.text = '';
+                                  _image = null;
+                                });
+                              }
+                            } catch (e) {
+                              toastMessage('오류가 발생했습니다.');
+                              print(e);
                             }
                           }
                         : null,
@@ -180,7 +190,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
         ));
   }
 
-  _ClubItem(name, image, index) {
+  _ClubItem(name, image, user, point, index) {
     return Container(
         width: Get.width,
         height: 120,
@@ -193,8 +203,8 @@ class _ClubAddPageState extends State<ClubAddPage> {
               width: 1),
           borderRadius: BorderRadius.circular(25),
         ),
-        child: TextButton(
-          onPressed: () {
+        child: GestureDetector(
+          onTap: () {
             setState(() {
               if (_selectindex == index) {
                 _selectindex = null;
@@ -210,7 +220,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                   Container(
                       width: 25,
                       height: 25,
-                      margin: EdgeInsets.only(left: 12, top: 8),
+                      margin: EdgeInsets.only(left: 15, top: 10),
                       decoration: BoxDecoration(
                           color:
                               _selectindex == index ? Color(0xff3AAFFC) : null,
@@ -227,59 +237,67 @@ class _ClubAddPageState extends State<ClubAddPage> {
               Container(
                 width: 80,
                 margin: EdgeInsets.only(top: 10, bottom: 10),
-                child: Column(children: [
-                  Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xff3AAFFC),
-                          )),
-                      child: CircleAvatar(
-                          backgroundImage: FileImage(File(image!.path)))),
-                  SizedBox(height: 5),
-                  Text(name,
-                      style: TextStyle(fontSize: 11, color: Color(0xff3AAFFC))),
-                ]),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                width: 1,
+                                color: Color(0xff3AAFFC),
+                              )),
+                          child: CircleAvatar(
+                              backgroundImage: NetworkImage(image))),
+                      SizedBox(height: 10),
+                      Text(name,
+                          style: TextStyle(
+                              fontSize: 11, color: Color(0xff3AAFFC))),
+                    ]),
               ),
               SizedBox(width: 15),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(children: [
-                    Container(
-                      width: 60,
-                      child: Text('회원 수',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 13, color: Colors.grey)),
-                    ),
-                    SizedBox(width: 30),
-                    Container(
-                      width: 100,
-                      child: Text('999' + ' 명',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 13, color: Colors.black)),
-                    ),
-                  ]),
-                  SizedBox(height: 15),
-                  Row(children: [
-                    Container(
-                      width: 60,
-                      child: Text('총 기부금',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 13, color: Colors.grey)),
-                    ),
-                    SizedBox(width: 30),
-                    Container(
-                      width: 100,
-                      child: Text('1000000' + ' 원',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(fontSize: 13, color: Colors.black)),
-                    ),
-                  ]),
-                ],
+              Flexible(
+                fit: FlexFit.loose,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(children: [
+                      Container(
+                        width: 60,
+                        child: Text('회원 수',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      ),
+                      SizedBox(width: 30),
+                      Container(
+                        width: 100,
+                        child: Text(user.toString() + ' 명',
+                            textAlign: TextAlign.right,
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black)),
+                      ),
+                    ]),
+                    SizedBox(height: 15),
+                    Row(children: [
+                      Container(
+                        width: 60,
+                        child: Text('총 기부금',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      ),
+                      SizedBox(width: 30),
+                      Container(
+                        width: 100,
+                        child: Text(point.toString() + ' 원',
+                            textAlign: TextAlign.right,
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black)),
+                      ),
+                    ]),
+                  ],
+                ),
               )
             ],
           ),
@@ -319,22 +337,6 @@ class _ClubAddPageState extends State<ClubAddPage> {
               ));
   }
 
-  _clubNameError() {
-    if (_isClubName == false) {
-      return Container(
-        width: Get.width,
-        margin: EdgeInsets.only(top: 8),
-        child: Text('클럽 이름을 입력해 주세요.',
-            textAlign: TextAlign.right,
-            style: TextStyle(fontSize: 12, color: Color(0xff3AAFFC))),
-      );
-    } else {
-      return Container(
-        height: 26,
-      );
-    }
-  }
-
   _isEnabldcheck() {
     if (_clubNameController.text.isEmpty == false || _image != null) {
       return true;
@@ -345,84 +347,117 @@ class _ClubAddPageState extends State<ClubAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            leading: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(Icons.arrow_back, color: Color(0xff3AAFFC))),
-            title: Text('클럽 추가',
-                style: TextStyle(
-                  fontSize: 15,
-                ))),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 15),
-                        width: Get.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+    final Stream<QuerySnapshot> _clubStream = FirebaseFirestore.instance
+        .collection('clubs')
+        .orderBy('clubuser')
+        .snapshots();
+    return GetBuilder(
+        builder: (AppData appdata) => Loading(
+                child: Stack(
+              children: [
+                Scaffold(
+                    appBar: AppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        centerTitle: true,
+                        leading: IconButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            icon: Icon(Icons.arrow_back,
+                                color: Color(0xff3AAFFC))),
+                        title: Text('클럽 추가',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ))),
+                    body: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
                           children: [
                             Container(
-                              width: 300,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
+                              margin: EdgeInsets.only(left: 15),
+                              width: Get.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 300,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 5),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xff3AAFFC),
+                                                  width: 2))),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          setState(() {});
+                                        },
+                                        icon: Icon(Icons.search,
                                             color: Color(0xff3AAFFC),
-                                            width: 2))),
+                                            size: 30)),
+                                  )
+                                ],
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isClubName = true;
-                                  });
-                                },
-                                icon: Icon(Icons.search,
-                                    color: Color(0xff3AAFFC), size: 30))
+                            SizedBox(height: 15),
+                            Container(
+                                child: _isClubcreate == false
+                                    ? _clubeCreateOff()
+                                    : _clubeCreateOn()),
+                            SizedBox(height: 10),
+                            StreamBuilder<QuerySnapshot>(
+                                stream: _clubStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    print(snapshot.error);
+                                    return Center(child: Text('오류가 발생했습니다.'));
+                                  }
+
+                                  if (snapshot.data == null) {
+                                    return Container();
+                                  }
+
+                                  List<ClubModel> clubmodels = [];
+
+                                  for (var value in snapshot.data!.docs) {
+                                    ClubModel clubmodel = ClubModel.fromJson(
+                                        value.data() as Map<String, dynamic>);
+                                    clubmodels.add(clubmodel);
+                                  }
+
+                                  clubmodels = clubmodels.reversed.toList();
+
+                                  return Container(
+                                    height: Get.height,
+                                    child: ListView.builder(
+                                        itemCount: clubmodels.length,
+                                        itemBuilder: (context, index) {
+                                          ClubModel clubmodel =
+                                              clubmodels.elementAt(index);
+                                          return _ClubItem(
+                                              clubmodel.name,
+                                              clubmodel.image,
+                                              clubmodel.clubuser,
+                                              clubmodel.clubdonatepoint,
+                                              index);
+                                        }),
+                                  );
+                                }),
                           ],
                         ),
                       ),
-                      SizedBox(height: 15),
-                      Container(
-                          child: _isClubcreate == false
-                              ? _clubeCreateOff()
-                              : _clubeCreateOn()),
-                      SizedBox(height: 10),
-                      _clubList.isEmpty
-                          ? Container()
-                          : Container(
-                              height: _clubList.length * 135,
-                              child: ListView.builder(
-                                  itemCount: _clubList.length,
-                                  itemBuilder: (context, index) {
-                                    ClubTest _clubtest =
-                                        _clubList.elementAt(index);
-                                    return _ClubItem(_clubtest.clubname,
-                                        _clubtest.image, index);
-                                  }),
-                            ),
-                    ],
-                  ),
-                ),
-              ),
-              _clubList.isEmpty
-                  ? Container()
-                  : Container(
+                    )),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
                       width: 400,
                       height: 50,
                       margin: EdgeInsets.only(bottom: 10),
@@ -439,9 +474,9 @@ class _ClubAddPageState extends State<ClubAddPage> {
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.white,
-                              ))))
-            ],
-          ),
-        ));
+                              )))),
+                )
+              ],
+            )));
   }
 }
