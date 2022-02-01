@@ -10,7 +10,8 @@ class CommentBox extends StatelessWidget {
   dynamic commentController;
   late String Image;
   late String labelText;
-  late String sendWidgets;
+  late Widget sendWidgets;
+  late String errorText;
   late Color backgroundColor;
   late Color textColor;
   CommentBox(
@@ -19,6 +20,7 @@ class CommentBox extends StatelessWidget {
       this.formKey,
       this.commentController,
       required this.Image,
+      required this.errorText,
       required this.labelText,
       required this.sendWidgets,
       required this.backgroundColor,
@@ -55,6 +57,29 @@ class CommentBox extends StatelessWidget {
               radius: 50,
               backgroundImage: NetworkImage(resultURL),
             ),
+          ),
+          title: Form(
+              key: formKey,
+              child: TextFormField(
+                maxLines: 4,
+                minLines: 1,
+                cursorColor: textColor,
+                style: TextStyle(color: textColor),
+                controller: commentController,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  labelText: labelText,
+                  focusColor: textColor,
+                  fillColor: textColor,
+                  labelStyle: TextStyle(color: textColor),
+                ),
+                validator: (value) => value!.isEmpty ? errorText : null,
+              )),
+          trailing: OutlinedButton(
+            onPressed: sendButton,
+            child: sendWidgets,
           ),
         )
       ],
