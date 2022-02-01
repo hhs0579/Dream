@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dreamproject/classes/toast_message.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class DatabaseService {
   final String uid;
@@ -66,20 +64,16 @@ class DatabaseService {
   }
 
   Future setClubData(
-    DateTime _date,
     String _name,
     String _image,
-    List<dynamic> _clubuserlist,
-    List<dynamic> _clubuser,
-    int _clubdonatepoint,
   ) async {
     await clubCollection.doc(_name).set({
-      'date': _date,
+      'date': DateTime.now(),
       'name': _name,
-      'image': '',
+      'image': _image,
       'clubmaster': uid,
-      'clubuserlist': [],
-      'clubuser': [],
+      'clubuserlist': [uid],
+      'clubuser': 1,
       'clubdonatepoint': 0,
     });
   }

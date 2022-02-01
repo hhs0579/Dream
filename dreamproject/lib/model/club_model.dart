@@ -6,7 +6,7 @@ class ClubModel {
   String image;
   String clubmaster;
   List<dynamic> clubuserlist;
-  List<dynamic> clubuser;
+  int clubuser;
   int clubdonatepoint;
 
   ClubModel(

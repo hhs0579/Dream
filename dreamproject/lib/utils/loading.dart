@@ -1,7 +1,6 @@
+import 'package:dreamproject/data/appdata.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'data/appdata.dart';
 
 class Loading extends StatefulWidget {
   final Widget child;
@@ -26,17 +25,9 @@ class _LoadingState extends State<Loading> {
         widget.child,
         Visibility(
           visible: appData.isLoadingScreen,
-          child: SizedBox.expand(
-            child: Container(
-              color: Colors.black.withOpacity(.5),
-            ),
-          ),
-        ),
-        Visibility(
-          visible: appData.isLoadingScreen,
           child: Center(
             child: CircularProgressIndicator(
-              color: Colors.lightBlue,
+              color: Color(0xff3AAFFC),
             ),
           ),
         ),
@@ -60,7 +51,7 @@ class StaticLoading extends StatelessWidget {
         ),
         Center(
           child: CircularProgressIndicator(
-            color: Colors.lightBlue,
+            color: Color(0xff3AAFFC),
           ),
         ),
       ],

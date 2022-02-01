@@ -28,7 +28,6 @@ class _MyInfoPageState extends State<MyInfoPage> {
   AppData appdata = Get.find();
   final _picker = ImagePicker();
   String resultURL = '';
-  String defaultURl = '';
   bool isProfile = false;
   var _member = 0;
   var _donation = 0;
@@ -62,8 +61,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     try {
                       XFile? result =
                           await _picker.pickImage(source: ImageSource.gallery);
-                      resultURL =
-                          await imageservice.uploadImageToStorage(result!);
+                      resultURL = await imageservice
+                          .uploadProfileImageToStorage(result!);
                       toastMessage('프로필 사진이 변경되었습니다.');
                     } catch (e) {
                       toastMessage('오류가 발생했습니다.');
@@ -676,7 +675,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                   margin: EdgeInsets.only(top: 12),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Get.to(ClubAddPage());
+                                      Get.to(() => ClubAddPage());
                                     },
                                     child: Icon(Icons.add, color: Colors.white),
                                     style: ElevatedButton.styleFrom(
