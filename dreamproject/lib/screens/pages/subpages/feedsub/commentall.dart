@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
+import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:random_string/random_string.dart';
 
 class Comments extends StatefulWidget {
   const Comments({Key? key}) : super(key: key);
@@ -13,13 +16,15 @@ class Comments extends StatefulWidget {
 }
 
 final formKey = GlobalKey<FormState>();
+FirebaseFirestore fireStore = FirebaseFirestore.instance;
 final TextEditingController commentController = TextEditingController();
 String resultURL = '';
 String resultName = '';
 final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
+var keyplus = 1;
 AppData appdata = Get.find();
-
+var key = randomString(16);
 void initState() {
   _prepareService();
   resultURL = appdata.myInfo.image;
@@ -28,24 +33,6 @@ void initState() {
 
 void _prepareService() async {
   _user = auth.currentUser;
-}
-
-_profileImageOn() {
-  return resultURL == ''
-      ? Container(
-          width: 70,
-          height: 70,
-          child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 40,
-              backgroundImage: AssetImage('assets/imgs/basic.png')))
-      : Container(
-          width: 70,
-          height: 70,
-          child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 40,
-              backgroundImage: NetworkImage(resultURL)));
 }
 
 List filedata = [];
@@ -96,33 +83,49 @@ class _CommentsState extends State<Comments> {
       ),
       body: Container(
         child: CommentBox(
-            child: commentChild(filedata),
-            Image: appdata.myInfo.image,
-            sendButton: () {
-              if (formKey.currentState!.validate()) {
-                print(commentController.text);
-                setState(() {
-                  var value = {
-                    'name': appdata.myInfo.name,
-                    'pic': appdata.myInfo.image,
-                    'message': commentController.text
-                  };
-                  filedata.insert(0, value);
-                });
-                commentController.clear();
-                FocusScope.of(context).unfocus();
-              } else {
-                print('값이 없습니다');
-              }
-            },
-            errorText: '댓글 내용이 없습니다',
-            labelText: '댓글을 입력해주세요',
-            sendWidgets:
-                Icon(Icons.send_sharp, size: 30, color: Colors.lightBlue),
-            backgroundColor: Colors.lightBlue,
-            commentController: commentController,
-            formKey: formKey,
-            textColor: Colors.black),
+          child: commentChild(filedata),
+          Image: appdata.myInfo.image,
+          sendButton: () {
+            if (formKey.currentState!.validate()) {
+              print(commentController.text);
+              setState(() {
+                var value = {
+                  'name': appdata.myInfo.name,
+                  'pic': appdata.myInfo.image,
+                  'message': commentController.text
+                };
+                filedata.insert(0, value);
+              });
+              final User? user = auth.currentUser;
+              final uid = user?.uid;
+
+              fireStore.collection('comments').doc(key).set({
+                'key': key,
+                'comment': commentController.text,
+                'profile': appdata.myInfo.image,
+                'name': appdata.myInfo.name,
+              });
+              setState(() {
+                key = randomString(16);
+              });
+              commentController.clear();
+              FocusScope.of(context).unfocus();
+            } else {
+              print('값이 없습니다');
+            }
+          },
+          errorText: '댓글 내용이 없습니다',
+          labelText: '댓글을 입력해주세요',
+          sendWidgets:
+              Icon(Icons.send_sharp, size: 30, color: Colors.lightBlue),
+          backgroundColor: Colors.lightBlue,
+          commentController: commentController,
+          formKey: formKey,
+          textColor: Colors.black,
+          commonComment: true,
+          productComment: false,
+          talentComment: false,
+        ),
       ),
     );
   }

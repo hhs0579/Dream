@@ -264,8 +264,8 @@ class _PostCardState extends State<PostCard> {
                                 CircleAvatar(
                                   radius: 15,
                                   //프로필 사진받아오기
-                                  backgroundImage: NetworkImage(
-                                      'https://www.woolha.com/media/2020/03/eevee.png'),
+                                  backgroundImage:
+                                      NetworkImage(appdata.myInfo.image),
                                 ),
                                 SizedBox(width: 5),
                                 //프로필 사진,이름 받아오기
