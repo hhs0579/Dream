@@ -30,6 +30,24 @@ void _prepareService() async {
   _user = auth.currentUser;
 }
 
+_profileImageOn() {
+  return resultURL == ''
+      ? Container(
+          width: 70,
+          height: 70,
+          child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 40,
+              backgroundImage: AssetImage('assets/imgs/basic.png')))
+      : Container(
+          width: 70,
+          height: 70,
+          child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 40,
+              backgroundImage: NetworkImage(resultURL)));
+}
+
 List filedata = [];
 
 class _CommentsState extends State<Comments> {
@@ -53,7 +71,8 @@ class _CommentsState extends State<Comments> {
                       color: Colors.blue,
                       borderRadius: new BorderRadius.all(Radius.circular(50))),
                   child: CircleAvatar(
-                      radius: 50, backgroundImage: NetworkImage(resultURL)),
+                      radius: 50,
+                      backgroundImage: NetworkImage(appdata.myInfo.image)),
                 ),
               ),
               title: Text(
@@ -78,14 +97,14 @@ class _CommentsState extends State<Comments> {
       body: Container(
         child: CommentBox(
             child: commentChild(filedata),
-            Image: resultURL,
+            Image: appdata.myInfo.image,
             sendButton: () {
               if (formKey.currentState!.validate()) {
                 print(commentController.text);
                 setState(() {
                   var value = {
-                    'name': resultName,
-                    'pic': resultURL,
+                    'name': appdata.myInfo.name,
+                    'pic': appdata.myInfo.image,
                     'message': commentController.text
                   };
                   filedata.insert(0, value);
@@ -103,7 +122,7 @@ class _CommentsState extends State<Comments> {
             backgroundColor: Colors.lightBlue,
             commentController: commentController,
             formKey: formKey,
-            textColor: Colors.grey),
+            textColor: Colors.black),
       ),
     );
   }

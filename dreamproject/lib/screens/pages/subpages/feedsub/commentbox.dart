@@ -60,7 +60,7 @@ class CommentBox extends StatelessWidget {
                 borderRadius: new BorderRadius.all(Radius.circular(50))),
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(Image),
+              backgroundImage: NetworkImage(appdata.myInfo.image),
             ),
           ),
           title: Form(
