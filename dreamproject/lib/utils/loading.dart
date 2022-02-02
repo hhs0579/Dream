@@ -25,6 +25,14 @@ class _LoadingState extends State<Loading> {
         widget.child,
         Visibility(
           visible: appData.isLoadingScreen,
+          child: SizedBox.expand(
+            child: Container(
+              color: Colors.black.withOpacity(.3),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: appData.isLoadingScreen,
           child: Center(
             child: CircularProgressIndicator(
               color: Color(0xff3AAFFC),
@@ -51,7 +59,7 @@ class StaticLoading extends StatelessWidget {
         ),
         Center(
           child: CircularProgressIndicator(
-            color: Color(0xff3AAFFC),
+            color: Colors.lightBlue,
           ),
         ),
       ],

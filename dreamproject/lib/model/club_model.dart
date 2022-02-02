@@ -8,6 +8,7 @@ class ClubModel {
   List<dynamic> clubuserlist;
   int clubuser;
   int clubdonatepoint;
+  bool isaccsess = false;
 
   ClubModel(
       {required this.date,
@@ -16,7 +17,8 @@ class ClubModel {
       required this.clubmaster,
       required this.clubuserlist,
       required this.clubuser,
-      required this.clubdonatepoint});
+      required this.clubdonatepoint,
+      required this.isaccsess});
 
   ClubModel.fromJson(Map<String, dynamic> json)
       : date = json["date"].toDate(),
@@ -25,7 +27,8 @@ class ClubModel {
         clubmaster = json['clubmaster'],
         clubuserlist = json['clubuserlist'],
         clubuser = json['clubuser'],
-        clubdonatepoint = json['clubdonatepoint'];
+        clubdonatepoint = json['clubdonatepoint'],
+        isaccsess = json['isaccsess'];
 
   Map<String, dynamic> toJson() => {
         'date': date,
@@ -35,5 +38,6 @@ class ClubModel {
         'clubuserlist': clubuserlist,
         'clubuser': clubuser,
         'clubdonatepoint': clubdonatepoint,
+        'isaccsess': isaccsess
       };
 }

@@ -1,6 +1,4 @@
 import 'package:dreamproject/classes/toast_message.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PossibleEmailText {
   bool isEmail;
@@ -26,11 +24,10 @@ vaildationemail(String value) {
   var vaildationemail = checkEmailText(value);
 
   if (value.isEmpty) {
-    print(value);
-    toastMessage("이메일을 작성해주세요");
+    return toastMessage("이메일을 작성해주세요");
   } else {
     if (vaildationemail.isEmail == false) {
-      toastMessage("잘못된 이메일 형식입니다.");
+      return toastMessage("잘못된 이메일 형식입니다.");
     } else {
       return null;
     }
@@ -61,21 +58,18 @@ PossibleNameText checkNameText(String value) {
     possibleNameText.isCharacters = false;
   }
 
-  //특수기호가 있는지 확인
   if (!validSpecial.hasMatch(value)) {
     possibleNameText.is1Symbol = true;
   } else {
     possibleNameText.is1Symbol = false;
   }
 
-  //문자가 있는지 확인
   if (!validAlphabet.hasMatch(value)) {
     possibleNameText.is1Letter = true;
   } else {
     possibleNameText.is1Letter = false;
   }
 
-  //숫자가 있는지 확인
   if (!validNumbers.hasMatch(value)) {
     possibleNameText.is1Number = true;
   } else {
@@ -88,14 +82,14 @@ vaildationname(String value) {
   var vaildationname = checkNameText(value);
 
   if (value.isEmpty) {
-    toastMessage("이름을 작성해주세요");
+    return toastMessage("이름을 작성해주세요");
   } else {
     if (vaildationname.isCharacters == false) {
-      toastMessage("이름은 2~5자 사이로 입력해주세요.");
+      return toastMessage("이름은 2~5자 사이로 입력해주세요.");
     } else if (vaildationname.is1Number == false ||
         vaildationname.is1Letter == false ||
         vaildationname.is1Symbol == false) {
-      toastMessage("실명을 입력해주세요.");
+      return toastMessage("실명을 입력해주세요.");
     } else {
       return null;
     }
@@ -120,28 +114,24 @@ PossiblePasswordText checkPasswordText(String value) {
   final validAlphabet = RegExp(r'[a-zA-Z]');
   final validSpecial = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
 
-  //8자 이상인지 확인
   if (value.length >= 8 && value.length <= 12) {
     possiblePasswordText.is8Characters = true;
   } else {
     possiblePasswordText.is8Characters = false;
   }
 
-  //특수기호가 있는지 확인
   if (validSpecial.hasMatch(value)) {
     possiblePasswordText.is1Symbol = true;
   } else {
     possiblePasswordText.is1Symbol = false;
   }
 
-  //문자가 있는지 확인
   if (validAlphabet.hasMatch(value)) {
     possiblePasswordText.is1Letter = true;
   } else {
     possiblePasswordText.is1Letter = false;
   }
 
-  //숫자가 있는지 확인
   if (validNumbers.hasMatch(value)) {
     possiblePasswordText.is1Number = true;
   } else {
@@ -154,14 +144,14 @@ vaildationpassword(String value) {
   var vaildationpassword = checkPasswordText(value);
 
   if (value.isEmpty) {
-    toastMessage("비밀번호를 작성해주세요");
+    return toastMessage("비밀번호를 작성해주세요");
   } else {
     if (vaildationpassword.is8Characters == false) {
-      toastMessage("8~12자 비밀번호를 설정해주세요.");
+      return toastMessage("8~12자 비밀번호를 설정해주세요.");
     } else if (vaildationpassword.is1Number == false ||
         vaildationpassword.is1Letter == false ||
         vaildationpassword.is1Symbol == false) {
-      toastMessage("비밀번호에 숫자, 문자, 특수문자는 필수입니다.");
+      return toastMessage("비밀번호에 숫자, 문자, 특수문자는 필수입니다.");
     } else {
       return null;
     }
@@ -197,13 +187,66 @@ vaildationPhoneNumber(String value) {
   var vaildationPhoneNumber = checkPhoneNumberText(value);
 
   if (value.isEmpty) {
-    toastMessage("전화번호를 입력해주세요.");
+    return toastMessage("전화번호를 입력해주세요.");
   } else {
     if (vaildationPhoneNumber.is11Characters == false) {
-      toastMessage("전화번호를 11자리를 입력해주세요.");
+      return toastMessage("전화번호를 11자리를 입력해주세요.");
     } else {
       if (vaildationPhoneNumber.is1Symbol == false) {
-        toastMessage("특수문자없이 숫자만 입력해주세요.");
+        return toastMessage("특수문자없이 숫자만 입력해주세요.");
+      } else {
+        return null;
+      }
+    }
+  }
+}
+
+class PossibleClubNameText {
+  bool isCharacters;
+  bool is1Symbol;
+  bool is1Number;
+  PossibleClubNameText(
+      {this.isCharacters = false,
+      this.is1Symbol = false,
+      this.is1Number = false});
+}
+
+PossibleNameText checkClubNameText(String value) {
+  var possibleclubNameText = PossibleNameText();
+  final validNumbers = RegExp(r'(\d+)');
+  final validSpecial = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+  if (value.length > 2) {
+    possibleclubNameText.isCharacters = true;
+  } else {
+    possibleclubNameText.isCharacters = false;
+  }
+
+  if (!validSpecial.hasMatch(value)) {
+    possibleclubNameText.is1Symbol = true;
+  } else {
+    possibleclubNameText.is1Symbol = false;
+  }
+
+  if (!validNumbers.hasMatch(value)) {
+    possibleclubNameText.is1Number = true;
+  } else {
+    possibleclubNameText.is1Number = false;
+  }
+  return possibleclubNameText;
+}
+
+vaildationClubname(String value) {
+  var vaildationclubname = checkClubNameText(value);
+
+  if (vaildationclubname.isCharacters == false) {
+    return toastMessage('2글자 이상 입력해주세요.');
+  } else {
+    if (vaildationclubname.is1Symbol == false) {
+      return toastMessage('특수문자는 입력할 수 없습니다.');
+    } else {
+      if (vaildationclubname.is1Number == false) {
+        return toastMessage('숫자는 입력할 수 없습니다.');
       } else {
         return null;
       }

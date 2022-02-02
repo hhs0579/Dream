@@ -75,6 +75,7 @@ class DatabaseService {
       'clubuserlist': [uid],
       'clubuser': 1,
       'clubdonatepoint': 0,
+      'isaccsess': false
     });
   }
 
