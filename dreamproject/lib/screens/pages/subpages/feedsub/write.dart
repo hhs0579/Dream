@@ -382,17 +382,12 @@ class _WriteState extends State<Write> {
                                 'post': postTextEditController.text,
                                 'image': _arrImageUrls,
                                 'uid': uid,
-                                'old': old,
-                                'child': child,
-                                'disorder': disorder,
-                                'multiculture': multiculture,
-                                'pet': pet,
-                                'poverty': poverty,
                                 'date': formatDate,
                                 'now': yearmonthdate,
                                 'future': future,
                                 'name': name,
                                 'select': select,
+                                'profile': appdata.myInfo.image
                               });
                               if ((child ||
                                       old ||

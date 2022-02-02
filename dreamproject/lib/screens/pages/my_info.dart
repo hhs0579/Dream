@@ -34,6 +34,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
 
   AppData appdata = Get.find();
   final _picker = ImagePicker();
+
   String resultURL = '';
   bool isProfile = false;
   var _member = 0;
@@ -42,6 +43,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
   @override
   void initState() {
     resultURL = appdata.myInfo.image;
+
     super.initState();
   }
 

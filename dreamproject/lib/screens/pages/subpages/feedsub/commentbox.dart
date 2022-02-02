@@ -15,23 +15,19 @@ class CommentBox extends StatefulWidget {
   late String errorText;
   late Color backgroundColor;
   late Color textColor;
-  bool commonComment;
-  bool productComment;
-  bool talentComment;
-  CommentBox(
-      {required this.child,
-      this.sendButton,
-      this.formKey,
-      this.commentController,
-      required this.Image,
-      required this.errorText,
-      required this.labelText,
-      required this.sendWidgets,
-      required this.backgroundColor,
-      required this.textColor,
-      required this.commonComment,
-      required this.productComment,
-      required this.talentComment});
+
+  CommentBox({
+    required this.child,
+    this.sendButton,
+    this.formKey,
+    this.commentController,
+    required this.Image,
+    required this.errorText,
+    required this.labelText,
+    required this.sendWidgets,
+    required this.backgroundColor,
+    required this.textColor,
+  });
 
   @override
   State<CommentBox> createState() => _CommentBoxState();
@@ -39,7 +35,9 @@ class CommentBox extends StatefulWidget {
 
 class _CommentBoxState extends State<CommentBox> {
   AppData appdata = Get.find();
-
+  bool commonComment = false;
+  bool productComment = false;
+  bool talentComment = false;
   String resultURL = '';
   final isSelected = <bool>[true, false, false];
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -88,42 +86,6 @@ class _CommentBoxState extends State<CommentBox> {
               key: widget.formKey,
               child: Column(
                 children: [
-                  ToggleButtons(
-                    color: Colors.black.withOpacity(0.6),
-                    selectedColor: Color(0xff3AAFFC),
-                    fillColor: Colors.white.withOpacity(0.3),
-                    splashColor: Color(0xff3AAFFC).withOpacity(0.2),
-                    hoverColor: Color(0xff3AAFFC).withOpacity(0.04),
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderColor: Colors.black.withOpacity(0.1),
-                    selectedBorderColor: Color(0xff3AAFFC),
-                    constraints: BoxConstraints(minHeight: 36.0),
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('일반 댓글'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('물품 기부'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('재능 기부'),
-                      ),
-                    ],
-                    onPressed: (index) {
-                      setState(() {
-                        for (int i = 0; i < isSelected.length; i++) {
-                          isSelected[i] = i == index;
-                        }
-                        if (index == 0) {}
-                        if (index == 1) {}
-                        if (index == 2) {}
-                      });
-                    },
-                    isSelected: isSelected,
-                  ),
                   TextFormField(
                     maxLines: 4,
                     minLines: 1,

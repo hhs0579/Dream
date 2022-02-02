@@ -16,6 +16,7 @@ class PostCard extends StatefulWidget {
 }
 
 List<String> bb = [];
+String profileURL = '';
 
 final Stream<QuerySnapshot> post =
     FirebaseFirestore.instance.collection('post').snapshots();
@@ -78,8 +79,8 @@ class _PostCardState extends State<PostCard> {
                           CircleAvatar(
                             radius: 20,
                             //프로필 사진받아오기
-                            backgroundImage: NetworkImage(
-                                'https://www.woolha.com/media/2020/03/eevee.png'),
+                            backgroundImage:
+                                NetworkImage('${data.docs[index]['profile']}'),
                           ),
                           SizedBox(width: 5),
                           //프로필 사진,이름 받아오기
