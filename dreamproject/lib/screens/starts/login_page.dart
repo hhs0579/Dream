@@ -79,10 +79,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
         onPressed: () async {
           if (emailController.text == '') {
-            toastMessage("이메일을 입력해주세요.");
+            return toastMessage("이메일을 입력해주세요.");
           } else {
             if (passwordController.text == '') {
-              toastMessage("비밀번호를 입력해주세요.");
+              return toastMessage("비밀번호를 입력해주세요.");
             } else {
               if (await authController.authUser(email, password) == null) {
                 Get.offAll(() => HomePage());

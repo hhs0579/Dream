@@ -18,6 +18,18 @@ class DatabaseController {
     }
   }
 
+  Future<bool> isDuplicatedclubname(String clubname) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('clubs')
+        .where('name', isEqualTo: clubname)
+        .get();
+    if (querySnapshot.docs.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> fetchMyInfo(String email) async {
     AppData appData = Get.find();
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance

@@ -26,6 +26,12 @@ class _MyInfoPageState extends State<MyInfoPage> {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference clubCollection =
+      FirebaseFirestore.instance.collection('clubs');
+
   AppData appdata = Get.find();
   final _picker = ImagePicker();
   String resultURL = '';
@@ -102,10 +108,11 @@ class _MyInfoPageState extends State<MyInfoPage> {
                 backgroundImage: NetworkImage(resultURL)));
   }
 
-  _myclublistOn(ClubModel clubmodel) {
+  _myclublistOn(ClubModel clubmodel, double margin) {
     return clubmodel.isaccsess
-        ? _myclublistItem(clubmodel)
+        ? _myclublistItem(clubmodel, margin)
         : Container(
+            margin: EdgeInsets.only(left: margin),
             width: 100,
             height: 220,
             decoration: BoxDecoration(
@@ -191,7 +198,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 20),
                 Container(width: Get.width, height: 1, color: Colors.blue),
                 Flexible(
                   fit: FlexFit.tight,
@@ -218,9 +225,10 @@ class _MyInfoPageState extends State<MyInfoPage> {
           );
   }
 
-  _myclublistItem(ClubModel clubmodel) {
+  _myclublistItem(ClubModel clubmodel, double margin) {
     return appdata.myInfo.uid == clubmodel.clubmaster
         ? Container(
+            margin: EdgeInsets.only(left: margin),
             width: 100,
             height: 220,
             decoration: BoxDecoration(
@@ -301,7 +309,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 18),
                 Flexible(
                   fit: FlexFit.tight,
                   child: ClipRRect(
@@ -361,6 +369,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
             ),
           )
         : Container(
+            margin: EdgeInsets.only(left: margin),
             width: 100,
             height: 220,
             decoration: BoxDecoration(
@@ -379,7 +388,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         margin: EdgeInsets.only(left: 20.0, top: 12),
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage("assets/imgs/a.png"),
+                            image: NetworkImage(clubmodel.image),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -390,7 +399,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 7, bottom: 7, left: 20),
-                        child: Text("클럽 이름",
+                        child: Text(clubmodel.name,
                             style: TextStyle(
                               fontSize: 11,
                             )),
@@ -426,7 +435,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               style:
                                   TextStyle(fontSize: 9, color: Colors.grey)),
                           SizedBox(width: 9),
-                          Text("$_member 명",
+                          Text(clubmodel.clubuser.toString(),
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold)),
                         ],
@@ -435,13 +444,13 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       Text("총 기부금",
                           style: TextStyle(fontSize: 9, color: Colors.grey)),
                       SizedBox(height: 3),
-                      Text("$_donation 원",
+                      Text(clubmodel.clubdonatepoint.toString(),
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: 18),
                 Flexible(
                   fit: FlexFit.tight,
                   child: ClipRRect(
@@ -454,7 +463,19 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         height: 35,
                         color: Colors.blue,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            appdata.myInfo.myclubs.remove(clubmodel.name);
+                            clubmodel.clubuserlist.remove(appdata.myInfo.uid);
+
+                            userCollection
+                                .doc(appdata.myInfo.uid)
+                                .update({'myclubs': appdata.myInfo.myclubs});
+                            clubCollection.doc(clubmodel.name).update({
+                              'clubuserlist': clubmodel.clubuserlist,
+                              'clubuser': clubmodel.clubuser - 1
+                            });
+                            setState(() {});
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(6),
                             primary: Colors.blue,
@@ -473,8 +494,9 @@ class _MyInfoPageState extends State<MyInfoPage> {
           );
   }
 
-  _myclublistOff() {
+  _myclublistOff(double margin) {
     return Container(
+      margin: EdgeInsets.only(left: margin),
       width: 100,
       height: 220,
       decoration: BoxDecoration(
@@ -508,7 +530,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
               style: TextStyle(fontSize: 15, color: Colors.black54),
             ),
           ),
-          SizedBox(height: 70),
+          SizedBox(height: 69),
           Flexible(
             fit: FlexFit.tight,
             child: ClipRRect(
@@ -528,18 +550,35 @@ class _MyInfoPageState extends State<MyInfoPage> {
     );
   }
 
-  _getclubmodel(String clubname) async {
-    if (clubname != null) {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('clubs')
-          .where('name', isEqualTo: clubname)
-          .get();
-
-      return ClubModel.fromJson(
-          querySnapshot.docs.first.data() as Map<String, dynamic>);
+  _getclubmodel() async {
+    List<dynamic> clublist = appdata.myInfo.myclubs;
+    List<dynamic> resultclublist = [];
+    if (clublist.isEmpty) {
+      resultclublist.add('');
+      resultclublist.add('');
+      resultclublist.add('');
     } else {
-      return null;
+      for (var element in clublist) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('clubs')
+            .where('name', isEqualTo: element)
+            .get();
+        if (querySnapshot.docs.isNotEmpty) {
+          ClubModel clubmodel = ClubModel.fromJson(
+              querySnapshot.docs.first.data() as Map<String, dynamic>);
+          resultclublist.add(clubmodel);
+        }
+      }
+
+      while (true) {
+        if (resultclublist.length == 3) {
+          break;
+        }
+        resultclublist.add('');
+      }
     }
+    print(resultclublist);
+    return resultclublist;
   }
 
   @override
@@ -816,19 +855,35 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       ],
                     ),
                     SizedBox(height: 15),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            ClubModel clubmodel = _getclubmodel(
-                                appdata.myInfo.myclubs.elementAt(index));
-                            return clubmodel == null
-                                ? _myclublistOff()
-                                : _myclublistOn(clubmodel);
-                          }),
-                    ),
+                    FutureBuilder<dynamic>(
+                        future: _getclubmodel(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(child: Text('오류가 발생했습니다.'));
+                          } else if (snapshot.data == null) {
+                            return Container();
+                          } else {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(left: 10),
+                              height: 220,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 3,
+                                  itemBuilder: (context, index) {
+                                    List<dynamic> clublist = snapshot.data!;
+                                    return clublist[index] == ''
+                                        ? index == 0
+                                            ? _myclublistOff(0)
+                                            : _myclublistOff(15)
+                                        : index == 0
+                                            ? _myclublistOn(clublist[index], 0)
+                                            : _myclublistOn(
+                                                clublist[index], 15);
+                                  }),
+                            );
+                          }
+                        }),
                     SizedBox(height: 15),
                     Row(
                       children: [

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/classes/toast_message.dart';
 import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/data/appdata.dart';
+import 'package:dreamproject/home_page.dart';
 import 'package:dreamproject/model/club_model.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:dreamproject/repo/image_service.dart';
@@ -26,8 +27,15 @@ class _ClubAddPageState extends State<ClubAddPage> {
   AppData appdata = Get.find();
 
   var _selectindex;
+  String _selectclub = '';
   TextEditingController _clubNameController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
+
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
+  final CollectionReference clubCollection =
+      FirebaseFirestore.instance.collection('clubs');
 
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
@@ -51,6 +59,20 @@ class _ClubAddPageState extends State<ClubAddPage> {
     required String searchWords,
   }) {
     if (clubmodel.name.contains(searchWords)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool _isduplicateClubApply(String clubname) {
+    String temp = '';
+    for (var element in appdata.myInfo.myclubs) {
+      if (element == clubname) {
+        temp = clubname;
+      }
+    }
+    if (temp == '') {
       return true;
     } else {
       return false;
@@ -170,30 +192,36 @@ class _ClubAddPageState extends State<ClubAddPage> {
                               if (vaildationClubname(
                                       _clubNameController.text) ==
                                   null) {
-                                appdata.isLoadingScreen = true;
-                                resultURL =
-                                    await imageservice.uploadClubImageToStorage(
-                                        _clubNameController.text, _image!);
-                                DatabaseService(uid: appdata.myInfo.uid)
-                                    .setClubData(
-                                        _clubNameController.text, resultURL);
+                                if (await databaseController
+                                        .isDuplicatedclubname(
+                                            _clubNameController.text) ==
+                                    true) {
+                                  toastMessage('중복된 클럽 이름입니다. 다시입력해주세요.');
+                                } else if (appdata.myInfo.myclubs.length == 3) {
+                                  toastMessage('클럽의 가입 및 생성은 3개까지 가능합니다.');
+                                } else {
+                                  appdata.isLoadingScreen = true;
+                                  resultURL = await imageservice
+                                      .uploadClubImageToStorage(
+                                          _clubNameController.text, _image!);
+                                  DatabaseService(uid: appdata.myInfo.uid)
+                                      .setClubData(
+                                          _clubNameController.text, resultURL);
 
-                                appdata.myInfo.myclubs
-                                    .add(_clubNameController.text);
+                                  appdata.myInfo.myclubs
+                                      .add(_clubNameController.text);
 
-                                FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(appdata.myInfo.uid)
-                                    .update(
-                                        {'myclubs': appdata.myInfo.myclubs});
+                                  userCollection.doc(appdata.myInfo.uid).update(
+                                      {'myclubs': appdata.myInfo.myclubs});
 
-                                toastMessage('클럽 생성이 완료되었습니다.');
-                                appdata.isLoadingScreen = false;
-                                setState(() {
-                                  _isClubcreate = false;
-                                  _clubNameController.text = '';
-                                  _image = null;
-                                });
+                                  toastMessage('클럽 생성이 완료되었습니다.');
+                                  appdata.isLoadingScreen = false;
+                                  setState(() {
+                                    _isClubcreate = false;
+                                    _clubNameController.text = '';
+                                    _image = null;
+                                  });
+                                }
                               }
                             } catch (e) {
                               toastMessage('오류가 발생했습니다.');
@@ -232,8 +260,10 @@ class _ClubAddPageState extends State<ClubAddPage> {
             setState(() {
               if (_selectindex == index) {
                 _selectindex = null;
+                _selectclub = '';
               } else {
                 _selectindex = index;
+                _selectclub = name;
               }
             });
           },
@@ -462,14 +492,18 @@ class _ClubAddPageState extends State<ClubAddPage> {
                                           clubmodel: clubmodel,
                                           searchWords:
                                               _searchController.text)) {
-                                        clubmodels.add(clubmodel);
+                                        if (clubmodel.isaccsess == true) {
+                                          clubmodels.add(clubmodel);
+                                        }
                                       } else {}
                                     }
                                   } else {
                                     for (var value in snapshot.data!.docs) {
                                       ClubModel clubmodel = ClubModel.fromJson(
                                           value.data() as Map<String, dynamic>);
-                                      clubmodels.add(clubmodel);
+                                      if (clubmodel.isaccsess == true) {
+                                        clubmodels.add(clubmodel);
+                                      }
                                     }
                                   }
 
@@ -503,7 +537,35 @@ class _ClubAddPageState extends State<ClubAddPage> {
                       height: 50,
                       margin: EdgeInsets.only(bottom: 10),
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            QuerySnapshot querySnapshot =
+                                await FirebaseFirestore.instance
+                                    .collection('clubs')
+                                    .where('name', isEqualTo: _selectclub)
+                                    .get();
+                            ClubModel clubmodel = ClubModel.fromJson(
+                                querySnapshot.docs.first.data()
+                                    as Map<String, dynamic>);
+                            if (_selectindex == null || _selectclub == '') {
+                              toastMessage('추가 할 클럽을 선택해주세요.');
+                            } else if (appdata.myInfo.myclubs.length == 3) {
+                              toastMessage('클럽 가입 및 생성은 3개까지 가능합니다.');
+                            } else if (_isduplicateClubApply(_selectclub) ==
+                                false) {
+                              toastMessage('이미 가입한 클럽입니다.');
+                            } else {
+                              appdata.myInfo.myclubs.add(_selectclub);
+                              clubmodel.clubuserlist.add(_selectclub);
+                              userCollection
+                                  .doc(appdata.myInfo.uid)
+                                  .update({'myclubs': appdata.myInfo.myclubs});
+                              clubCollection.doc(_selectclub).update({
+                                'clubuser': clubmodel.clubuser + 1,
+                                'clubuserlist': clubmodel.clubuserlist
+                              });
+                              Get.back();
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             shadowColor: Colors.black,
                             primary: Color(0xff3AAFFC),

@@ -231,7 +231,7 @@ class _JoinPageState extends State<JoinPage> {
                                       emailController.text) ==
                                   true) {
                                 Fluttertoast.showToast(
-                                    msg: '중복된 이메일입니다. 다시 한번 확인해주세요.',
+                                    msg: '중복된 이메일입니다. 다시 입력해주세요.',
                                     toastLength: Toast.LENGTH_SHORT,
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Colors.lightBlue,
@@ -799,6 +799,7 @@ class _JoinPageState extends State<JoinPage> {
                                       signUpUserCredential(
                                           email: emailController.text,
                                           password: passwordController.text);
+                                      toastMessage("가입이 완료되었습니다.");
                                       Get.offAll(LoginPage());
                                     }
                                   }
