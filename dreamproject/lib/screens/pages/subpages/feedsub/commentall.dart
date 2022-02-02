@@ -19,6 +19,7 @@ String resultName = '';
 final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
 AppData appdata = Get.find();
+
 void initState() {
   _prepareService();
   resultURL = appdata.myInfo.image;
@@ -27,6 +28,24 @@ void initState() {
 
 void _prepareService() async {
   _user = auth.currentUser;
+}
+
+_profileImageOn() {
+  return resultURL == ''
+      ? Container(
+          width: 70,
+          height: 70,
+          child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 40,
+              backgroundImage: AssetImage('assets/imgs/basic.png')))
+      : Container(
+          width: 70,
+          height: 70,
+          child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 40,
+              backgroundImage: NetworkImage(resultURL)));
 }
 
 List filedata = [];
@@ -53,7 +72,7 @@ class _CommentsState extends State<Comments> {
                       borderRadius: new BorderRadius.all(Radius.circular(50))),
                   child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(data[i]['pic'] + "$i")),
+                      backgroundImage: NetworkImage(appdata.myInfo.image)),
                 ),
               ),
               title: Text(
@@ -78,14 +97,14 @@ class _CommentsState extends State<Comments> {
       body: Container(
         child: CommentBox(
             child: commentChild(filedata),
-            Image: resultURL,
+            Image: appdata.myInfo.image,
             sendButton: () {
               if (formKey.currentState!.validate()) {
                 print(commentController.text);
                 setState(() {
                   var value = {
-                    'name': resultName,
-                    'pic': resultURL,
+                    'name': appdata.myInfo.name,
+                    'pic': appdata.myInfo.image,
                     'message': commentController.text
                   };
                   filedata.insert(0, value);
@@ -98,8 +117,11 @@ class _CommentsState extends State<Comments> {
             },
             errorText: '댓글 내용이 없습니다',
             labelText: '댓글을 입력해주세요',
-            sendWidgets: Icon(Icons.send_sharp, size: 30, color: Colors.white),
+            sendWidgets:
+                Icon(Icons.send_sharp, size: 30, color: Colors.lightBlue),
             backgroundColor: Colors.lightBlue,
+            commentController: commentController,
+            formKey: formKey,
             textColor: Colors.black),
       ),
     );
