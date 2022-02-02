@@ -35,6 +35,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
   AppData appdata = Get.find();
   final _picker = ImagePicker();
   String resultURL = '';
+  String clubURL = '';
   bool isProfile = false;
   var _member = 0;
   var _donation = 0;
@@ -178,7 +179,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               style: TextStyle(
                                   fontSize: 9, color: Colors.grey[300])),
                           SizedBox(width: 9),
-                          Text(clubmodel.clubuser.toString(),
+                          Text(clubmodel.clubuser.toString() + ' 명',
                               style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -190,7 +191,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                           style:
                               TextStyle(fontSize: 9, color: Colors.grey[300])),
                       SizedBox(height: 3),
-                      Text(clubmodel.clubdonatepoint.toString(),
+                      Text(clubmodel.clubdonatepoint.toString() + ' 원',
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -226,6 +227,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
   }
 
   _myclublistItem(ClubModel clubmodel, double margin) {
+    clubURL = clubmodel.image;
     return appdata.myInfo.uid == clubmodel.clubmaster
         ? Container(
             margin: EdgeInsets.only(left: margin),
@@ -247,7 +249,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         margin: EdgeInsets.only(left: 20.0, top: 12),
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(clubmodel.image),
+                            image: NetworkImage(clubURL),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -294,18 +296,18 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               style:
                                   TextStyle(fontSize: 9, color: Colors.grey)),
                           SizedBox(width: 9),
-                          Text(clubmodel.clubuser.toString(),
+                          Text(clubmodel.clubuser.toString() + ' 명',
                               style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                                  fontSize: 11, fontWeight: FontWeight.bold)),
                         ],
                       ),
                       SizedBox(height: 7),
                       Text("총 기부금",
                           style: TextStyle(fontSize: 9, color: Colors.grey)),
                       SizedBox(height: 3),
-                      Text(clubmodel.clubdonatepoint.toString(),
+                      Text(clubmodel.clubdonatepoint.toString() + ' 원',
                           style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
+                              fontSize: 11, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -348,7 +350,21 @@ class _MyInfoPageState extends State<MyInfoPage> {
                             Container(
                               width: 57.5,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  try {
+                                    XFile? result = await _picker.pickImage(
+                                        source: ImageSource.gallery);
+                                    clubURL = await imageservice
+                                        .uploadClubImageToStorage(
+                                            clubmodel.name, result!);
+                                    clubmodel.image = clubURL;
+                                    toastMessage('클럽 사진이 변경되었습니다.');
+                                  } catch (e) {
+                                    toastMessage('오류가 발생했습니다.');
+                                    print(e);
+                                  }
+                                  setState(() {});
+                                },
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(6),
                                   primary: Colors.blue,
@@ -435,7 +451,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               style:
                                   TextStyle(fontSize: 9, color: Colors.grey)),
                           SizedBox(width: 9),
-                          Text(clubmodel.clubuser.toString(),
+                          Text(clubmodel.clubuser.toString() + ' 명',
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold)),
                         ],
@@ -444,7 +460,7 @@ class _MyInfoPageState extends State<MyInfoPage> {
                       Text("총 기부금",
                           style: TextStyle(fontSize: 9, color: Colors.grey)),
                       SizedBox(height: 3),
-                      Text(clubmodel.clubdonatepoint.toString(),
+                      Text(clubmodel.clubdonatepoint.toString() + ' 원',
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ],
