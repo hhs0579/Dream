@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/classes/toast_message.dart';
+import 'package:dreamproject/controller/database_controller.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/model/club_model.dart';
 import 'package:dreamproject/repo/image_service.dart';
@@ -329,13 +330,48 @@ class _MyInfoPageState extends State<MyInfoPage> {
                               width: 40,
                               height: 35,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.defaultDialog(
+                                    cancelTextColor: Color(0xff3AAFFC),
+                                    title: '',
+                                    content: Text('정말 해체하시겠습니까?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          appdata.myInfo.myclubs
+                                              .remove(clubmodel.name);
+                                          userCollection
+                                              .doc(appdata.myInfo.uid)
+                                              .update({
+                                            'myclubs': appdata.myInfo.myclubs
+                                          });
+                                          clubCollection
+                                              .doc(clubmodel.name)
+                                              .delete();
+                                          FirebaseFirestore.instance
+                                              .doc('club/${clubmodel.name}')
+                                              .delete();
+
+                                          toastMessage('해체 되었습니다.');
+                                          Get.back();
+                                        },
+                                        child: Text('확인'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text('취소'),
+                                      ),
+                                    ],
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.all(6),
                                   primary: Colors.blue,
                                   elevation: 0,
                                 ),
-                                child: Text("탈퇴",
+                                child: Text("해체",
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: Colors.white,
@@ -480,17 +516,40 @@ class _MyInfoPageState extends State<MyInfoPage> {
                         color: Colors.blue,
                         child: ElevatedButton(
                           onPressed: () {
-                            appdata.myInfo.myclubs.remove(clubmodel.name);
-                            clubmodel.clubuserlist.remove(appdata.myInfo.uid);
+                            Get.defaultDialog(
+                              cancelTextColor: Color(0xff3AAFFC),
+                              title: '',
+                              content: Text('정말 탈퇴하시겠습니까?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    appdata.myInfo.myclubs
+                                        .remove(clubmodel.name);
+                                    clubmodel.clubuserlist
+                                        .remove(appdata.myInfo.uid);
 
-                            userCollection
-                                .doc(appdata.myInfo.uid)
-                                .update({'myclubs': appdata.myInfo.myclubs});
-                            clubCollection.doc(clubmodel.name).update({
-                              'clubuserlist': clubmodel.clubuserlist,
-                              'clubuser': clubmodel.clubuser - 1
-                            });
-                            setState(() {});
+                                    userCollection
+                                        .doc(appdata.myInfo.uid)
+                                        .update({
+                                      'myclubs': appdata.myInfo.myclubs
+                                    });
+                                    clubCollection.doc(clubmodel.name).update({
+                                      'clubuserlist': clubmodel.clubuserlist,
+                                      'clubuser': clubmodel.clubuser - 1
+                                    });
+                                    Get.back();
+                                    setState(() {});
+                                  },
+                                  child: Text('확인'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text('취소'),
+                                ),
+                              ],
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(6),

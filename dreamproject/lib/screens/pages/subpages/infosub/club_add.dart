@@ -555,7 +555,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                               toastMessage('이미 가입한 클럽입니다.');
                             } else {
                               appdata.myInfo.myclubs.add(_selectclub);
-                              clubmodel.clubuserlist.add(_selectclub);
+                              clubmodel.clubuserlist.add(appdata.myInfo.uid);
                               userCollection
                                   .doc(appdata.myInfo.uid)
                                   .update({'myclubs': appdata.myInfo.myclubs});

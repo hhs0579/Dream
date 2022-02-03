@@ -17,11 +17,6 @@ class PostCard extends StatefulWidget {
 
 List<String> bb = [];
 
-final Stream<QuerySnapshot> post =
-    FirebaseFirestore.instance.collection('post').snapshots();
-final Stream<QuerySnapshot> user =
-    FirebaseFirestore.instance.collection('users').snapshots();
-
 final FirebaseAuth auth = FirebaseAuth.instance;
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
@@ -43,6 +38,10 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 //     FirebaseFirestore.instance.collection('post').snapshots();
 
 class _PostCardState extends State<PostCard> {
+  final Stream<QuerySnapshot> post =
+      FirebaseFirestore.instance.collection('post').snapshots();
+  final Stream<QuerySnapshot> user =
+      FirebaseFirestore.instance.collection('users').snapshots();
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/classes/right_drawer.dart';
+import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/withitem.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
@@ -17,52 +19,6 @@ class CurrentPage extends StatefulWidget {
 }
 
 class _CurrentPageState extends State<CurrentPage> {
-  final withitem = {
-    "list": [
-      {
-        "image": "assets/imgs/a.png",
-        "name": "김땡땡",
-        "areaname": "부산",
-        "money": "900000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "이땡땡",
-        "areaname": "경기",
-        "money": "800000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "황땡땡",
-        "areaname": "서울",
-        "money": "700000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "정땡땡",
-        "areaname": "충북",
-        "money": "690000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "박땡땡",
-        "areaname": "부산",
-        "money": "500000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "강땡땡",
-        "areaname": "제주도",
-        "money": "300000원"
-      },
-      {
-        "image": "assets/imgs/a.png",
-        "name": "박땡땡",
-        "areaname": "강원도",
-        "money": "100000원"
-      }
-    ]
-  };
   WithList? withList;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -72,8 +28,23 @@ class _CurrentPageState extends State<CurrentPage> {
   @override
   final AuthService _auth = AuthService();
 
+  _profileImage(image) {
+    return image == ''
+        ? CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 15,
+            backgroundImage: AssetImage('assets/imgs/basic.png'))
+        : CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 15,
+            backgroundImage: NetworkImage(image));
+  }
+
   Widget build(BuildContext context) {
-    withList = WithList.fromJson(withitem);
+    final Stream<QuerySnapshot> _userStream = FirebaseFirestore.instance
+        .collection('users')
+        .orderBy('totaldonatepoint')
+        .snapshots();
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
@@ -190,49 +161,92 @@ class _CurrentPageState extends State<CurrentPage> {
                   width: MediaQuery.of(context).size.width,
                   color: Colors.black12,
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(), //separatorBuilder : item과 item 사이에 그려질 위젯 (개수는 itemCount -1 이 된다)
-                      itemCount: withList!.list!.length, //리스트의 개수
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                                width: 40,
-                                child: Text(
-                                  withList!.list!.elementAt(index).areaname!,
-                                  textAlign: TextAlign.center,
-                                )),
-                            Container(
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(300),
-                                    child: Image.asset(
-                                        withList!.list!.elementAt(index).image!,
-                                        width: 30,
-                                        height: 30),
+                StreamBuilder<QuerySnapshot>(
+                    stream: _userStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        print(snapshot.error);
+                        return Center(child: Text('오류가 발생했습니다.'));
+                      }
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      List<MyInfo> usermodels = [];
+
+                      for (var value in snapshot.data!.docs) {
+                        MyInfo usermodel = MyInfo.fromJson(
+                            value.data() as Map<String, dynamic>);
+
+                        usermodels.add(usermodel);
+                      }
+                      usermodels = usermodels.reversed.toList();
+
+                      return SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: ListView.builder(
+                              itemCount: usermodels.length,
+                              itemBuilder: (context, index) {
+                                MyInfo usermodel = usermodels.elementAt(index);
+                                return Expanded(
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 60,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 130,
+                                              child: Center(
+                                                child: Text(
+                                                    usermodel.address
+                                                        .substring(0, 2),
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey)),
+                                              ),
+                                            ),
+                                            Container(
+                                                width: 120,
+                                                child: Row(children: [
+                                                  _profileImage(
+                                                      usermodel.image),
+                                                  SizedBox(width: 10),
+                                                  Text(usermodel.name,
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          color: Colors.grey))
+                                                ])),
+                                            Flexible(
+                                                fit: FlexFit.loose,
+                                                child: Container(
+                                                  width: 145,
+                                                  child: Text(
+                                                      usermodel.totaldonatepoint
+                                                              .toString() +
+                                                          ' 원',
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey,
+                                                      )),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 1,
+                                        color: Colors.grey[300],
+                                      )
+                                    ],
                                   ),
-                                  Text(withList!.list!.elementAt(index).name!),
-                                ],
-                              ),
-                            ),
-                            Container(
-                                child: Text(
-                              withList!.list!.elementAt(index).money!,
-                              textAlign: TextAlign.center,
-                            )),
-                          ],
-                        ));
-                      }),
-                )
+                                );
+                              }));
+                    })
               ],
             ),
           ),
