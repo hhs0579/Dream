@@ -10,9 +10,12 @@ class PostItem {
   String name;
   String profile;
   String postcode;
+  int commentNum;
+  int likeNum;
+  String uid;
   List<dynamic> commentList;
   List<dynamic> select;
-  String uid;
+  List<dynamic> like;
 
   PostItem(
       {required this.date,
@@ -26,7 +29,10 @@ class PostItem {
       required this.image,
       required this.name,
       required this.postcode,
-      required this.uid});
+      required this.uid,
+      required this.commentNum,
+      required this.likeNum,
+      required this.like});
 
   PostItem.fromJson(Map<String, dynamic> json)
       : date = json['date'],
@@ -40,7 +46,10 @@ class PostItem {
         image = json['image'],
         name = json['name'],
         postcode = json['postcode'],
-        uid = json['uid'];
+        uid = json['uid'],
+        commentNum = json['commentNum'] ?? 0,
+        likeNum = json['likeNum'] ?? 0,
+        like = json['like'];
 
   Map<String, dynamic> toJson() => {
         'date': date,
@@ -54,6 +63,9 @@ class PostItem {
         'image': image,
         'name': name,
         'postcode': postcode,
-        'uid': uid
+        'uid': uid,
+        'commentNum': commentNum,
+        'likeNum': likeNum,
+        'like': like
       };
 }

@@ -5,6 +5,7 @@ import 'package:dreamproject/screens/pages/subpages/feedsub/comment.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentall.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,6 +43,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 // // }
 // final Stream<QuerySnapshot> _usersStream =
 //     FirebaseFirestore.instance.collection('post').snapshots();
+bool aa = false;
 
 class _PostCardState extends State<PostCard> {
   @override
@@ -192,14 +194,35 @@ class _PostCardState extends State<PostCard> {
                     child: Row(children: [
                       //공감 아이콘
                       IconButton(
-                        onPressed: () {},
                         icon: Icon(
-                          Icons.favorite,
+                          Icons.favorite_border,
                           color: Color(0xff3AAFFC),
                         ),
+                        onPressed: () {
+                          final User? user = auth.currentUser;
+                          final uid = user?.uid;
+                          setState(() {
+                            if (appdata.postItem.like.contains(uid)) {
+                              appdata.postItem.likeNum -= 1;
+                              appdata.postItem.like.remove(uid);
+                              appdata.myInfo.myempathyposts.remove(key);
+                              aa = false;
+                              Icon(
+                                Icons.favorite_border,
+                                color: Color(0xff3AAFFC),
+                              );
+                            } else {
+                              Icon(Icons.favorite, color: Color(0xff3AAFFC));
+                              appdata.postItem.likeNum += 1;
+                              appdata.postItem.like.add(uid);
+                              appdata.myInfo.myempathyposts.add(key);
+                              aa = true;
+                            }
+                          });
+                        },
                       ),
                       //공감 숫자
-                      Text('59',
+                      Text('${appdata.postItem.likeNum}',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -216,7 +239,8 @@ class _PostCardState extends State<PostCard> {
                         ),
                       ),
                       //댓글 숫자
-                      Text('2',
+
+                      Text('${appdata.postItem.commentNum}',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -227,18 +251,23 @@ class _PostCardState extends State<PostCard> {
                           children: [
                             Container(
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  setState(() {});
+                                },
                                 icon: Icon(
-                                  Icons.favorite,
+                                  Icons.favorite_border,
                                   color: Color(0xff3AAFFC),
                                 ),
                               ),
                             ),
-                            Text('공감하기',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Color(0xff3AAFFC))),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('공감하기',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Color(0xff3AAFFC))),
+                            )
                           ],
                         ),
                       ),

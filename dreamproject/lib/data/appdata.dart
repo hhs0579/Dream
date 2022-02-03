@@ -42,7 +42,10 @@ class AppData extends GetxController {
       postcode: '',
       profile: '',
       select: [],
-      uid: '');
+      uid: '',
+      commentNum: 0,
+      likeNum: 0,
+      like: []);
 
   int get currentScreenIndex => _currentScreenIndex;
 
