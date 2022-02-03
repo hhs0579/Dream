@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:random_string/random_string.dart';
 
 class Comments extends StatefulWidget {
-  const Comments({Key? key}) : super(key: key);
+  const Comments({Key? key, aa}) : super(key: key);
 
   @override
   _CommentsState createState() => _CommentsState();
@@ -24,7 +24,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
 var keyplus = 1;
 final isSelected = <bool>[true, false, false];
-
+String keys = Get.arguments[0];
 AppData appdata = Get.find();
 var key = randomString(16);
 void initState() {
@@ -100,13 +100,18 @@ class _CommentsState extends State<Comments> {
               });
               final User? user = auth.currentUser;
               final uid = user?.uid;
-              appdata.postItem.commentList.add(commentController.text);
+
               fireStore.collection('comments').doc(key).set({
                 'key': key,
                 'comment': commentController.text,
                 'profile': appdata.myInfo.image,
                 'name': appdata.myInfo.name,
               });
+              appdata.postItem.commentList.add(keys);
+              fireStore
+                  .collection('post')
+                  .doc()
+                  .update({'commentList': appdata.postItem.commentList});
 
               setState(() {
                 key = randomString(16);
