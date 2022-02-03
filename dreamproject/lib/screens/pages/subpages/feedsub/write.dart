@@ -41,11 +41,12 @@ class _WriteState extends State<Write> {
   var pet = false;
   var poverty = false;
   List<String> select = [];
-
+  List<String> commentList = [];
   String name = "";
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   User? _user;
+  var visibley = false;
   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   String _profileImageURL = "";
   TextEditingController postTextEditController = TextEditingController();
@@ -116,7 +117,8 @@ class _WriteState extends State<Write> {
     String future = DateFormat('yyyy.MM.dd').format(month);
 
     bool isPadMode = MediaQuery.of(context).size.width > 300;
-
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection('users');
     List<Widget> _boxContents = [
       IconButton(
           onPressed: () {
@@ -363,60 +365,69 @@ class _WriteState extends State<Write> {
                     ),
                     SizedBox(height: 30),
                     Container(
+                      margin: EdgeInsets.only(right: 20),
                       child: TextButton(
                         onPressed: () {
                           uploadFunction(imageFileList!);
+                          setState(() {
+                            visibley = true;
+                          });
                         },
                         child: Text("업로드"),
                       ),
                     ),
-                    Container(
-                        margin: EdgeInsets.only(right: 20),
-                        child: TextButton(
-                            onPressed: () {
-                              final User? user = auth.currentUser;
-                              final uid = user?.uid;
+                    Visibility(
+                      visible: visibley,
+                      child: Container(
+                          margin: EdgeInsets.only(right: 20),
+                          child: TextButton(
+                              onPressed: () {
+                                final User? user = auth.currentUser;
+                                final uid = user?.uid;
+                                appdata.myInfo.myposts.add(key);
 
-                              fireStore.collection('post').doc(key).set({
-                                'key': key,
-                                'post': postTextEditController.text,
-                                'image': _arrImageUrls,
-                                'uid': uid,
-                                'old': old,
-                                'child': child,
-                                'disorder': disorder,
-                                'multiculture': multiculture,
-                                'pet': pet,
-                                'poverty': poverty,
-                                'date': formatDate,
-                                'now': yearmonthdate,
-                                'future': future,
-                                'name': name,
-                                'select': select,
-                              });
-                              if ((child ||
-                                      old ||
-                                      pet ||
-                                      disorder ||
-                                      multiculture ||
-                                      poverty) ==
-                                  false) {
-                                Fluttertoast.showToast(
-                                    msg: "카테고리를 하나이상 선택해주세요.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.lightBlue,
-                                    fontSize: 12.0);
-                              } else if (postTextEditController.text == "") {
-                                Fluttertoast.showToast(
-                                    msg: "작성 내용을 입력해주세요.",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.lightBlue,
-                                    fontSize: 12.0);
-                              } else {}
-                            },
-                            child: Text('게시'))),
+                                fireStore.collection('post').doc(key).set({
+                                  'key': key,
+                                  'post': postTextEditController.text,
+                                  'image': _arrImageUrls,
+                                  'uid': uid,
+                                  'date': formatDate,
+                                  'now': yearmonthdate,
+                                  'future': future,
+                                  'name': name,
+                                  'select': select,
+                                  'profile': appdata.myInfo.image,
+                                  'commentList': commentList,
+                                  'postcode': key,
+                                });
+
+                                if ((child ||
+                                        old ||
+                                        pet ||
+                                        disorder ||
+                                        multiculture ||
+                                        poverty) ==
+                                    false) {
+                                  Fluttertoast.showToast(
+                                      msg: "카테고리를 하나이상 선택해주세요.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.lightBlue,
+                                      fontSize: 12.0);
+                                } else if (postTextEditController.text == "") {
+                                  Fluttertoast.showToast(
+                                      msg: "작성 내용을 입력해주세요.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.lightBlue,
+                                      fontSize: 12.0);
+                                } else {
+                                  Get.back();
+                                  Get.back();
+                                }
+                              },
+                              child: Text('게시'))),
+                    )
                   ],
                 )),
           ),

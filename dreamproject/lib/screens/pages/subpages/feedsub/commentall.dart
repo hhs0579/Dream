@@ -23,6 +23,8 @@ String resultName = '';
 final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
 var keyplus = 1;
+final isSelected = <bool>[true, false, false];
+
 AppData appdata = Get.find();
 var key = randomString(16);
 void initState() {
@@ -92,19 +94,20 @@ class _CommentsState extends State<Comments> {
                 var value = {
                   'name': appdata.myInfo.name,
                   'pic': appdata.myInfo.image,
-                  'message': commentController.text
+                  'message': commentController.text,
                 };
                 filedata.insert(0, value);
               });
               final User? user = auth.currentUser;
               final uid = user?.uid;
-
+              appdata.postItem.commentList.add(commentController.text);
               fireStore.collection('comments').doc(key).set({
                 'key': key,
                 'comment': commentController.text,
                 'profile': appdata.myInfo.image,
                 'name': appdata.myInfo.name,
               });
+
               setState(() {
                 key = randomString(16);
               });
@@ -122,9 +125,6 @@ class _CommentsState extends State<Comments> {
           commentController: commentController,
           formKey: formKey,
           textColor: Colors.black,
-          commonComment: true,
-          productComment: false,
-          talentComment: false,
         ),
       ),
     );
