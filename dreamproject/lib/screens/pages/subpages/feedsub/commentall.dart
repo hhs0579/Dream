@@ -100,13 +100,14 @@ class _CommentsState extends State<Comments> {
               });
               final User? user = auth.currentUser;
               final uid = user?.uid;
-
-              fireStore.collection('post').doc(key).set({
+              appdata.postItem.commentList.add(commentController.text);
+              fireStore.collection('comments').doc(key).set({
                 'key': key,
                 'comment': commentController.text,
                 'profile': appdata.myInfo.image,
                 'name': appdata.myInfo.name,
               });
+
               setState(() {
                 key = randomString(16);
               });

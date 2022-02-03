@@ -1,4 +1,5 @@
 import 'package:dreamproject/model/myinfo.dart';
+import 'package:dreamproject/model/postitem.dart';
 import 'package:get/get.dart';
 
 class AppData extends GetxController {
@@ -29,6 +30,19 @@ class AppData extends GetxController {
     pushToken: '',
     uid: '',
   );
+  PostItem _postItem = PostItem(
+      date: '',
+      commentList: [],
+      future: '',
+      image: '',
+      key: '',
+      name: '',
+      now: '',
+      post: '',
+      postcode: '',
+      profile: '',
+      select: [],
+      uid: '');
 
   int get currentScreenIndex => _currentScreenIndex;
 
@@ -55,6 +69,13 @@ class AppData extends GetxController {
 
   set myInfo(MyInfo myInfo) {
     _myInfo = myInfo;
+    update();
+  }
+
+  PostItem get postItem => _postItem;
+
+  set postItem(PostItem postItem) {
+    _postItem = postItem;
     update();
   }
 
