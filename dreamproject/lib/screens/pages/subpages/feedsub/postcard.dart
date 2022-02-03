@@ -19,11 +19,6 @@ class PostCard extends StatefulWidget {
 List<String> bb = [];
 String profileURL = '';
 
-final Stream<QuerySnapshot> post =
-    FirebaseFirestore.instance.collection('post').snapshots();
-final Stream<QuerySnapshot> user =
-    FirebaseFirestore.instance.collection('users').snapshots();
-
 final FirebaseAuth auth = FirebaseAuth.instance;
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
@@ -46,6 +41,10 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 bool aa = false;
 
 class _PostCardState extends State<PostCard> {
+  final Stream<QuerySnapshot> post =
+      FirebaseFirestore.instance.collection('post').snapshots();
+  final Stream<QuerySnapshot> user =
+      FirebaseFirestore.instance.collection('users').snapshots();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,15 +110,15 @@ class _PostCardState extends State<PostCard> {
                               i++) {
                             data.docs[index]['image'][i];
                             return Image.network(
-                                "${data.docs[index]['image'][i]}");
+                              "${data.docs[index]['image'][i]}",
+                            );
                           }
-                          return Container(
-                              child: Image.network(
-                                  "${data.docs[index]['image']}"));
+                          return Image.network("${data.docs[index]['image']}",
+                              fit: BoxFit.fill);
                         })),
                 Container(
                     padding: EdgeInsets.only(top: 10),
-                    height: 50,
+                    height: 40,
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Row(children: [
@@ -128,20 +127,15 @@ class _PostCardState extends State<PostCard> {
                           shrinkWrap: true,
                           itemCount: data.size,
                           itemBuilder: (BuildContext context, int index) {
-                            for (int i = 0;
-                                i < data.docs[index]['select'].length;
-                                i++) {
-                              data.docs[index]['select'][i];
-                              return Container(
-                                width: 60,
-                                height: 20,
-                                margin: EdgeInsets.only(left: 10),
-                                decoration: BoxDecoration(
-                                    color: Color(0xff3AAFFC),
-                                    borderRadius: BorderRadius.circular(5)),
-                              );
-                            }
-                            return Text("${data.docs[index]['select']}");
+                            return Container(
+                              child: Text("${data.docs[index]['select']}"),
+                              width: 60,
+                              height: 20,
+                              margin: EdgeInsets.only(left: 10),
+                              decoration: BoxDecoration(
+                                  color: Color(0xff3AAFFC),
+                                  borderRadius: BorderRadius.circular(5)),
+                            );
                           }),
                     ])),
                 Container(
@@ -282,7 +276,7 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              Get.to(Comments());
+                              Get.to(() => Comments(), arguments: [aa]);
                             },
                             child: Text('댓글 모두보기'),
                           )

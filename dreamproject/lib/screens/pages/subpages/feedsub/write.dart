@@ -33,7 +33,7 @@ class Write extends StatefulWidget {
 class _WriteState extends State<Write> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  var key = randomString(16);
+
   var old = false;
   var child = false;
   var disorder = false;
@@ -107,6 +107,7 @@ class _WriteState extends State<Write> {
   Imageservice imageservice = Imageservice();
   @override
   Widget build(BuildContext context) {
+    var key = randomString(16);
     var now = DateTime.now();
 
     var month = now.add(const Duration(days: 30));
@@ -381,7 +382,7 @@ class _WriteState extends State<Write> {
                       child: Container(
                           margin: EdgeInsets.only(right: 20),
                           child: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 final User? user = auth.currentUser;
                                 final uid = user?.uid;
                                 appdata.myInfo.myposts.add(key);
@@ -422,8 +423,11 @@ class _WriteState extends State<Write> {
                                       backgroundColor: Colors.lightBlue,
                                       fontSize: 12.0);
                                 } else {
-                                  Get.back();
-                                  Get.back();
+                                  final Keys = key;
+                                  final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Feed()));
                                 }
                               },
                               child: Text('게시'))),
