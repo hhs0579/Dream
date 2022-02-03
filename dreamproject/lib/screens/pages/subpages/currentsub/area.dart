@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/classes/right_drawer.dart';
+import 'package:dreamproject/model/category_model.dart';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
@@ -15,6 +18,10 @@ class _AreaState extends State<Area> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final isSelected = <bool>[false, false, true, false];
+
+  final CollectionReference donationCollection =
+      FirebaseFirestore.instance.collection('donations');
+
   @override
   Widget build(BuildContext context) {
     final List<String> _yearList = ["2020", "2021", "2022"];
@@ -44,28 +51,7 @@ class _AreaState extends State<Area> {
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
-        endDrawer: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          child: Drawer(
-            child: ListView(
-              children: <Widget>[
-                ListTile(
-                  title: Text('드림소개', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('이용방법', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('''카카오톡 플친
-    전화 010-0000-0000''', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
+        endDrawer: drawer(context),
         appBar: AppBar(
           title: Text(
             '현황',

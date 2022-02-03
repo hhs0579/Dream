@@ -191,33 +191,40 @@ class _CurrentPageState extends State<CurrentPage> {
                                   child: Column(
                                     children: [
                                       Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20),
                                         width:
                                             MediaQuery.of(context).size.width,
                                         height: 60,
                                         child: Row(
                                           children: [
                                             Container(
-                                              width: 130,
+                                              width: 80,
                                               child: Center(
                                                 child: Text(
                                                     usermodel.address
                                                         .substring(0, 2),
                                                     style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 11,
                                                         color: Colors.grey)),
                                               ),
                                             ),
                                             Container(
-                                                width: 120,
-                                                child: Row(children: [
-                                                  _profileImage(
-                                                      usermodel.image),
-                                                  SizedBox(width: 10),
-                                                  Text(usermodel.name,
-                                                      style: TextStyle(
-                                                          fontSize: 11,
-                                                          color: Colors.grey))
-                                                ])),
+                                                width: 140,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      _profileImage(
+                                                          usermodel.image),
+                                                      SizedBox(width: 10),
+                                                      Text(usermodel.name,
+                                                          style: TextStyle(
+                                                              fontSize: 11,
+                                                              color:
+                                                                  Colors.grey))
+                                                    ])),
                                             Flexible(
                                                 fit: FlexFit.loose,
                                                 child: Container(
@@ -229,7 +236,7 @@ class _CurrentPageState extends State<CurrentPage> {
                                                       textAlign:
                                                           TextAlign.right,
                                                       style: TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 11,
                                                         color: Colors.grey,
                                                       )),
                                                 ))
