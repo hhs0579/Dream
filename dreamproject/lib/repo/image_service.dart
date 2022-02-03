@@ -38,8 +38,6 @@ class Imageservice {
   }
 
   Future<String> uploadClubImageToStorage(String name, XFile result) async {
-    User? _user = _firebaseAuth.currentUser;
-
     File image = File(result.path);
     Reference storageReference = firebaseStorage.ref().child("club/$name");
 
