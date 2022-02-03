@@ -31,21 +31,21 @@ class AppData extends GetxController {
     uid: '',
   );
   PostItem _postItem = PostItem(
-      date: '',
-      commentList: [],
-      future: '',
-      image: '',
-      key: '',
-      name: '',
-      now: '',
-      post: '',
-      postcode: '',
-      profile: '',
-      select: [],
-      uid: '',
-      commentNum: 0,
-      likeNum: 0,
-      like: []);
+    date: '',
+    commentList: [],
+    future: '',
+    image: [],
+    key: '',
+    name: '',
+    now: '',
+    post: '',
+    postcode: '',
+    profile: '',
+    select: [],
+    uid: '',
+    commentNum: 0,
+    likeNum: 0,
+  );
 
   int get currentScreenIndex => _currentScreenIndex;
 

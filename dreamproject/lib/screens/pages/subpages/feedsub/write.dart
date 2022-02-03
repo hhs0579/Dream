@@ -65,6 +65,9 @@ class _WriteState extends State<Write> {
     _user = _firebaseAuth.currentUser;
   }
 
+  List<String> like = [];
+  var likeNum = 0;
+  var commentNum = 0;
   List<String> _arrImageUrls = [];
   List<String> aa = [];
   List<XFile>? imageFileList = [];
@@ -89,8 +92,9 @@ class _WriteState extends State<Write> {
   }
 
   Future<String> uploadFile(XFile _image) async {
+    String imageurls = _image.name;
     Reference reference =
-        FirebaseStorage.instance.ref().child('post').child(_image.name);
+        FirebaseStorage.instance.ref().child('post').child(imageurls);
 
     UploadTask uploadTask = reference.putFile(File(_image.path));
     await uploadTask.whenComplete(() {});
@@ -386,7 +390,19 @@ class _WriteState extends State<Write> {
                                 final User? user = auth.currentUser;
                                 final uid = user?.uid;
                                 appdata.myInfo.myposts.add(key);
-
+                                appdata.postItem.name = name;
+                                appdata.postItem.key = key;
+                                appdata.postItem.post =
+                                    postTextEditController.text;
+                                appdata.postItem.image.add(_arrImageUrls);
+                                appdata.postItem.uid = uid!;
+                                appdata.postItem.date = formatDate;
+                                appdata.postItem.now = yearmonthdate;
+                                appdata.postItem.future = future;
+                                appdata.postItem.select.add(select);
+                                appdata.postItem.profile = appdata.myInfo.image;
+                                appdata.postItem.commentList.add(commentList);
+                                appdata.postItem.postcode = key;
                                 fireStore.collection('post').doc(key).set({
                                   'key': key,
                                   'post': postTextEditController.text,

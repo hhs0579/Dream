@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/model/postitem.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/comment.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentall.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
@@ -45,6 +46,7 @@ class _PostCardState extends State<PostCard> {
       FirebaseFirestore.instance.collection('post').snapshots();
   final Stream<QuerySnapshot> user =
       FirebaseFirestore.instance.collection('users').snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,12 +62,18 @@ class _PostCardState extends State<PostCard> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text('로딩중');
         }
-        final data = snapshot.requireData;
+        List<PostItem> postItems = [];
+        for (var value in snapshot.data!.docs) {
+          PostItem postItem =
+              PostItem.fromJson(value.data() as Map<String, dynamic>);
+          postItems.add(postItem);
+        }
         return ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
-            itemCount: data.size,
+            itemCount: postItems.length,
             itemBuilder: (context, index) {
+              PostItem postItem = postItems.elementAt(index);
               return Column(children: [
                 Container(
                   padding: EdgeInsets.only(left: 10, right: 10),
@@ -80,13 +88,12 @@ class _PostCardState extends State<PostCard> {
                           CircleAvatar(
                             radius: 20,
                             //프로필 사진받아오기
-                            backgroundImage:
-                                NetworkImage('${data.docs[index]['profile']}'),
+                            backgroundImage: NetworkImage(postItem.profile),
                           ),
                           SizedBox(width: 5),
                           //프로필 사진,이름 받아오기
                           Text(
-                            '${data.docs[index]['name']}',
+                            postItem.name,
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -103,17 +110,9 @@ class _PostCardState extends State<PostCard> {
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
-                        itemCount: data.size,
+                        itemCount: postItem.image.length,
                         itemBuilder: (BuildContext context, int index) {
-                          for (int i = 0;
-                              i < data.docs[index]['image'].length;
-                              i++) {
-                            data.docs[index]['image'][i];
-                            return Image.network(
-                              "${data.docs[index]['image'][i]}",
-                            );
-                          }
-                          return Image.network("${data.docs[index]['image']}",
+                          return Image.network(postItem.image.elementAt(index),
                               fit: BoxFit.fill);
                         })),
                 Container(
@@ -125,10 +124,10 @@ class _PostCardState extends State<PostCard> {
                       ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: data.size,
+                          itemCount: postItem.select.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
-                              child: Text("${data.docs[index]['select']}"),
+                              child: Text(postItem.select.elementAt(index)),
                               width: 60,
                               height: 20,
                               margin: EdgeInsets.only(left: 10),
@@ -145,7 +144,7 @@ class _PostCardState extends State<PostCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //작성하기 글 가져오기
-                      Text('${data.docs[index]['post']}'),
+                      Text(postItem.post),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -175,8 +174,7 @@ class _PostCardState extends State<PostCard> {
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Row(children: [
-                      Text(
-                          '게시기간 : ${data.docs[index]['now']} ~ ${data.docs[index]['future']}',
+                      Text('게시기간 : ${postItem.now} ~ ${postItem.future}',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15))
                     ])),
@@ -193,26 +191,26 @@ class _PostCardState extends State<PostCard> {
                           color: Color(0xff3AAFFC),
                         ),
                         onPressed: () {
-                          final User? user = auth.currentUser;
-                          final uid = user?.uid;
-                          setState(() {
-                            if (appdata.postItem.like.contains(uid)) {
-                              appdata.postItem.likeNum -= 1;
-                              appdata.postItem.like.remove(uid);
-                              appdata.myInfo.myempathyposts.remove(key);
-                              aa = false;
-                              Icon(
-                                Icons.favorite_border,
-                                color: Color(0xff3AAFFC),
-                              );
-                            } else {
-                              Icon(Icons.favorite, color: Color(0xff3AAFFC));
-                              appdata.postItem.likeNum += 1;
-                              appdata.postItem.like.add(uid);
-                              appdata.myInfo.myempathyposts.add(key);
-                              aa = true;
-                            }
-                          });
+                          // final User? user = auth.currentUser;
+                          // final uid = user?.uid;
+                          // setState(() {
+                          //   if (postItem.like.elementAt(index)) {
+                          //     postItem.likeNum -= 1;
+                          //     postItem.like.remove(uid);
+                          //     appdata.myInfo.myempathyposts.remove(key);
+                          //     aa = false;
+                          //     Icon(
+                          //       Icons.favorite_border,
+                          //       color: Color(0xff3AAFFC),
+                          //     );
+                          //   } else {
+                          //     Icon(Icons.favorite, color: Color(0xff3AAFFC));
+                          //     postItem.likeNum += 1;
+                          //     postItem.like.add(uid);
+                          //     appdata.myInfo.myempathyposts.add(key);
+                          //     aa = true;
+                          //   }
+                          // });
                         },
                       ),
                       //공감 숫자
@@ -276,7 +274,7 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              Get.to(() => Comments(), arguments: [aa]);
+                              Get.to(() => Comments(), arguments: []);
                             },
                             child: Text('댓글 모두보기'),
                           )
