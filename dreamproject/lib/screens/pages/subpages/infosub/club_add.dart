@@ -449,6 +449,7 @@ class _ClubAddPageState extends State<ClubAddPage> {
                                                   width: 2))),
                                     ),
                                   ),
+                                  //
                                   Flexible(
                                     fit: FlexFit.loose,
                                     child: IconButton(
