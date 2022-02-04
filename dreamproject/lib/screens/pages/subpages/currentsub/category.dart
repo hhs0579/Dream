@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
@@ -14,8 +16,8 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  final List<String> _yearList = ["2020", "2021", "2022"];
-  var yearValue = '2021';
+  final List<String> _yearList = ["2022", "2023"];
+  var yearValue = '2022';
   final monthList = [
     '1월',
     '2월',
@@ -33,43 +35,50 @@ class _CategoryState extends State<Category> {
 
   String monthValue = '1월';
   Map<String, double> dataMap = {
-    "아동": 10,
-    "노인": 1,
-    "장애": 8,
-    "빈곤": 20,
-    "유기동물": 5
+    "아동": 150,
+    "노인": 310,
+    "장애": 150,
+    "빈곤": 200,
+    "유기동물": 350,
+    "다문화": 150
   };
+
+  _categoryItem(String category, String donateuser, double top, double bottom,
+      double left, double right, dynamic onTap) {
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          color: Color(0xff3AAFFC),
+          width: 70,
+          height: 50,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(category),
+            SizedBox(height: 7),
+            Text(donateuser)
+          ]),
+        ),
+      ),
+    );
+  }
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final isSelected = <bool>[false, true, false, false];
+
+  final CollectionReference donationCollection =
+      FirebaseFirestore.instance.collection('donations');
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
-        endDrawer: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          child: Drawer(
-            child: ListView(
-              children: <Widget>[
-                ListTile(
-                  title: Text('드림소개', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('이용방법', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('''카카오톡 플친
-    전화 010-0000-0000''', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
+        endDrawer: drawer(context),
         appBar: AppBar(
           title: Text(
             '현황',
@@ -247,38 +256,49 @@ class _CategoryState extends State<Category> {
                       )),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 60),
-                child: PieChart(
-                  dataMap: dataMap,
-                  animationDuration: Duration(milliseconds: 800),
-                  chartLegendSpacing: 32,
-                  chartRadius: MediaQuery.of(context).size.width / 2.8,
-
-                  initialAngleInDegree: 0,
-                  chartType: ChartType.ring,
-                  ringStrokeWidth: 32,
-
-                  legendOptions: LegendOptions(
-                    showLegendsInRow: false,
-                    legendPosition: LegendPosition.right,
-                    showLegends: true,
-                    legendShape: BoxShape.circle,
-                    legendTextStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  chartValuesOptions: ChartValuesOptions(
-                    showChartValueBackground: true,
-                    showChartValues: true,
-                    showChartValuesInPercentage: false,
-                    showChartValuesOutside: true,
-                    decimalPlaces: 0,
-                  ),
-                  // gradientList: ---To add gradient colors---
-                  // emptyColorGradient: ---Empty Color gradient---
-                ),
-              )
+              StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return Stack(
+                      children: [
+                        _categoryItem('아동', '0', 300, 75, 280, 60, () {}),
+                        _categoryItem('노인', '0', 320, 55, 170, 170, () {}),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.54,
+                          child: PieChart(
+                            dataMap: dataMap,
+                            animationDuration: Duration(milliseconds: 1000),
+                            chartRadius:
+                                MediaQuery.of(context).size.width / 3.5,
+                            initialAngleInDegree: 0,
+                            chartType: ChartType.ring,
+                            ringStrokeWidth: 40,
+                            colorList: [
+                              Color(0xff3AAFFC),
+                              Color(0xFFBDBDBD),
+                              Color(0xff3AAFFC),
+                              Color(0xFFBDBDBD),
+                              Color(0xff3AAFFC),
+                              Color(0xFFBDBDBD)
+                            ],
+                            legendOptions: LegendOptions(
+                              showLegends: false,
+                            ),
+                            chartValuesOptions: ChartValuesOptions(
+                                showChartValueBackground: true,
+                                chartValueBackgroundColor: Colors.grey[300],
+                                showChartValues: true,
+                                showChartValuesInPercentage: false,
+                                showChartValuesOutside: true,
+                                decimalPlaces: 0,
+                                chartValueStyle: TextStyle(
+                                    fontSize: 10, color: Colors.black)),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
             ],
           ),
         ),
