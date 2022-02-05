@@ -113,7 +113,7 @@ class _PostCardState extends State<PostCard> {
                         itemCount: postItem.image.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Image.network(postItem.image.elementAt(index),
-                              fit: BoxFit.fill);
+                              fit: BoxFit.cover);
                         })),
                 Container(
                     padding: EdgeInsets.only(top: 10),
@@ -127,7 +127,12 @@ class _PostCardState extends State<PostCard> {
                           itemCount: postItem.select.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
-                              child: Text(postItem.select.elementAt(index)),
+                              child: Center(
+                                child: Text(postItem.select.elementAt(index),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    )),
+                              ),
                               width: 60,
                               height: 20,
                               margin: EdgeInsets.only(left: 10),
@@ -191,26 +196,27 @@ class _PostCardState extends State<PostCard> {
                           color: Color(0xff3AAFFC),
                         ),
                         onPressed: () {
-                          // final User? user = auth.currentUser;
-                          // final uid = user?.uid;
-                          // setState(() {
-                          //   if (postItem.like.elementAt(index)) {
-                          //     postItem.likeNum -= 1;
-                          //     postItem.like.remove(uid);
-                          //     appdata.myInfo.myempathyposts.remove(key);
-                          //     aa = false;
-                          //     Icon(
-                          //       Icons.favorite_border,
-                          //       color: Color(0xff3AAFFC),
-                          //     );
-                          //   } else {
-                          //     Icon(Icons.favorite, color: Color(0xff3AAFFC));
-                          //     postItem.likeNum += 1;
-                          //     postItem.like.add(uid);
-                          //     appdata.myInfo.myempathyposts.add(key);
-                          //     aa = true;
-                          //   }
-                          // });
+                          final User? user = auth.currentUser;
+                          final uid = user?.uid;
+
+                          setState(() {
+                            if (postItem.like.elementAt(index)) {
+                              postItem.likeNum -= 1;
+                              postItem.like.remove(appdata.myInfo.uid);
+                              appdata.myInfo.myempathyposts.remove(key);
+                              aa = false;
+                              Icon(
+                                Icons.favorite_border,
+                                color: Color(0xff3AAFFC),
+                              );
+                            } else {
+                              Icon(Icons.favorite, color: Color(0xff3AAFFC));
+                              postItem.likeNum += 1;
+                              postItem.like.add(appdata.myInfo.uid);
+                              appdata.myInfo.myempathyposts.add(key);
+                              aa = true;
+                            }
+                          });
                         },
                       ),
                       //공감 숫자

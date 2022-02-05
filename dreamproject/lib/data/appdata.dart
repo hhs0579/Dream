@@ -1,3 +1,4 @@
+import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/postitem.dart';
 import 'package:get/get.dart';
@@ -31,22 +32,24 @@ class AppData extends GetxController {
     uid: '',
   );
   PostItem _postItem = PostItem(
-    date: '',
-    commentList: [],
-    future: '',
-    image: [],
-    key: '',
-    name: '',
-    now: '',
-    post: '',
-    postcode: '',
-    profile: '',
-    select: [],
-    uid: '',
-    commentNum: 0,
-    likeNum: 0,
-  );
+      date: '',
+      commentList: [],
+      future: '',
+      image: [],
+      key: '',
+      name: '',
+      now: '',
+      post: '',
+      postcode: '',
+      profile: '',
+      select: [],
+      uid: '',
+      commentNum: 0,
+      likeNum: 0,
+      like: []);
 
+  CommentItem _commentItem = CommentItem(
+      comment: '', date: '', name: '', key: '', profile: '', select: []);
   int get currentScreenIndex => _currentScreenIndex;
 
   set currentScreenIndex(int currentScreenIndex) {
@@ -79,6 +82,13 @@ class AppData extends GetxController {
 
   set postItem(PostItem postItem) {
     _postItem = postItem;
+    update();
+  }
+
+  CommentItem get commentItem => _commentItem;
+
+  set commentItem(CommentItem commentItem) {
+    _commentItem = commentItem;
     update();
   }
 

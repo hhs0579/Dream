@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
+import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
 
 class Comments extends StatefulWidget {
@@ -20,9 +22,12 @@ FirebaseFirestore fireStore = FirebaseFirestore.instance;
 final TextEditingController commentController = TextEditingController();
 String resultURL = '';
 String resultName = '';
+List<dynamic> selected = [];
 final FirebaseAuth auth = FirebaseAuth.instance;
 User? _user;
 var keyplus = 1;
+var now = DateTime.now();
+String date = DateFormat('yyyy/MM/dd - HH:mm:ss').format(now);
 final isSelected = <bool>[true, false, false];
 String keys = Get.arguments[0];
 AppData appdata = Get.find();
@@ -38,40 +43,88 @@ void _prepareService() async {
 }
 
 List filedata = [];
+final Stream<QuerySnapshot> comment =
+    FirebaseFirestore.instance.collection('comments').snapshots();
 
 class _CommentsState extends State<Comments> {
   @override
   Widget commentChild(data) {
-    return ListView(
-      children: [
-        for (var i = 0; i < data.length; i++)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2.0, 8.0, 2.0, 0.0),
-            child: ListTile(
-              leading: GestureDetector(
-                onTap: () async {
-                  // Display the image in large form.
-                  print("Comment Clicked");
-                },
-                child: Container(
-                  height: 50.0,
-                  width: 50.0,
-                  decoration: new BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: new BorderRadius.all(Radius.circular(50))),
-                  child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(appdata.myInfo.image)),
-                ),
-              ),
-              title: Text(
-                data[i]['name'],
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(data[i]['message']),
-            ),
-          )
-      ],
+    return Container(
+      child: StreamBuilder<QuerySnapshot>(
+          stream: comment,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('오류 발생');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('로딩중');
+            }
+            List<CommentItem> commentItems = [];
+            for (var value in snapshot.data!.docs) {
+              CommentItem commentItem =
+                  CommentItem.fromJson(value.data() as Map<String, dynamic>);
+              commentItems.add(commentItem);
+            }
+
+            return ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: commentItems.length,
+                itemBuilder: (context, index) {
+                  CommentItem commentItem = commentItems.elementAt(index);
+
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(2.0, 8.0, 2.0, 0.0),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              height: 50.0,
+                              width: 50.0,
+                              decoration: new BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: new BorderRadius.all(
+                                      Radius.circular(50))),
+                              child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage:
+                                      NetworkImage(appdata.myInfo.image)),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: Column(
+                            children: [
+                              Text(
+                                commentItem.name,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(commentItem.comment),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Center(
+                            child: Text(commentItem.select[0],
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12)),
+                          ),
+                          width: 50,
+                          height: 20,
+                          margin: EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                              color: Color(0xff3AAFFC),
+                              borderRadius: BorderRadius.circular(5)),
+                        )
+                      ],
+                    ),
+                  );
+                });
+          }),
     );
   }
 
@@ -87,6 +140,7 @@ class _CommentsState extends State<Comments> {
         child: CommentBox(
           child: commentChild(filedata),
           Image: appdata.myInfo.image,
+          select: selected,
           sendButton: () {
             if (formKey.currentState!.validate()) {
               print(commentController.text);
@@ -95,6 +149,7 @@ class _CommentsState extends State<Comments> {
                   'name': appdata.myInfo.name,
                   'pic': appdata.myInfo.image,
                   'message': commentController.text,
+                  'select': selected[0]
                 };
                 filedata.insert(0, value);
               });
@@ -106,12 +161,9 @@ class _CommentsState extends State<Comments> {
                 'comment': commentController.text,
                 'profile': appdata.myInfo.image,
                 'name': appdata.myInfo.name,
+                'date': date,
+                'select': selected
               });
-              appdata.postItem.commentList.add(keys);
-              fireStore
-                  .collection('post')
-                  .doc()
-                  .update({'commentList': appdata.postItem.commentList});
 
               setState(() {
                 key = randomString(16);
