@@ -49,12 +49,11 @@ List<dynamic> nameslist = [];
 List<dynamic> selectslist = [];
 List a = [];
 _getCommentmodel() async {
-  List<dynamic> commentList = appdata.commentItem.commentsList;
+  List<dynamic> commentList = appdata.postItem.commentList;
 
   List<dynamic> resultcommentlist = [];
   if (commentList.isEmpty) {
-    resultcommentlist.add('');
-    resultcommentlist.add('');
+    return null;
   } else {
     for (var i = 0; i < postItem!.commentList.length; i++) {
       var q = postItem?.commentList[i];
@@ -68,14 +67,8 @@ _getCommentmodel() async {
         resultcommentlist.add(commentItem);
       }
     }
-    while (true) {
-      if (resultcommentlist.length == 2) {
-        break;
-      }
-      resultcommentlist.add('');
-    }
   }
-  print(resultcommentlist);
+
   return resultcommentlist;
 }
 
