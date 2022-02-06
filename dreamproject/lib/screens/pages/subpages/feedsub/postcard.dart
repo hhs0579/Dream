@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/postitem.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/comment.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentall.dart';
@@ -42,6 +43,95 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 bool aa = false;
 
 var commentkey = '';
+List<dynamic> commentslist = [];
+List<dynamic> profileslist = [];
+List<dynamic> nameslist = [];
+List<dynamic> selectslist = [];
+List a = [];
+_getCommentmodel() async {
+  List<dynamic> commentList = appdata.commentItem.commentsList;
+  List<dynamic> commentslist = [];
+  List<dynamic> profileslist = [];
+  List<dynamic> nameslist = [];
+  List<dynamic> selectslist = [];
+  List<dynamic> resultcommentlist = [];
+  if (commentList.isEmpty) {
+    resultcommentlist.add('');
+    resultcommentlist.add('');
+  } else {
+    for (var i = 0; i < postItem!.commentList.length; i++) {
+      var q = postItem?.commentList[i];
+      QuerySnapshot querySnapshot = (await FirebaseFirestore.instance
+          .collection('comment')
+          .doc(q)
+          .get()) as QuerySnapshot<Object?>;
+      if (querySnapshot.docs.isNotEmpty) {
+        CommentItem commentItem = CommentItem.fromJson(
+            querySnapshot.docs.first.data() as Map<String, dynamic>);
+        resultcommentlist.add(commentItem);
+      }
+    }
+    while (true) {
+      if (resultcommentlist.length == 2) {
+        break;
+      }
+      resultcommentlist.add('');
+    }
+  }
+  print(resultcommentlist);
+  return resultcommentlist;
+}
+
+_mycommentlistOn(CommentItem commentItem, double margin) {
+  return Container(
+    margin: EdgeInsets.only(left: margin),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              height: 50.0,
+              width: 50.0,
+              decoration: new BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: new BorderRadius.all(Radius.circular(50))),
+              child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(commentItem.profile)),
+            ),
+            Container(
+              child: Text(commentItem.name),
+            ),
+            Container(
+              child: Center(
+                child: Text(commentItem.select[0],
+                    style: TextStyle(color: Colors.white, fontSize: 12)),
+              ),
+              width: 50,
+              height: 20,
+              margin: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                  color: Color(0xff3AAFFC),
+                  borderRadius: BorderRadius.circular(5)),
+            )
+          ],
+        ),
+        Container(
+          child: Text(commentItem.comment),
+        ),
+      ],
+    ),
+  );
+}
+
+_mycommentlistOff(double margin) {
+  return Container(
+    margin: EdgeInsets.only(left: margin),
+    width: 50,
+    child: Text('dd'),
+  );
+}
 
 class _PostCardState extends State<PostCard> {
   final Stream<QuerySnapshot> post =
@@ -273,7 +363,7 @@ class _PostCardState extends State<PostCard> {
                     ])),
                 Container(
                     padding: EdgeInsets.only(left: 10),
-                    height: 180,
+                    height: 550,
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Column(
@@ -286,9 +376,32 @@ class _PostCardState extends State<PostCard> {
                             child: Text('댓글 모두보기'),
                           )
                         ]),
-                        Column(
-                          children: [],
-                        )
+                        Column(children: [
+                          FutureBuilder<dynamic>(
+                              future: _getCommentmodel(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Center(child: Text('오류가 발생했습니다.'));
+                                } else if (snapshot.data == null) {
+                                  return Container();
+                                } else {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 200,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 2,
+                                        itemBuilder: (context, index) {
+                                          List<dynamic> commentlist =
+                                              snapshot.data!;
+                                          return _mycommentlistOn(
+                                              commentlist[index], 15);
+                                        }),
+                                  );
+                                }
+                              }),
+                        ])
                       ],
                     )),
               ]);

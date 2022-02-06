@@ -49,7 +49,13 @@ class AppData extends GetxController {
       like: []);
 
   CommentItem _commentItem = CommentItem(
-      comment: '', date: '', name: '', key: '', profile: '', select: []);
+      comment: '',
+      date: '',
+      name: '',
+      key: '',
+      profile: '',
+      select: [],
+      commentsList: []);
   int get currentScreenIndex => _currentScreenIndex;
 
   set currentScreenIndex(int currentScreenIndex) {
