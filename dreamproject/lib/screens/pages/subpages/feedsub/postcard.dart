@@ -41,6 +41,8 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 //     FirebaseFirestore.instance.collection('post').snapshots();
 bool aa = false;
 
+var commentkey = '';
+
 class _PostCardState extends State<PostCard> {
   final Stream<QuerySnapshot> post =
       FirebaseFirestore.instance.collection('post').snapshots();
@@ -200,11 +202,11 @@ class _PostCardState extends State<PostCard> {
                           final uid = user?.uid;
 
                           setState(() {
-                            if (postItem.like.elementAt(index)) {
+                            if (postItem.like.contains(appdata.myInfo.uid)) {
                               postItem.likeNum -= 1;
                               postItem.like.remove(appdata.myInfo.uid);
                               appdata.myInfo.myempathyposts.remove(key);
-                              aa = false;
+
                               Icon(
                                 Icons.favorite_border,
                                 color: Color(0xff3AAFFC),
@@ -214,7 +216,6 @@ class _PostCardState extends State<PostCard> {
                               postItem.likeNum += 1;
                               postItem.like.add(appdata.myInfo.uid);
                               appdata.myInfo.myempathyposts.add(key);
-                              aa = true;
                             }
                           });
                         },
@@ -280,90 +281,13 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              Get.to(() => Comments(), arguments: []);
+                              Get.to(() => Comments(), arguments: postItem.key);
                             },
                             child: Text('댓글 모두보기'),
                           )
                         ]),
                         Column(
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 15,
-                                  //프로필 사진받아오기
-                                  backgroundImage:
-                                      NetworkImage(appdata.myInfo.image),
-                                ),
-                                SizedBox(width: 5),
-                                //프로필 사진,이름 받아오기
-                                Text(
-                                  '김땡땡',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, height: 1.0),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  height: 20,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border:
-                                          Border.all(color: Color(0xff3AAFFC))),
-                                  child: (Text(
-                                    '물품기부',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Color(0xff3AAFFC), fontSize: 13),
-                                  )),
-                                )
-                              ],
-                            ),
-                            Text('안녕하세요 저희 집에 입식식탁이 있어서 드리고싶어요.',
-                                style: TextStyle(fontSize: 13, height: 1.0)),
-                            Container(
-                              padding: EdgeInsets.only(top: 17),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 15,
-                                    //프로필 사진받아오기
-                                    backgroundImage: NetworkImage(
-                                        'https://www.woolha.com/media/2020/03/eevee.png'),
-                                  ),
-                                  SizedBox(width: 5),
-                                  //프로필 사진,이름 받아오기
-                                  Text(
-                                    '박땡땡',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        height: 1.0),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    height: 20,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: Color(0xff3AAFFC))),
-                                    child: (Text(
-                                      '재능기부',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Color(0xff3AAFFC),
-                                          fontSize: 13),
-                                    )),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(right: 200),
-                              child: Text('저도 돕고싶어요~',
-                                  style: TextStyle(fontSize: 13, height: 1.0)),
-                            ),
-                          ],
+                          children: [],
                         )
                       ],
                     )),

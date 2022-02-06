@@ -41,7 +41,7 @@ class PostItem {
         now = json['now'],
         future = json['future'],
         profile = json['profile'],
-        commentList = json['commentList'],
+        commentList = json['commentList'] ?? [],
         select = json['select'],
         image = json['image'],
         name = json['name'],

@@ -389,20 +389,7 @@ class _WriteState extends State<Write> {
                               onPressed: () async {
                                 final User? user = auth.currentUser;
                                 final uid = user?.uid;
-                                appdata.myInfo.myposts.add(key);
-                                appdata.postItem.name = name;
-                                appdata.postItem.key = key;
-                                appdata.postItem.post =
-                                    postTextEditController.text;
-                                appdata.postItem.image.add(_arrImageUrls);
-                                appdata.postItem.uid = uid!;
-                                appdata.postItem.date = formatDate;
-                                appdata.postItem.now = yearmonthdate;
-                                appdata.postItem.future = future;
-                                appdata.postItem.select.add(select);
-                                appdata.postItem.profile = appdata.myInfo.image;
-                                appdata.postItem.commentList.add(commentList);
-                                appdata.postItem.postcode = key;
+
                                 fireStore.collection('post').doc(key).set({
                                   'key': key,
                                   'post': postTextEditController.text,

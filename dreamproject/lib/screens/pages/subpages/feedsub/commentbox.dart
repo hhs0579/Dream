@@ -38,7 +38,7 @@ class _CommentBoxState extends State<CommentBox> {
   AppData appdata = Get.find();
 
   String resultURL = '';
-  final isSelected = <bool>[true, false, false];
+  final isSelected = <bool>[false, false, false];
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   User? _user;

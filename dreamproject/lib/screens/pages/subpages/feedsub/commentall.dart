@@ -29,7 +29,7 @@ var keyplus = 1;
 var now = DateTime.now();
 String date = DateFormat('yyyy/MM/dd - HH:mm:ss').format(now);
 final isSelected = <bool>[true, false, false];
-String keys = Get.arguments[0];
+
 AppData appdata = Get.find();
 var key = randomString(16);
 void initState() {
@@ -37,6 +37,10 @@ void initState() {
   resultURL = appdata.myInfo.image;
   resultName = appdata.myInfo.name;
 }
+
+var k = Get.arguments;
+
+List<String> keys = [];
 
 void _prepareService() async {
   _user = auth.currentUser;
@@ -164,7 +168,8 @@ class _CommentsState extends State<Comments> {
                 'date': date,
                 'select': selected
               });
-
+              keys.add(key);
+              fireStore.collection('post').doc(k).update({'commentList': keys});
               setState(() {
                 key = randomString(16);
               });
