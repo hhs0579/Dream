@@ -50,10 +50,7 @@ List<dynamic> selectslist = [];
 List a = [];
 _getCommentmodel() async {
   List<dynamic> commentList = appdata.commentItem.commentsList;
-  List<dynamic> commentslist = [];
-  List<dynamic> profileslist = [];
-  List<dynamic> nameslist = [];
-  List<dynamic> selectslist = [];
+
   List<dynamic> resultcommentlist = [];
   if (commentList.isEmpty) {
     resultcommentlist.add('');
@@ -80,57 +77,6 @@ _getCommentmodel() async {
   }
   print(resultcommentlist);
   return resultcommentlist;
-}
-
-_mycommentlistOn(CommentItem commentItem, double margin) {
-  return Container(
-    margin: EdgeInsets.only(left: margin),
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(left: 10),
-              height: 50.0,
-              width: 50.0,
-              decoration: new BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: new BorderRadius.all(Radius.circular(50))),
-              child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(commentItem.profile)),
-            ),
-            Container(
-              child: Text(commentItem.name),
-            ),
-            Container(
-              child: Center(
-                child: Text(commentItem.select[0],
-                    style: TextStyle(color: Colors.white, fontSize: 12)),
-              ),
-              width: 50,
-              height: 20,
-              margin: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                  color: Color(0xff3AAFFC),
-                  borderRadius: BorderRadius.circular(5)),
-            )
-          ],
-        ),
-        Container(
-          child: Text(commentItem.comment),
-        ),
-      ],
-    ),
-  );
-}
-
-_mycommentlistOff(double margin) {
-  return Container(
-    margin: EdgeInsets.only(left: margin),
-    width: 50,
-    child: Text('dd'),
-  );
 }
 
 class _PostCardState extends State<PostCard> {
