@@ -3,9 +3,7 @@ import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class Category extends StatefulWidget {
