@@ -19,6 +19,7 @@ class _AppFooterState extends State<AppFooter> {
               .textTheme
               .copyWith(caption: new TextStyle(color: Colors.grey))),
       child: new BottomNavigationBar(
+          selectedLabelStyle: TextStyle(fontSize: 12.0),
           type: BottomNavigationBarType.fixed,
           currentIndex: index,
           onTap: (int index) {
@@ -43,16 +44,15 @@ class _AppFooterState extends State<AppFooter> {
                 icon: index == 0
                     ? new Image.asset('assets/images/dashboard_active.png')
                     : new Image.asset('assets/images/dashboard_inactive.png'),
-                title: new Text('Dashboard',
-                    style: new TextStyle(fontSize: 12.0))),
+                label: ('Dashboard'),),
+                    // style: new TextStyle(fontSize: 12.0))),
             new BottomNavigationBarItem(
                 backgroundColor: Colors.white,
                 icon: index == 1
                     ? new Image.asset('assets/images/medical_sevice_active.png')
                     : new Image.asset(
                         'assets/images/medical_sevice_inactive.png'),
-                title: new Text('Health Services',
-                    style: new TextStyle(fontSize: 12.0))),
+                label: ('Health Services')),
             new BottomNavigationBarItem(
                 icon: InkWell(
                   child: Icon(
@@ -61,8 +61,7 @@ class _AppFooterState extends State<AppFooter> {
                     size: 20.0,
                   ),
                 ),
-                title:
-                    new Text('History', style: new TextStyle(fontSize: 12.0))),
+                label: ('History')),
           ]),
     );
   }
