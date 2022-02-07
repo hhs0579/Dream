@@ -67,9 +67,8 @@ _getCommentmodel() async {
         resultcommentlist.add(commentItem);
       }
     }
+    return resultcommentlist;
   }
-
-  return resultcommentlist;
 }
 
 class _PostCardState extends State<PostCard> {
@@ -347,11 +346,10 @@ class _PostCardState extends State<PostCard> {
                                                               left: 10),
                                                       height: 50.0,
                                                       width: 50.0,
-                                                      decoration: new BoxDecoration(
+                                                      decoration: BoxDecoration(
                                                           color: Colors.blue,
                                                           borderRadius:
-                                                              new BorderRadius
-                                                                      .all(
+                                                              BorderRadius.all(
                                                                   Radius
                                                                       .circular(
                                                                           50))),
