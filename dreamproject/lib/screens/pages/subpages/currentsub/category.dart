@@ -165,13 +165,13 @@ class _CategoryState extends State<Category> {
                   )
                 ],
               ),
+              SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
                     height: 40,
-                    width: 120,
-                    margin: EdgeInsets.only(top: 40, right: 20),
+                    width: 100,
                     padding: EdgeInsets.symmetric(
                       horizontal: 20,
                     ),
@@ -190,7 +190,10 @@ class _CategoryState extends State<Category> {
                         (value) {
                           return DropdownMenuItem(
                             value: value,
-                            child: Text(value),
+                            child: Text(value,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                )),
                           );
                         },
                       ).toList(),
@@ -201,9 +204,10 @@ class _CategoryState extends State<Category> {
                       },
                     ),
                   ),
+                  SizedBox(width: 15),
                   Container(
+                    width: 75,
                     height: 40,
-                    margin: EdgeInsets.only(top: 40, right: 20),
                     padding: EdgeInsets.symmetric(
                       horizontal: 10,
                     ),
@@ -221,7 +225,10 @@ class _CategoryState extends State<Category> {
                         (value) {
                           return DropdownMenuItem(
                             value: value,
-                            child: Text(value),
+                            child: Text(value,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                )),
                           );
                         },
                       ).toList(),
@@ -232,29 +239,8 @@ class _CategoryState extends State<Category> {
                       },
                     ),
                   ),
+                  Flexible(fit: FlexFit.loose, child: SizedBox(width: 40))
                 ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        primary: Color(0xff3AAFFC),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                        side: BorderSide(
-                          color: Color(0xff3AAFFC),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        '200000원',
-                        style: TextStyle(fontSize: 15),
-                      )),
-                ),
               ),
               StreamBuilder<Object>(
                   stream: null,
@@ -299,6 +285,28 @@ class _CategoryState extends State<Category> {
                       ],
                     );
                   }),
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                child: Center(
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        primary: Color(0xff3AAFFC),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                        side: BorderSide(
+                          color: Color(0xff3AAFFC),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        '200000원',
+                        style: TextStyle(fontSize: 15),
+                      )),
+                ),
+              ),
             ],
           ),
         ),

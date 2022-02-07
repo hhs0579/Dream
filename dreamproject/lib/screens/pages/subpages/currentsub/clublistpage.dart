@@ -240,81 +240,75 @@ class _ClubListPageState extends State<ClubListPage> {
                               itemBuilder: (context, index) {
                                 ClubModel clubmodel =
                                     clubmodels.elementAt(index);
-                                return Expanded(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 60,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 50,
-                                              child: Center(
-                                                child:
-                                                    Text((index + 1).toString(),
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                        )),
-                                              ),
-                                            ),
-                                            Container(
-                                                width: 110,
-                                                child: Row(children: [
-                                                  CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      radius: 15,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              clubmodel.image)),
-                                                  SizedBox(width: 10),
-                                                  Text(clubmodel.name,
+                                return Column(
+                                  children: [
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            child: Center(
+                                              child:
+                                                  Text((index + 1).toString(),
                                                       style: TextStyle(
-                                                          fontSize: 11,
-                                                          color: Colors.grey))
-                                                ])),
-                                            Container(
-                                              width: 85,
-                                              child: Text(
-                                                  clubmodel.clubuser
-                                                          .toString() +
-                                                      ' 명',
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey,
-                                                  )),
-                                            ),
-                                            Flexible(
-                                                fit: FlexFit.tight,
-                                                child: Container(
-                                                  width: 130,
-                                                  child: Text(
-                                                      clubmodel.clubdonatepoint
-                                                              .toString() +
-                                                          ' 원',
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: Colors.grey,
+                                                        fontSize: 12,
                                                       )),
-                                                ))
-                                          ],
-                                        ),
+                                            ),
+                                          ),
+                                          Container(
+                                              width: 110,
+                                              child: Row(children: [
+                                                CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    radius: 15,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            clubmodel.image)),
+                                                SizedBox(width: 10),
+                                                Text(clubmodel.name,
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.grey))
+                                              ])),
+                                          Container(
+                                            width: 85,
+                                            child: Text(
+                                                clubmodel.clubuser.toString() +
+                                                    ' 명',
+                                                textAlign: TextAlign.right,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.grey,
+                                                )),
+                                          ),
+                                          Flexible(
+                                              fit: FlexFit.tight,
+                                              child: Container(
+                                                width: 130,
+                                                child: Text(
+                                                    clubmodel.clubdonatepoint
+                                                            .toString() +
+                                                        ' 원',
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey,
+                                                    )),
+                                              ))
+                                        ],
                                       ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 1,
-                                        color: Colors.grey[300],
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 1,
+                                      color: Colors.grey[300],
+                                    )
+                                  ],
                                 );
                               }));
                     })

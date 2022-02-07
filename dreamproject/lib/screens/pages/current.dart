@@ -187,70 +187,63 @@ class _CurrentPageState extends State<CurrentPage> {
                               itemCount: usermodels.length,
                               itemBuilder: (context, index) {
                                 MyInfo usermodel = usermodels.elementAt(index);
-                                return Expanded(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 60,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 80,
-                                              child: Center(
-                                                child: Text(
-                                                    usermodel.address
-                                                        .substring(0, 2),
-                                                    style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: Colors.grey)),
-                                              ),
+                                return Column(
+                                  children: [
+                                    Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 80,
+                                            child: Center(
+                                              child: Text(
+                                                  usermodel.address
+                                                      .substring(0, 2),
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey)),
                                             ),
-                                            Container(
-                                                width: 140,
-                                                child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      _profileImage(
-                                                          usermodel.image),
-                                                      SizedBox(width: 10),
-                                                      Text(usermodel.name,
-                                                          style: TextStyle(
-                                                              fontSize: 11,
-                                                              color:
-                                                                  Colors.grey))
-                                                    ])),
-                                            Flexible(
-                                                fit: FlexFit.loose,
-                                                child: Container(
-                                                  width: 145,
-                                                  child: Text(
-                                                      usermodel.totaldonatepoint
-                                                              .toString() +
-                                                          ' 원',
-                                                      textAlign:
-                                                          TextAlign.right,
-                                                      style: TextStyle(
-                                                        fontSize: 11,
-                                                        color: Colors.grey,
-                                                      )),
-                                                ))
-                                          ],
-                                        ),
+                                          ),
+                                          Container(
+                                              width: 140,
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    _profileImage(
+                                                        usermodel.image),
+                                                    SizedBox(width: 10),
+                                                    Text(usermodel.name,
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            color: Colors.grey))
+                                                  ])),
+                                          Flexible(
+                                              fit: FlexFit.loose,
+                                              child: Container(
+                                                width: 145,
+                                                child: Text(
+                                                    usermodel.totaldonatepoint
+                                                            .toString() +
+                                                        ' 원',
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey,
+                                                    )),
+                                              ))
+                                        ],
                                       ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 1,
-                                        color: Colors.grey[300],
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 1,
+                                      color: Colors.grey[300],
+                                    )
+                                  ],
                                 );
                               }));
                     })
