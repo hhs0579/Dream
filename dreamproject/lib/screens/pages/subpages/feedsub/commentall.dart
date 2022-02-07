@@ -47,8 +47,10 @@ void _prepareService() async {
 }
 
 List filedata = [];
-final Stream<QuerySnapshot> comment =
-    FirebaseFirestore.instance.collection('comments').snapshots();
+final Stream<QuerySnapshot> comment = FirebaseFirestore.instance
+    .collection('comments')
+    .orderBy('timeStamp', descending: true)
+    .snapshots();
 
 class _CommentsState extends State<Comments> {
   @override
@@ -153,7 +155,7 @@ class _CommentsState extends State<Comments> {
                   'name': appdata.myInfo.name,
                   'pic': appdata.myInfo.image,
                   'message': commentController.text,
-                  'select': selected[0]
+                  'select': selected[0],
                 };
                 filedata.insert(0, value);
               });
@@ -161,6 +163,7 @@ class _CommentsState extends State<Comments> {
               final uid = user?.uid;
 
               fireStore.collection('comments').doc(key).set({
+                'timeStamp': Timestamp.now(),
                 'key': key,
                 'comment': commentController.text,
                 'profile': appdata.myInfo.image,
@@ -169,7 +172,10 @@ class _CommentsState extends State<Comments> {
                 'select': selected
               });
               keys.add(key);
-              fireStore.collection('post').doc(k).update({'commentList': keys});
+              fireStore
+                  .collection('post')
+                  .doc(k)
+                  .update({'commentList': FieldValue.arrayUnion(keys)});
               appdata.postItem.commentList.add(key);
               setState(() {
                 key = randomString(16);
