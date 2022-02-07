@@ -170,6 +170,7 @@ class _CommentsState extends State<Comments> {
               });
               keys.add(key);
               fireStore.collection('post').doc(k).update({'commentList': keys});
+              appdata.postItem.commentList.add(key);
               setState(() {
                 key = randomString(16);
               });

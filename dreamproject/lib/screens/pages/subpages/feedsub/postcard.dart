@@ -43,20 +43,18 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 bool aa = false;
 
 var commentkey = '';
-List<dynamic> commentslist = [];
-List<dynamic> profileslist = [];
-List<dynamic> nameslist = [];
-List<dynamic> selectslist = [];
+
 List a = [];
 _getCommentmodel() async {
   List<dynamic> commentList = appdata.postItem.commentList;
 
   List<dynamic> resultcommentlist = [];
   if (commentList.isEmpty) {
+    print(commentList);
     return null;
   } else {
-    for (var i = 0; i < postItem!.commentList.length; i++) {
-      var q = postItem?.commentList[i];
+    for (var i = 0; i < commentList.length; i++) {
+      var q = commentList[i];
       QuerySnapshot querySnapshot = (await FirebaseFirestore.instance
           .collection('comment')
           .doc(q)
@@ -69,6 +67,55 @@ _getCommentmodel() async {
     }
     return resultcommentlist;
   }
+}
+
+mycommentListOff() {
+  Container(
+    child: Text('dd'),
+  );
+}
+
+mycommentListOn(CommentItem commentItem) {
+  Container(
+    margin: EdgeInsets.only(left: 10),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              height: 50.0,
+              width: 50.0,
+              decoration: new BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: new BorderRadius.all(Radius.circular(50))),
+              child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(commentItem.profile)),
+            ),
+            Container(
+              child: Text(commentItem.name),
+            ),
+            Container(
+              child: Center(
+                child: Text(commentItem.select[0],
+                    style: TextStyle(color: Colors.white, fontSize: 12)),
+              ),
+              width: 50,
+              height: 20,
+              margin: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                  color: Color(0xff3AAFFC),
+                  borderRadius: BorderRadius.circular(5)),
+            )
+          ],
+        ),
+        Container(
+          child: Text(commentItem.comment),
+        ),
+      ],
+    ),
+  );
 }
 
 class _PostCardState extends State<PostCard> {
@@ -331,69 +378,12 @@ class _PostCardState extends State<PostCard> {
                                         scrollDirection: Axis.horizontal,
                                         itemCount: 2,
                                         itemBuilder: (context, index) {
-                                          List<CommentItem> commentItems = [];
-                                          CommentItem commetItem =
-                                              commentItems.elementAt(index);
-                                          return Container(
-                                            margin: EdgeInsets.only(left: 10),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      height: 50.0,
-                                                      width: 50.0,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.blue,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          50))),
-                                                      child: CircleAvatar(
-                                                          radius: 50,
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  commentItem!
-                                                                      .profile)),
-                                                    ),
-                                                    Container(
-                                                      child: Text(
-                                                          commentItem!.name),
-                                                    ),
-                                                    Container(
-                                                      child: Center(
-                                                        child: Text(
-                                                            commentItem!
-                                                                .select[0],
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 12)),
-                                                      ),
-                                                      width: 50,
-                                                      height: 20,
-                                                      margin: EdgeInsets.only(
-                                                          left: 10),
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xff3AAFFC),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                  child: Text(
-                                                      commentItem!.comment),
-                                                ),
-                                              ],
-                                            ),
-                                          );
+                                          List<dynamic> commentlist =
+                                              snapshot.data!;
+                                          return commentlist[index] == null
+                                              ? mycommentListOff()
+                                              : mycommentListOn(
+                                                  commentlist[index]);
                                         }),
                                   );
                                 }
