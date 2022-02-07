@@ -654,7 +654,6 @@ class _MyInfoPageState extends State<MyInfoPage> {
         resultclublist.add('');
       }
     }
-    print(resultclublist);
     return resultclublist;
   }
 

@@ -44,39 +44,36 @@ bool aa = false;
 
 var commentkey = '';
 
-List a = [];
-_getCommentmodel() async {
-  List<dynamic> commentList = appdata.postItem.commentList;
-
+_getCommentmodel(List<dynamic> commentList) async {
   List<dynamic> resultcommentlist = [];
   if (commentList.isEmpty) {
     print(commentList);
     return null;
   } else {
     for (var i = 0; i < commentList.length; i++) {
-      var q = commentList[i];
-      QuerySnapshot querySnapshot = (await FirebaseFirestore.instance
-          .collection('comment')
-          .doc(q)
-          .get()) as QuerySnapshot<Object?>;
-      if (querySnapshot.docs.isNotEmpty) {
-        CommentItem commentItem = CommentItem.fromJson(
-            querySnapshot.docs.first.data() as Map<String, dynamic>);
-        resultcommentlist.add(commentItem);
-      }
+      CommentItem resultcommentItem;
+      await FirebaseFirestore.instance
+          .collection('comments')
+          .doc(commentList[i])
+          .get()
+          .then((snapshot) => {
+                resultcommentItem = CommentItem.fromJson(
+                    snapshot.data() as Map<String, dynamic>),
+                resultcommentlist.add(resultcommentItem)
+              });
     }
     return resultcommentlist;
   }
 }
 
 mycommentListOff() {
-  Container(
+  return Container(
     child: Text('dd'),
   );
 }
 
 mycommentListOn(CommentItem commentItem) {
-  Container(
+  return Container(
     margin: EdgeInsets.only(left: 10),
     child: Column(
       children: [
@@ -86,9 +83,9 @@ mycommentListOn(CommentItem commentItem) {
               margin: const EdgeInsets.only(left: 10),
               height: 50.0,
               width: 50.0,
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                   color: Colors.blue,
-                  borderRadius: new BorderRadius.all(Radius.circular(50))),
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
               child: CircleAvatar(
                   radius: 50,
                   backgroundImage: NetworkImage(commentItem.profile)),
@@ -363,11 +360,12 @@ class _PostCardState extends State<PostCard> {
                         ]),
                         Column(children: [
                           FutureBuilder<dynamic>(
-                              future: _getCommentmodel(),
+                              future: _getCommentmodel(postItem.commentList),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
                                   return Center(child: Text('오류가 발생했습니다.'));
-                                } else if (snapshot.data == null) {
+                                } else if (snapshot.data == null ||
+                                    snapshot.data == []) {
                                   return Container();
                                 } else {
                                   return Container(
@@ -375,7 +373,6 @@ class _PostCardState extends State<PostCard> {
                                     margin: EdgeInsets.only(left: 10),
                                     height: 200,
                                     child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
                                         itemCount: 2,
                                         itemBuilder: (context, index) {
                                           List<dynamic> commentlist =
