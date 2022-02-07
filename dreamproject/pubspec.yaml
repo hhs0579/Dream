@@ -63,7 +63,8 @@ dependencies:
   dotted_border: ^2.0.0+1
   intl: ^0.17.0
   comment_box: ^0.0.17
-  
+  platform: ^3.1.0
+
 
 #encourage_image 패키지 설치
 
