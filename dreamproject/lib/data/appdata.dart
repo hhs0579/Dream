@@ -25,6 +25,7 @@ class AppData extends GetxController {
     myposts: [],
     myempathyposts: [],
     myclubs: [],
+    mydonations: [],
     point: 0,
     totaldonatepoint: 0,
     totaldonatenumber: 0,

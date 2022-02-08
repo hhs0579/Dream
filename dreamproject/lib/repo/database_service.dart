@@ -31,6 +31,7 @@ class DatabaseService {
       'myposts': [],
       'myempathyposts': [],
       'myclubs': [],
+      'mydonations': [],
       'address': _address,
       'addressdetail': _addressdetail,
       'postcode': _postcode,

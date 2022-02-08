@@ -376,8 +376,8 @@ class _PostCardState extends State<PostCard> {
                                         itemCount: 2,
                                         itemBuilder: (context, index) {
                                           List<dynamic> commentlist =
-                                              snapshot.data!;
-                                          return commentlist[index] == null
+                                              snapshot.data;
+                                          return commentlist == null
                                               ? mycommentListOff()
                                               : mycommentListOn(
                                                   commentlist[index]);
