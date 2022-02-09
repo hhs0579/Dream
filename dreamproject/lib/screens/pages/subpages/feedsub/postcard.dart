@@ -5,6 +5,7 @@ import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/postitem.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/comment.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentall.dart';
+import 'package:dreamproject/screens/pages/subpages/feedsub/empathy.dart';
 import 'package:dreamproject/screens/starts/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,9 +20,11 @@ class PostCard extends StatefulWidget {
   _PostCardState createState() => _PostCardState();
 }
 
+bool toggle = false;
 List<String> bb = [];
 String profileURL = '';
-
+List<dynamic> uids = [];
+List<dynamic> posts = [];
 final FirebaseAuth auth = FirebaseAuth.instance;
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
@@ -164,8 +167,10 @@ mycommentListOn(CommentItem commentItem) {
 }
 
 class _PostCardState extends State<PostCard> {
-  final Stream<QuerySnapshot> post =
-      FirebaseFirestore.instance.collection('post').snapshots();
+  final Stream<QuerySnapshot> post = FirebaseFirestore.instance
+      .collection('post')
+      .orderBy('date', descending: true)
+      .snapshots();
   final Stream<QuerySnapshot> user =
       FirebaseFirestore.instance.collection('users').snapshots();
 
@@ -198,7 +203,6 @@ class _PostCardState extends State<PostCard> {
             itemBuilder: (context, index) {
               PostItem postItem = postItems.elementAt(index);
               var video = postItem.dateutc;
-              var timestamp = postItem.date;
 
               return Column(children: [
                 Container(
@@ -316,15 +320,28 @@ class _PostCardState extends State<PostCard> {
                     child: Row(children: [
                       //공감 아이콘
                       IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Color(0xff3AAFFC),
-                        ),
+                        icon: toggle
+                            ? Icon(Icons.favorite_border,
+                                color: Color(0xff3AAFFC))
+                            : Icon(Icons.favorite, color: Color(0xff3AAFFC)),
                         onPressed: () {
+                          uids.add(appdata.myInfo.uid);
+                          posts.add(postItem.key);
                           setState(() {
+                            toggle = !toggle;
                             if (postItem.like.contains(appdata.myInfo.uid)) {
                               postItem.like.remove(appdata.myInfo.uid);
-                              appdata.myInfo.myempathyposts.remove(key);
+                              fireStore
+                                  .collection('post')
+                                  .doc(postItem.key)
+                                  .update(
+                                      {'like': FieldValue.arrayRemove(uids)});
+                              fireStore
+                                  .collection('users')
+                                  .doc(appdata.myInfo.uid)
+                                  .update({
+                                'myempathyposts': FieldValue.arrayRemove(posts)
+                              });
                               Icon(
                                 Icons.favorite_border,
                                 color: Color(0xff3AAFFC),
@@ -332,7 +349,17 @@ class _PostCardState extends State<PostCard> {
                             } else {
                               Icon(Icons.favorite, color: Color(0xff3AAFFC));
                               postItem.like.add(appdata.myInfo.uid);
-                              appdata.myInfo.myempathyposts.add(key);
+                              fireStore
+                                  .collection('post')
+                                  .doc(postItem.key)
+                                  .update(
+                                      {'like': FieldValue.arrayUnion(uids)});
+                              fireStore
+                                  .collection('users')
+                                  .doc(appdata.myInfo.uid)
+                                  .update({
+                                'myempathyposts': FieldValue.arrayUnion(posts)
+                              });
                             }
                           });
                         },
@@ -373,31 +400,17 @@ class _PostCardState extends State<PostCard> {
                                   setState(() {});
                                 },
                                 icon: Icon(
-                                  Icons.favorite_border,
+                                  Icons.favorite,
                                   color: Color(0xff3AAFFC),
                                 ),
                               ),
                             ),
                             TextButton(
                               onPressed: () {
-                                setState(() {
-                                  if (postItem.like
-                                      .contains(appdata.myInfo.uid)) {
-                                    postItem.like.remove(appdata.myInfo.uid);
-                                    appdata.myInfo.myempathyposts.remove(key);
-                                    Icon(
-                                      Icons.favorite_border,
-                                      color: Color(0xff3AAFFC),
-                                    );
-                                  } else {
-                                    Icon(Icons.favorite,
-                                        color: Color(0xff3AAFFC));
-                                    postItem.like.add(appdata.myInfo.uid);
-                                    appdata.myInfo.myempathyposts.add(key);
-                                  }
-                                });
+                                Get.to(() => empathy(),
+                                    arguments: postItem.key);
                               },
-                              child: Text('공감하기',
+                              child: Text('공감한사람',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,

@@ -40,6 +40,7 @@ class _WriteState extends State<Write> {
   var multiculture = false;
   var pet = false;
   var poverty = false;
+  List<dynamic> like = [];
   List<String> select = [];
   List<String> commentList = [];
   String name = "";
@@ -65,7 +66,6 @@ class _WriteState extends State<Write> {
     _user = _firebaseAuth.currentUser;
   }
 
-  List<String> like = [];
   var likeNum = 0;
   var commentNum = 0;
   List<String> _arrImageUrls = [];
@@ -404,6 +404,7 @@ class _WriteState extends State<Write> {
                                   'profile': appdata.myInfo.image,
                                   'commentList': commentList,
                                   'postcode': key,
+                                  'like': like,
                                 });
 
                                 if ((child ||
