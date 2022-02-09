@@ -88,7 +88,7 @@ extension StringExtension on String {
       timeUnit = '분';
     } else if (diffInHours < 24) {
       timeValue = diffInHours;
-      timeUnit = '시';
+      timeUnit = '시간';
     } else if (diffInHours >= 24 && diffInHours < 24 * 7) {
       timeValue = (diffInHours / 24).floor();
       timeUnit = '일';
@@ -124,14 +124,14 @@ mycommentListOn(CommentItem commentItem) {
         Column(
           children: [
             Container(
-              height: 50.0,
-              width: 50.0,
-              decoration: new BoxDecoration(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
                   color: Colors.blue,
-                  borderRadius: new BorderRadius.all(Radius.circular(50))),
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
               child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(appdata.myInfo.image)),
+                  backgroundImage: NetworkImage(commentItem.profile)),
             ),
           ],
         ),
@@ -154,9 +154,7 @@ mycommentListOn(CommentItem commentItem) {
           ),
           width: 50,
           height: 20,
-          margin: EdgeInsets.only(
-            bottom: 15,
-          ),
+          margin: EdgeInsets.only(bottom: 20, left: 5),
           decoration: BoxDecoration(
               color: Color(0xff3AAFFC), borderRadius: BorderRadius.circular(5)),
         )
@@ -304,7 +302,6 @@ class _PostCardState extends State<PostCard> {
                 ),
                 Container(
                     padding: EdgeInsets.only(left: 20, bottom: 10),
-                    height: 35,
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Row(children: [
@@ -313,7 +310,6 @@ class _PostCardState extends State<PostCard> {
                               fontWeight: FontWeight.bold, fontSize: 15))
                     ])),
                 Container(
-                    height: 40,
                     padding: EdgeInsets.only(left: 15),
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
@@ -325,12 +321,8 @@ class _PostCardState extends State<PostCard> {
                           color: Color(0xff3AAFFC),
                         ),
                         onPressed: () {
-                          final User? user = auth.currentUser;
-                          final uid = user?.uid;
-
                           setState(() {
                             if (postItem.like.contains(appdata.myInfo.uid)) {
-                              postItem.likeNum -= 1;
                               postItem.like.remove(appdata.myInfo.uid);
                               appdata.myInfo.myempathyposts.remove(key);
                               Icon(
@@ -339,7 +331,6 @@ class _PostCardState extends State<PostCard> {
                               );
                             } else {
                               Icon(Icons.favorite, color: Color(0xff3AAFFC));
-                              postItem.likeNum += 1;
                               postItem.like.add(appdata.myInfo.uid);
                               appdata.myInfo.myempathyposts.add(key);
                             }
@@ -347,7 +338,7 @@ class _PostCardState extends State<PostCard> {
                         },
                       ),
                       //공감 숫자
-                      Text('${postItem.likeNum}',
+                      Text(postItem.like.length.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -356,7 +347,9 @@ class _PostCardState extends State<PostCard> {
                       Container(
                         padding: EdgeInsets.only(left: 15),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(() => Comments(), arguments: postItem.key);
+                          },
                           icon: Icon(
                             Icons.comment,
                             color: Color(0xff3AAFFC),
@@ -365,7 +358,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                       //댓글 숫자
 
-                      Text('${appdata.postItem.commentNum}',
+                      Text(postItem.commentList.length.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -386,7 +379,24 @@ class _PostCardState extends State<PostCard> {
                               ),
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  if (postItem.like
+                                      .contains(appdata.myInfo.uid)) {
+                                    postItem.like.remove(appdata.myInfo.uid);
+                                    appdata.myInfo.myempathyposts.remove(key);
+                                    Icon(
+                                      Icons.favorite_border,
+                                      color: Color(0xff3AAFFC),
+                                    );
+                                  } else {
+                                    Icon(Icons.favorite,
+                                        color: Color(0xff3AAFFC));
+                                    postItem.like.add(appdata.myInfo.uid);
+                                    appdata.myInfo.myempathyposts.add(key);
+                                  }
+                                });
+                              },
                               child: Text('공감하기',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -399,7 +409,6 @@ class _PostCardState extends State<PostCard> {
                     ])),
                 Container(
                     padding: EdgeInsets.only(left: 10),
-                    height: 550,
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white,
                     child: Column(
