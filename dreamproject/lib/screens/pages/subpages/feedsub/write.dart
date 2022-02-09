@@ -78,7 +78,7 @@ class _WriteState extends State<Write> {
     try {
       final List<XFile>? imgs = await _picker.pickMultiImage(
         imageQuality: 70,
-        maxWidth: 1440,
+        maxWidth: 1000,
       );
 
       if (imgs!.isNotEmpty) {
@@ -391,6 +391,7 @@ class _WriteState extends State<Write> {
                                 final uid = user?.uid;
 
                                 fireStore.collection('post').doc(key).set({
+                                  'dateutc': DateTime.now(),
                                   'key': key,
                                   'post': postTextEditController.text,
                                   'image': _arrImageUrls,

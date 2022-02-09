@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class PostCard extends StatefulWidget {
   const PostCard({Key? key}) : super(key: key);
@@ -66,50 +67,99 @@ _getCommentmodel(List<dynamic> commentList) async {
   }
 }
 
+extension StringExtension on String {
+  static String displayTimeAgoFromTimestamp(String timestamp) {
+    final year = int.parse(timestamp.substring(0, 4));
+    final month = int.parse(timestamp.substring(5, 7));
+    final day = int.parse(timestamp.substring(8, 10));
+    final hour = int.parse(timestamp.substring(11, 13));
+    final minute = int.parse(timestamp.substring(14, 16));
+
+    final DateTime videoDate = DateTime(year, month, day, hour, minute);
+    final int diffInHours = DateTime.now().difference(videoDate).inHours;
+
+    String timeAgo = '';
+    String timeUnit = '';
+    int timeValue = 0;
+
+    if (diffInHours < 1) {
+      final diffInMinutes = DateTime.now().difference(videoDate).inMinutes;
+      timeValue = diffInMinutes;
+      timeUnit = '분';
+    } else if (diffInHours < 24) {
+      timeValue = diffInHours;
+      timeUnit = '시';
+    } else if (diffInHours >= 24 && diffInHours < 24 * 7) {
+      timeValue = (diffInHours / 24).floor();
+      timeUnit = '일';
+    } else if (diffInHours >= 24 * 7 && diffInHours < 24 * 30) {
+      timeValue = (diffInHours / (24 * 7)).floor();
+      timeUnit = '주';
+    } else if (diffInHours >= 24 * 30 && diffInHours < 24 * 12 * 30) {
+      timeValue = (diffInHours / (24 * 30)).floor();
+      timeUnit = '달';
+    } else {
+      timeValue = (diffInHours / (24 * 365)).floor();
+      timeUnit = '년';
+    }
+
+    timeAgo = timeValue.toString() + ' ' + timeUnit;
+    timeAgo += timeValue > 1 ? '' : '';
+
+    return timeAgo + '전';
+  }
+}
+
 mycommentListOff() {
   return Container(
-    child: Text('dd'),
+    child: Text('댓글이 없습니다'),
   );
 }
 
 mycommentListOn(CommentItem commentItem) {
   return Container(
     margin: EdgeInsets.only(left: 10),
-    child: Column(
+    child: Row(
       children: [
-        Row(
+        Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 10),
               height: 50.0,
               width: 50.0,
-              decoration: BoxDecoration(
+              decoration: new BoxDecoration(
                   color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(50))),
+                  borderRadius: new BorderRadius.all(Radius.circular(50))),
               child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(commentItem.profile)),
+                  backgroundImage: NetworkImage(appdata.myInfo.image)),
             ),
-            Container(
-              child: Text(commentItem.name),
-            ),
-            Container(
-              child: Center(
-                child: Text(commentItem.select[0],
-                    style: TextStyle(color: Colors.white, fontSize: 12)),
-              ),
-              width: 50,
-              height: 20,
-              margin: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                  color: Color(0xff3AAFFC),
-                  borderRadius: BorderRadius.circular(5)),
-            )
           ],
         ),
         Container(
-          child: Text(commentItem.comment),
+          margin: EdgeInsets.only(left: 10),
+          child: Column(
+            children: [
+              Text(
+                commentItem.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(commentItem.comment),
+            ],
+          ),
         ),
+        Container(
+          child: Center(
+            child: Text(commentItem.select[0],
+                style: TextStyle(color: Colors.white, fontSize: 12)),
+          ),
+          width: 50,
+          height: 20,
+          margin: EdgeInsets.only(
+            bottom: 15,
+          ),
+          decoration: BoxDecoration(
+              color: Color(0xff3AAFFC), borderRadius: BorderRadius.circular(5)),
+        )
       ],
     ),
   );
@@ -142,12 +192,16 @@ class _PostCardState extends State<PostCard> {
               PostItem.fromJson(value.data() as Map<String, dynamic>);
           postItems.add(postItem);
         }
+
         return ListView.builder(
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: postItems.length,
             itemBuilder: (context, index) {
               PostItem postItem = postItems.elementAt(index);
+              var video = postItem.dateutc;
+              var timestamp = postItem.date;
+
               return Column(children: [
                 Container(
                   padding: EdgeInsets.only(left: 10, right: 10),
@@ -172,7 +226,8 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ],
                       ),
-                      Text('1시간전'),
+                      Text(StringExtension.displayTimeAgoFromTimestamp(
+                          video.toString())),
                       //시간 받아오기
                     ],
                   ),
@@ -278,7 +333,6 @@ class _PostCardState extends State<PostCard> {
                               postItem.likeNum -= 1;
                               postItem.like.remove(appdata.myInfo.uid);
                               appdata.myInfo.myempathyposts.remove(key);
-
                               Icon(
                                 Icons.favorite_border,
                                 color: Color(0xff3AAFFC),
@@ -293,7 +347,7 @@ class _PostCardState extends State<PostCard> {
                         },
                       ),
                       //공감 숫자
-                      Text('${appdata.postItem.likeNum}',
+                      Text('${postItem.likeNum}',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -373,7 +427,7 @@ class _PostCardState extends State<PostCard> {
                                     margin: EdgeInsets.only(left: 10),
                                     height: 200,
                                     child: ListView.builder(
-                                        itemCount: 2,
+                                        itemCount: 1,
                                         itemBuilder: (context, index) {
                                           List<dynamic> commentlist =
                                               snapshot.data;

@@ -16,6 +16,7 @@ class PostItem {
   List<dynamic> commentList;
   List<dynamic> select;
   List<dynamic> like;
+  DateTime dateutc;
 
   PostItem(
       {required this.date,
@@ -32,7 +33,8 @@ class PostItem {
       required this.uid,
       required this.commentNum,
       required this.likeNum,
-      required this.like});
+      required this.like,
+      required this.dateutc});
 
   PostItem.fromJson(Map<String, dynamic> json)
       : date = json['date'],
@@ -49,7 +51,8 @@ class PostItem {
         uid = json['uid'],
         commentNum = json['commentNum'] ?? 0,
         likeNum = json['likeNum'] ?? 0,
-        like = json['like'] ?? [];
+        like = json['like'] ?? [],
+        dateutc = json['dateutc'].toDate();
 
   Map<String, dynamic> toJson() => {
         'date': date,
@@ -66,6 +69,7 @@ class PostItem {
         'uid': uid,
         'commentNum': commentNum,
         'likeNum': likeNum,
-        'like': like
+        'like': like,
+        'dateutc': dateutc
       };
 }

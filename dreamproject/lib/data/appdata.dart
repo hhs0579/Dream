@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/postitem.dart';
@@ -33,21 +34,23 @@ class AppData extends GetxController {
     uid: '',
   );
   PostItem _postItem = PostItem(
-      date: '',
-      commentList: [],
-      future: '',
-      image: [],
-      key: '',
-      name: '',
-      now: '',
-      post: '',
-      postcode: '',
-      profile: '',
-      select: [],
-      uid: '',
-      commentNum: 0,
-      likeNum: 0,
-      like: []);
+    date: '',
+    commentList: [],
+    future: '',
+    image: [],
+    key: '',
+    name: '',
+    now: '',
+    post: '',
+    postcode: '',
+    profile: '',
+    select: [],
+    uid: '',
+    commentNum: 0,
+    likeNum: 0,
+    like: [],
+    dateutc: DateTime.now(),
+  );
 
   CommentItem _commentItem = CommentItem(
       comment: '',
