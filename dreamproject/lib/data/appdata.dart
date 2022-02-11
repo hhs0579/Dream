@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/model/comment_item.dart';
+import 'package:dreamproject/model/empathy_item.dart';
 import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/postitem.dart';
 import 'package:get/get.dart';
@@ -60,6 +61,14 @@ class AppData extends GetxController {
       profile: '',
       select: [],
       commentsList: []);
+
+  EmpathyItem _empathyItem = EmpathyItem(
+      like: [],
+      dateutc: DateTime.now(),
+      name: '',
+      postkey: '',
+      profile: '',
+      uid: '');
   int get currentScreenIndex => _currentScreenIndex;
 
   set currentScreenIndex(int currentScreenIndex) {
@@ -99,6 +108,13 @@ class AppData extends GetxController {
 
   set commentItem(CommentItem commentItem) {
     _commentItem = commentItem;
+    update();
+  }
+
+  EmpathyItem get empathyItem => _empathyItem;
+
+  set empathyItem(EmpathyItem empathyItem) {
+    _empathyItem = empathyItem;
     update();
   }
 

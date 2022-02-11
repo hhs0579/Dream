@@ -90,14 +90,14 @@ class _CommentsState extends State<Comments> {
                               margin: const EdgeInsets.only(left: 10),
                               height: 50.0,
                               width: 50.0,
-                              decoration: new BoxDecoration(
+                              decoration: BoxDecoration(
                                   color: Colors.blue,
-                                  borderRadius: new BorderRadius.all(
-                                      Radius.circular(50))),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
                               child: CircleAvatar(
                                   radius: 50,
                                   backgroundImage:
-                                      NetworkImage(appdata.myInfo.image)),
+                                      NetworkImage(commentItem.profile)),
                             ),
                           ],
                         ),
@@ -147,22 +147,22 @@ class _CommentsState extends State<Comments> {
           child: commentChild(filedata),
           Image: appdata.myInfo.image,
           select: selected,
-          sendButton: () {
+          sendButton: () async {
             if (formKey.currentState!.validate()) {
               print(commentController.text);
               setState(() {
                 var value = {
-                  'name': appdata.myInfo.name,
-                  'pic': appdata.myInfo.image,
-                  'message': commentController.text,
-                  'select': selected[0],
+                  'name': commentItem?.name,
+                  'pic': commentItem?.profile,
+                  'message': commentItem?.comment,
+                  'select': commentItem?.select[0],
                 };
                 filedata.insert(0, value);
               });
               final User? user = auth.currentUser;
               final uid = user?.uid;
 
-              fireStore.collection('comments').doc(key).set({
+              await fireStore.collection('comments').doc(key).set({
                 'timeStamp': Timestamp.now(),
                 'key': key,
                 'comment': commentController.text,
