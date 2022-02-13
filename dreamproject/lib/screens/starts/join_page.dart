@@ -80,7 +80,7 @@ class _JoinPageState extends State<JoinPage> {
         print(e.message);
       });
 
-      await Fluttertoast.showToast(
+      Fluttertoast.showToast(
           msg: '오류가 발생했습니다. 인증번호를 확인해주세요.',
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 1,
@@ -776,7 +776,7 @@ class _JoinPageState extends State<JoinPage> {
                     onPressed: () async {
                       if (duplicateEmail == false) {
                         toastMessage('이메일 인증을 완료해 주세요.');
-                      } else {
+                      } else { 
                         if (vaildationname(nameController.text) == null) {
                           if (gender == '') {
                             toastMessage("성별을 선택해주세요.");
