@@ -14,6 +14,7 @@ class MyInfo {
   List<dynamic> myposts;
   List<dynamic> myempathyposts;
   List<dynamic> myclubs;
+  List<dynamic> mydonations;
   int point;
   int totaldonatepoint;
   int totaldonatenumber;
@@ -34,6 +35,7 @@ class MyInfo {
       required this.myposts,
       required this.myempathyposts,
       required this.myclubs,
+      required this.mydonations,
       required this.point,
       required this.totaldonatepoint,
       required this.totaldonatenumber,
@@ -54,6 +56,7 @@ class MyInfo {
         myposts = json['myposts'],
         myempathyposts = json['myempathyposts'],
         myclubs = json['myclubs'],
+        mydonations = json['mydonations'],
         point = json['point'] ?? 0,
         totaldonatepoint = json['totaldonatepoint'] ?? 0,
         totaldonatenumber = json['totaldonaenumber'] ?? 0,
@@ -74,6 +77,7 @@ class MyInfo {
         'myposts': myposts,
         'myempathyposts': myempathyposts,
         'myclubs': myclubs,
+        'mydonations': mydonations,
         'point': point,
         'totaldonatepoint': totaldonatepoint,
         'totaldonatenumber': totaldonatenumber,

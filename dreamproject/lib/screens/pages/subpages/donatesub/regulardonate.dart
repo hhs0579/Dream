@@ -1,3 +1,4 @@
+import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/screens/pages/current.dart';
 import 'package:dreamproject/screens/pages/donate.dart';
 import 'package:flutter/material.dart';
@@ -819,28 +820,7 @@ class _RegularDonatedState extends State<RegularDonated> {
     return Stack(children: [
       Scaffold(
         key: _scaffoldKey,
-        endDrawer: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          child: Drawer(
-            child: ListView(
-              children: <Widget>[
-                ListTile(
-                  title: Text('드림소개', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('이용방법', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-                ListTile(
-                  title: Text('''카카오톡 플친
-      전화 010-0000-0000''', textAlign: TextAlign.center),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
+        endDrawer: drawer(context),
         appBar: AppBar(
           title: Text(
             '후원하기',
@@ -1117,7 +1097,8 @@ class _RegularDonatedState extends State<RegularDonated> {
                               (value) {
                                 return DropdownMenuItem(
                                   value: value,
-                                  child: Text(value),
+                                  child: Text(value,
+                                      style: TextStyle(fontSize: 13)),
                                 );
                               },
                             ).toList(),
@@ -1636,13 +1617,17 @@ class _RegularDonatedState extends State<RegularDonated> {
                           sixselectBox('노인', '아동', '장애', '다문화', '유기동물', '빈곤')),
                 ],
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(336, 50),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25))),
-                  onPressed: () {},
-                  child: Text('드림'))
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25))),
+                    onPressed: () {},
+                    child: Text('드림', style: TextStyle(color: Colors.white))),
+              )
             ],
           ),
         ),

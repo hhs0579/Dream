@@ -240,71 +240,82 @@ class _CategoryState extends State<Category> {
                   Flexible(fit: FlexFit.loose, child: SizedBox(width: 40))
                 ],
               ),
+              SizedBox(height: 30),
               StreamBuilder<Object>(
                   stream: null,
                   builder: (context, snapshot) {
-                    return Stack(
+                    return Column(
                       children: [
-                        _categoryItem('아동', '0', 300, 75, 280, 60, () {}),
-                        _categoryItem('노인', '0', 320, 55, 170, 170, () {}),
+                        Container(
+                          child: Center(
+                            child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  primary: Color(0xff3AAFFC),
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 40),
+                                  side: BorderSide(
+                                    color: Color(0xff3AAFFC),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  '200000원',
+                                  style: TextStyle(fontSize: 15),
+                                )),
+                          ),
+                        ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.54,
-                          child: PieChart(
-                            dataMap: dataMap,
-                            animationDuration: Duration(milliseconds: 1000),
-                            chartRadius:
-                                MediaQuery.of(context).size.width / 3.5,
-                            initialAngleInDegree: 0,
-                            chartType: ChartType.ring,
-                            ringStrokeWidth: 40,
-                            colorList: [
-                              Color(0xff3AAFFC),
-                              Color(0xFFBDBDBD),
-                              Color(0xff3AAFFC),
-                              Color(0xFFBDBDBD),
-                              Color(0xff3AAFFC),
-                              Color(0xFFBDBDBD)
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: Stack(
+                            children: [
+                              _categoryItem('아동', '0', 280, 95, 280, 60, () {}),
+                              _categoryItem(
+                                  '노인', '0', 300, 75, 170, 170, () {}),
+                              Positioned(
+                                left: 140,
+                                top: 120,
+                                child: PieChart(
+                                  dataMap: dataMap,
+                                  animationDuration:
+                                      Duration(milliseconds: 1000),
+                                  chartRadius:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  initialAngleInDegree: 0,
+                                  chartType: ChartType.ring,
+                                  ringStrokeWidth: 40,
+                                  colorList: [
+                                    Color(0xff3AAFFC),
+                                    Color(0xFF9E9E9E),
+                                    Color(0xff3AAFFC),
+                                    Color(0xFF9E9E9E),
+                                    Color(0xff3AAFFC),
+                                    Color(0xFF9E9E9E)
+                                  ],
+                                  legendOptions: LegendOptions(
+                                    showLegends: false,
+                                  ),
+                                  chartValuesOptions: ChartValuesOptions(
+                                      showChartValueBackground: true,
+                                      chartValueBackgroundColor:
+                                          Colors.grey[300],
+                                      showChartValues: true,
+                                      showChartValuesInPercentage: false,
+                                      showChartValuesOutside: true,
+                                      decimalPlaces: 0,
+                                      chartValueStyle: TextStyle(
+                                          fontSize: 10, color: Colors.black)),
+                                ),
+                              ),
                             ],
-                            legendOptions: LegendOptions(
-                              showLegends: false,
-                            ),
-                            chartValuesOptions: ChartValuesOptions(
-                                showChartValueBackground: true,
-                                chartValueBackgroundColor: Colors.grey[300],
-                                showChartValues: true,
-                                showChartValuesInPercentage: false,
-                                showChartValuesOutside: true,
-                                decimalPlaces: 0,
-                                chartValueStyle: TextStyle(
-                                    fontSize: 10, color: Colors.black)),
                           ),
                         ),
                       ],
                     );
                   }),
-              Container(
-                margin: EdgeInsets.only(top: 40),
-                child: Center(
-                  child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        primary: Color(0xff3AAFFC),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                        side: BorderSide(
-                          color: Color(0xff3AAFFC),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text(
-                        '200000원',
-                        style: TextStyle(fontSize: 15),
-                      )),
-                ),
-              ),
             ],
           ),
         ),
