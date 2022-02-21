@@ -105,7 +105,7 @@ class _empathyState extends State<empathy> {
                               return Container(
                                 width: MediaQuery.of(context).size.width,
                                 margin: EdgeInsets.only(left: 10),
-                                height: 200,
+                                height: 500,
                                 child: ListView.builder(
                                     itemCount: postItem.like.length,
                                     itemBuilder: (context, index) {

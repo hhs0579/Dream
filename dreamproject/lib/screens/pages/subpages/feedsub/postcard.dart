@@ -25,6 +25,7 @@ List<String> bb = [];
 String profileURL = '';
 List<dynamic> uids = [];
 List<dynamic> posts = [];
+
 final FirebaseAuth auth = FirebaseAuth.instance;
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
