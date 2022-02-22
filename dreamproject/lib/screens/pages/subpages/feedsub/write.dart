@@ -48,7 +48,7 @@ class _WriteState extends State<Write> {
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   User? _user;
   var visibley = false;
-  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+
   String _profileImageURL = "";
   TextEditingController postTextEditController = TextEditingController();
   final _picker = ImagePicker();
@@ -69,7 +69,7 @@ class _WriteState extends State<Write> {
   var likeNum = 0;
   var commentNum = 0;
   List<String> _arrImageUrls = [];
-  List<String> aa = [];
+
   List<XFile>? imageFileList = [];
   Future<void> _pickedImgs() async {
     if (imageFileList != null) {
@@ -372,8 +372,8 @@ class _WriteState extends State<Write> {
                     Container(
                       margin: EdgeInsets.only(right: 20),
                       child: TextButton(
-                        onPressed: () {
-                          uploadFunction(imageFileList!);
+                        onPressed: () async {
+                          await uploadFunction(imageFileList!);
                           setState(() {
                             visibley = true;
                           });
