@@ -48,8 +48,6 @@ class _CommentBoxState extends State<CommentBox> {
 
   final Stream<QuerySnapshot> user =
       FirebaseFirestore.instance.collection('users').snapshots();
-  final Stream<QuerySnapshot> comment =
-      FirebaseFirestore.instance.collection('comment').snapshots();
 
   void initState() {
     _prepareService();

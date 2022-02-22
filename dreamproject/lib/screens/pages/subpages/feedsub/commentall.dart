@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/myinfo.dart';
+import 'package:dreamproject/model/postitem.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,9 @@ class Comments extends StatefulWidget {
   @override
   _CommentsState createState() => _CommentsState();
 }
+
+String postKey = Get.arguments[0];
+List<dynamic> comments = Get.arguments[1];
 
 final formKey = GlobalKey<FormState>();
 FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -32,13 +36,12 @@ final isSelected = <bool>[true, false, false];
 
 AppData appdata = Get.find();
 var key = randomString(16);
+
 void initState() {
   _prepareService();
   resultURL = appdata.myInfo.image;
   resultName = appdata.myInfo.name;
 }
-
-var k = Get.arguments;
 
 List<String> keys = [];
 
@@ -46,18 +49,85 @@ void _prepareService() async {
   _user = auth.currentUser;
 }
 
+_getCommentmodel(List<dynamic> commentList) async {
+  List<dynamic> resultcommentlist = [];
+  if (commentList.isEmpty) {
+    print(commentList);
+    return null;
+  } else {
+    for (var i = 0; i < commentList.length; i++) {
+      CommentItem resultcommentItem;
+      await FirebaseFirestore.instance
+          .collection('comments')
+          .doc(commentList[i])
+          .get()
+          .then((snapshot) => {
+                resultcommentItem = CommentItem.fromJson(
+                    snapshot.data() as Map<String, dynamic>),
+                resultcommentlist.add(resultcommentItem)
+              });
+    }
+    return resultcommentlist;
+  }
+}
+
+mycommentListOn(CommentItem commentItem) {
+  return Container(
+    margin: EdgeInsets.only(left: 10),
+    child: Row(
+      children: [
+        Column(
+          children: [
+            Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(commentItem.profile)),
+            ),
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 10),
+          child: Column(
+            children: [
+              Text(
+                commentItem.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(commentItem.comment),
+            ],
+          ),
+        ),
+        Container(
+          child: Center(
+            child: Text(commentItem.select[0],
+                style: TextStyle(color: Colors.white, fontSize: 12)),
+          ),
+          width: 50,
+          height: 20,
+          margin: EdgeInsets.only(bottom: 20, left: 5),
+          decoration: BoxDecoration(
+              color: Color(0xff3AAFFC), borderRadius: BorderRadius.circular(5)),
+        )
+      ],
+    ),
+  );
+}
+
 List filedata = [];
-final Stream<QuerySnapshot> comment = FirebaseFirestore.instance
-    .collection('comments')
-    .orderBy('timeStamp', descending: true)
-    .snapshots();
+final Stream<QuerySnapshot> post =
+    FirebaseFirestore.instance.collection('post').snapshots();
 
 class _CommentsState extends State<Comments> {
   @override
   Widget commentChild(data) {
     return Container(
       child: StreamBuilder<QuerySnapshot>(
-          stream: comment,
+          stream: post,
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -67,70 +137,54 @@ class _CommentsState extends State<Comments> {
               return Text('로딩중');
             }
             List<CommentItem> commentItems = [];
+            List<PostItem> postItems = [];
             for (var value in snapshot.data!.docs) {
-              CommentItem commentItem =
-                  CommentItem.fromJson(value.data() as Map<String, dynamic>);
-              commentItems.add(commentItem);
+              PostItem postItem =
+                  PostItem.fromJson(value.data() as Map<String, dynamic>);
+              postItems.add(postItem);
             }
-
             return ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: commentItems.length,
+                itemCount: postItems.length,
                 itemBuilder: (context, index) {
-                  CommentItem commentItem = commentItems.elementAt(index);
-
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(2.0, 8.0, 2.0, 0.0),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 10),
-                              height: 50.0,
-                              width: 50.0,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50))),
-                              child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-                                      NetworkImage(commentItem.profile)),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: Column(
-                            children: [
-                              Text(
-                                commentItem.name,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(commentItem.comment),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Center(
-                            child: Text(commentItem.select[0],
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12)),
-                          ),
-                          width: 50,
-                          height: 20,
-                          margin: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                              color: Color(0xff3AAFFC),
-                              borderRadius: BorderRadius.circular(5)),
-                        )
-                      ],
-                    ),
+                  PostItem postItem = postItems.elementAt(index);
+                  return Column(
+                    children: [
+                      FutureBuilder<dynamic>(
+                          future: _getCommentmodel(comments),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Center(child: Text('오류가 발생했습니다.'));
+                            } else if (snapshot.data == null ||
+                                snapshot.data == []) {
+                              return Container();
+                            } else {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.only(left: 10),
+                                height: 400,
+                                child: ListView.builder(
+                                    itemCount: postItem.commentList.length,
+                                    itemBuilder: (context, index) {
+                                      List<dynamic> commentlist = snapshot.data;
+                                      return commentlist == null
+                                          ? mycommentListOff()
+                                          : mycommentListOn(commentlist[index]);
+                                    }),
+                              );
+                            }
+                          }),
+                    ],
                   );
                 });
           }),
+    );
+  }
+
+  mycommentListOff() {
+    return Container(
+      child: Text('댓글이 없습니다'),
     );
   }
 
@@ -174,7 +228,7 @@ class _CommentsState extends State<Comments> {
               keys.add(key);
               fireStore
                   .collection('post')
-                  .doc(k)
+                  .doc(postKey)
                   .update({'commentList': FieldValue.arrayUnion(keys)});
               appdata.postItem.commentList.add(key);
               setState(() {

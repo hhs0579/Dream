@@ -25,7 +25,7 @@ List<String> bb = [];
 String profileURL = '';
 List<dynamic> uids = [];
 List<dynamic> posts = [];
-
+List<dynamic> resultarg = [];
 final FirebaseAuth auth = FirebaseAuth.instance;
 // Stream UserColectionStream =
 //     FirebaseFirestore.instance.collection('users').snapshots();
@@ -430,7 +430,9 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              Get.to(() => Comments(), arguments: postItem.key);
+                              resultarg.add(postItem.key);
+                              resultarg.add(postItem.commentList);
+                              Get.to(() => Comments(), arguments: resultarg);
                             },
                             child: Text('댓글 모두보기'),
                           )
