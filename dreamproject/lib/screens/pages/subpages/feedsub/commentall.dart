@@ -19,7 +19,7 @@ class Comments extends StatefulWidget {
 }
 
 String postKey = Get.arguments[0];
-List<dynamic> comments = Get.arguments[1];
+List<dynamic> commentea = Get.arguments[1];
 
 final formKey = GlobalKey<FormState>();
 FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -143,6 +143,7 @@ class _CommentsState extends State<Comments> {
                   PostItem.fromJson(value.data() as Map<String, dynamic>);
               postItems.add(postItem);
             }
+
             return ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -152,7 +153,7 @@ class _CommentsState extends State<Comments> {
                   return Column(
                     children: [
                       FutureBuilder<dynamic>(
-                          future: _getCommentmodel(comments),
+                          future: _getCommentmodel(postItem.commentList),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Center(child: Text('오류가 발생했습니다.'));

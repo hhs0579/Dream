@@ -321,10 +321,7 @@ class _PostCardState extends State<PostCard> {
                     child: Row(children: [
                       //공감 아이콘
                       IconButton(
-                        icon: toggle
-                            ? Icon(Icons.favorite_border,
-                                color: Color(0xff3AAFFC))
-                            : Icon(Icons.favorite, color: Color(0xff3AAFFC)),
+                        icon: Icon(Icons.favorite, color: Color(0xff3AAFFC)),
                         onPressed: () {
                           uids.add(appdata.myInfo.uid);
                           posts.add(postItem.key);
