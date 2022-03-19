@@ -60,64 +60,73 @@ extension StringExtension on String {
 var keyv = Get.arguments;
 final Stream<QuerySnapshot> post =
     FirebaseFirestore.instance.collection('post').snapshots();
+var likeList = [];
+var userList = [];
+var username = '';
+var userimg = '';
 
 class _empathyState extends State<empathy> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: StreamBuilder<QuerySnapshot>(
-            stream: post,
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('post')
+                .doc(keyv)
+                .snapshots(),
             builder: (
               BuildContext context,
-              AsyncSnapshot<QuerySnapshot> snapshot,
+              AsyncSnapshot<DocumentSnapshot> snapshot,
             ) {
-              if (snapshot.hasError) {
-                return Text('오류 발생');
+              if (!snapshot.hasData) {
+                return Text("Loading");
               }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text('로딩중');
+              for (var i = 0; i < snapshot.data!['like'].length; i++) {
+                likeList.add(snapshot.data!['like'][i]);
               }
-              List<PostItem> postItems = [];
-              for (var value in snapshot.data!.docs) {
-                PostItem postItem =
-                    PostItem.fromJson(value.data() as Map<String, dynamic>);
-                postItems.add(postItem);
-              }
+              print('The Documents Exists');
 
               return ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: postItem?.like.length,
+                  itemCount: likeList.length,
                   itemBuilder: (context, index) {
-                    PostItem postItem = postItems.elementAt(index);
-                    var video = postItem.dateutc;
+                    return Container(
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(likeList[0])
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return Text("Loading");
+                          }
 
-                    return Column(children: [
-                      FutureBuilder<dynamic>(
-                          future: usermodel(postItem.like),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Center(child: Text('오류가 발생했습니다.'));
-                            } else if (snapshot.data == null ||
-                                snapshot.data == []) {
-                              return Container();
-                            } else {
+                          username = snapshot.data!['name'];
+                          userimg = snapshot.data!['image'];
+
+                          print('The Documents Exists');
+                          return ListView.builder(
+                            itemCount: userList.length,
+                            itemBuilder: (BuildContext context, int index) {
                               return Container(
                                 width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.only(left: 10),
-                                height: 500,
-                                child: ListView.builder(
-                                    itemCount: postItem.like.length,
-                                    itemBuilder: (context, index) {
-                                      List<dynamic> likes = snapshot.data!;
-                                      return likes[index] == null
-                                          ? mylikeListOff()
-                                          : mylikeListOn(likes[index]);
-                                    }),
+                                height: MediaQuery.of(context).size.height,
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: NetworkImage(userimg)),
+                                    Text(username)
+                                  ],
+                                ),
                               );
-                            }
-                          }),
-                    ]);
+                            },
+                          );
+                        },
+                      ),
+                    );
                   });
             }));
   }
