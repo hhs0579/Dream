@@ -68,126 +68,135 @@ var userimg = '';
 class _empathyState extends State<empathy> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('post')
-                .doc(keyv)
-                .snapshots(),
-            builder: (
-              BuildContext context,
-              AsyncSnapshot<DocumentSnapshot> snapshot,
-            ) {
-              if (!snapshot.hasData) {
-                return Text("Loading");
-              }
-              for (var i = 0; i < snapshot.data!['like'].length; i++) {
-                likeList.add(snapshot.data!['like'][i]);
-              }
-              print('The Documents Exists');
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'FEED',
+          style: TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      body: Container(
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('post')
+                  .doc(keyv)
+                  .snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot,
+              ) {
+                if (!snapshot.hasData) {
+                  return Text("Loading");
+                }
+                for (var i = 0; i < snapshot.data!['like'].length; i++) {
+                  likeList.add(snapshot.data!['like'][i]);
+                }
+                print('The Documents Exists');
 
-              return ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: likeList.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(likeList[0])
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (!snapshot.hasData) {
-                            return Text("Loading");
-                          }
+                return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: likeList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(likeList[1])
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (!snapshot.hasData) {
+                              return Text("Loading");
+                            }
 
-                          username = snapshot.data!['name'];
-                          userimg = snapshot.data!['image'];
+                            username = snapshot.data!['name'];
+                            userimg = snapshot.data!['image'];
 
-                          print('The Documents Exists');
-                          return ListView.builder(
-                            itemCount: userList.length,
-                            itemBuilder: (BuildContext context, int index) {
+                            print('The Documents Exists');
+                            {
                               return Container(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height,
                                 child: Row(
                                   children: [
                                     CircleAvatar(
-                                        radius: 50,
+                                        radius: 20,
                                         backgroundImage: NetworkImage(userimg)),
                                     Text(username)
                                   ],
                                 ),
                               );
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  });
-            }));
-  }
-
-  usermodel(List<dynamic> like) async {
-    List<dynamic> resultlikelist = [];
-    if (like.isEmpty) {
-      print(like);
-      return null;
-    } else {
-      for (var i = 0; i < like.length; i++) {
-        MyInfo resultlikeItem;
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(like[i])
-            .get()
-            .then((snapshot) => {
-                  resultlikeItem =
-                      MyInfo.fromJson(snapshot.data() as Map<String, dynamic>),
-                  resultlikelist.add(resultlikeItem)
-                });
-      }
-      return resultlikelist;
-    }
-  }
-
-  mylikeListOff() {
-    return Container();
-  }
-
-  mylikeListOn(MyInfo ilike) {
-    return Container(
-      margin: EdgeInsets.only(left: 10),
-      child: Row(
-        children: [
-          Column(
-            children: [
-              Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(50))),
-                child: CircleAvatar(
-                    radius: 50, backgroundImage: NetworkImage(ilike.image)),
-              ),
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 10),
-            child: Column(
-              children: [
-                Text(
-                  ilike.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                            }
+                          },
+                        ),
+                      );
+                    });
+              })),
     );
   }
+
+  // usermodel(List<dynamic> like) async {
+  //   List<dynamic> resultlikelist = [];
+  //   if (like.isEmpty) {
+  //     print(like);
+  //     return null;
+  //   } else {
+  //     for (var i = 0; i < like.length; i++) {
+  //       MyInfo resultlikeItem;
+  //       await FirebaseFirestore.instance
+  //           .collection('users')
+  //           .doc(like[i])
+  //           .get()
+  //           .then((snapshot) => {
+  //                 resultlikeItem =
+  //                     MyInfo.fromJson(snapshot.data() as Map<String, dynamic>),
+  //                 resultlikelist.add(resultlikeItem)
+  //               });
+  //     }
+  //     return resultlikelist;
+  //   }
+  // }
+
+  // mylikeListOff() {
+  //   return Container();
+  // }
+
+  // mylikeListOn(MyInfo ilike) {
+  //   return Container(
+  //     margin: EdgeInsets.only(left: 10),
+  //     child: Row(
+  //       children: [
+  //         Column(
+  //           children: [
+  //             Container(
+  //               height: 40.0,
+  //               width: 40.0,
+  //               decoration: BoxDecoration(
+  //                   color: Colors.blue,
+  //                   borderRadius: BorderRadius.all(Radius.circular(50))),
+  //               child: CircleAvatar(
+  //                   radius: 50, backgroundImage: NetworkImage(ilike.image)),
+  //             ),
+  //           ],
+  //         ),
+  //         Container(
+  //           margin: EdgeInsets.only(left: 10),
+  //           child: Column(
+  //             children: [
+  //               Text(
+  //                 ilike.name,
+  //                 style: TextStyle(fontWeight: FontWeight.bold),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+//   }
+// }
 }
