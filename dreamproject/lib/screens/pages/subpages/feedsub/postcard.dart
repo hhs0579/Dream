@@ -373,7 +373,10 @@ class _PostCardState extends State<PostCard> {
                         padding: EdgeInsets.only(left: 15),
                         child: IconButton(
                           onPressed: () {
-                            Get.to(() => Comments(), arguments: postItem.key);
+                            Get.to(
+                              () => Comments(),
+                              arguments: [postItem.commentList, postItem.key],
+                            );
                           },
                           icon: Icon(
                             Icons.comment,
@@ -406,7 +409,7 @@ class _PostCardState extends State<PostCard> {
                             TextButton(
                               onPressed: () {
                                 Get.to(() => empathy(),
-                                    arguments: postItem.key);
+                                    arguments: postItem.like);
                               },
                               child: Text('공감한사람',
                                   style: TextStyle(
@@ -429,7 +432,10 @@ class _PostCardState extends State<PostCard> {
                             onPressed: () {
                               resultarg.add(postItem.key);
                               resultarg.add(postItem.commentList);
-                              Get.to(() => Comments(), arguments: resultarg);
+                              Get.to(() => Comments(), arguments: [
+                                postItem.commentList,
+                                postItem.key
+                              ]);
                             },
                             child: Text('댓글 모두보기'),
                           )

@@ -57,13 +57,82 @@ extension StringExtension on String {
   }
 }
 
-var keyv = Get.arguments;
+List like = Get.arguments;
 final Stream<QuerySnapshot> post =
     FirebaseFirestore.instance.collection('post').snapshots();
-var likeList = [];
+
 var userList = [];
 var username = '';
 var userimg = '';
+List<dynamic> resultlist = [];
+String useruid = '';
+_profileImage(image) {
+  return image == ''
+      ? CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 15,
+          backgroundImage: AssetImage('assets/imgs/basic.png'))
+      : CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 15,
+          backgroundImage: NetworkImage(image));
+}
+
+_getLikemodel(List<dynamic> likeList) async {
+  List<dynamic> resultLikeList = [];
+  if (likeList.isEmpty) {
+    print(likeList);
+    return null;
+  } else {
+    for (var i = 0; i < likeList.length; i++) {
+      MyInfo resultLikeItem;
+      await FirebaseFirestore.instance
+          .collection('comments')
+          .doc(likeList[i])
+          .get()
+          .then((snapshot) => {
+                resultLikeItem =
+                    MyInfo.fromJson(snapshot.data() as Map<String, dynamic>),
+                resultLikeList.add(resultLikeItem)
+              });
+    }
+    return resultLikeList;
+  }
+}
+
+mycommentListOn(MyInfo myinfo) {
+  return Container(
+    margin: EdgeInsets.only(left: 10),
+    child: Row(
+      children: [
+        Column(
+          children: [
+            Container(
+              height: 40.0,
+              width: 40.0,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(50))),
+              child: CircleAvatar(
+                  radius: 50, backgroundImage: NetworkImage(myinfo.image)),
+            ),
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 10),
+          child: Column(
+            children: [
+              Text(
+                myinfo.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
 class _empathyState extends State<empathy> {
   @override
@@ -79,63 +148,66 @@ class _empathyState extends State<empathy> {
         elevation: 0.0,
       ),
       body: Container(
-          child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('post')
-                  .doc(keyv)
-                  .snapshots(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot,
-              ) {
-                if (!snapshot.hasData) {
+          child: StreamBuilder<QuerySnapshot>(
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
                   return Text("Loading");
                 }
-                for (var i = 0; i < snapshot.data!['like'].length; i++) {
-                  likeList.add(snapshot.data!['like'][i]);
+                List<MyInfo> usermodels = [];
+                for (var value in snapshot.data!.docs) {
+                  MyInfo usermodel =
+                      MyInfo.fromJson(value.data() as Map<String, dynamic>);
+
+                  usermodels.add(usermodel);
                 }
-                print('The Documents Exists');
+                usermodels = usermodels.reversed.toList();
 
                 return ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: likeList.length,
+                    itemCount: usermodels.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(likeList[1])
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<DocumentSnapshot> snapshot) {
-                            if (!snapshot.hasData) {
-                              return Text("Loading");
-                            }
-
-                            username = snapshot.data!['name'];
-                            userimg = snapshot.data!['image'];
-
-                            print('The Documents Exists');
-                            {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                        radius: 20,
-                                        backgroundImage: NetworkImage(userimg)),
-                                    Text(username)
-                                  ],
-                                ),
-                              );
-                            }
-                          },
-                        ),
+                      MyInfo usermodel = usermodels.elementAt(index);
+                      return Column(
+                        children: [
+                          FutureBuilder<dynamic>(
+                              future: _getLikemodel(like),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Center(child: Text('오류가 발생했습니다.'));
+                                } else if (snapshot.data == null ||
+                                    snapshot.data == []) {
+                                  return Container();
+                                } else {
+                                  return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 400,
+                                    child: ListView.builder(
+                                        itemCount: like.length,
+                                        itemBuilder: (context, index) {
+                                          List<dynamic> likeList =
+                                              snapshot.data;
+                                          return likeList == null
+                                              ? mycommentListOff()
+                                              : mycommentListOn(
+                                                  likeList[index]);
+                                        }),
+                                  );
+                                }
+                              }),
+                        ],
                       );
                     });
               })),
+    );
+  }
+
+  mycommentListOff() {
+    return Container(
+      child: Text('댓글이 없습니다'),
     );
   }
 
