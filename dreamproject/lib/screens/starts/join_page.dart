@@ -4,7 +4,6 @@ import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/repo/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dreamproject/repo/join_validation.dart';
 import 'package:get/get.dart';
 import 'package:kpostal/kpostal.dart';
@@ -80,12 +79,7 @@ class _JoinPageState extends State<JoinPage> {
         print(e.message);
       });
 
-      Fluttertoast.showToast(
-          msg: '오류가 발생했습니다. 인증번호를 확인해주세요.',
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.lightBlue,
-          fontSize: 12.0);
+      toastMessage('오류가 발생했습니다. 인증번호를 확인해주세요.');
     }
   }
 
@@ -230,20 +224,10 @@ class _JoinPageState extends State<JoinPage> {
                               if (await databaseController.isDuplicatedEmail(
                                       emailController.text) ==
                                   true) {
-                                Fluttertoast.showToast(
-                                    msg: '중복된 이메일입니다. 다시 입력해주세요.',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.lightBlue,
-                                    fontSize: 12.0);
+                                toastMessage('중복된 이메일입니다. 다시 입력해주세요.');
                               } else {
                                 duplicateEmail = true;
-                                Fluttertoast.showToast(
-                                    msg: '사용가능한 이메일입니다',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.lightBlue,
-                                    fontSize: 12.0);
+                                toastMessage('사용가능한 이메일입니다');
                               }
                             }
                           },
@@ -776,7 +760,7 @@ class _JoinPageState extends State<JoinPage> {
                     onPressed: () async {
                       if (duplicateEmail == false) {
                         toastMessage('이메일 인증을 완료해 주세요.');
-                      } else { 
+                      } else {
                         if (vaildationname(nameController.text) == null) {
                           if (gender == '') {
                             toastMessage("성별을 선택해주세요.");
