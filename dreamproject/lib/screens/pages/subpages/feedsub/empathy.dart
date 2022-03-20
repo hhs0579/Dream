@@ -78,17 +78,16 @@ _profileImage(image) {
           backgroundImage: NetworkImage(image));
 }
 
-_getLikemodel(List<dynamic> likeList) async {
+_getLikemodel(List<dynamic> like) async {
   List<dynamic> resultLikeList = [];
-  if (likeList.isEmpty) {
-    print(likeList);
+  if (like.isEmpty) {
     return null;
   } else {
-    for (var i = 0; i < likeList.length; i++) {
+    for (var i = 0; i < like.length; i++) {
       MyInfo resultLikeItem;
       await FirebaseFirestore.instance
-          .collection('comments')
-          .doc(likeList[i])
+          .collection('users')
+          .doc(like[i])
           .get()
           .then((snapshot) => {
                 resultLikeItem =
@@ -100,9 +99,9 @@ _getLikemodel(List<dynamic> likeList) async {
   }
 }
 
-mycommentListOn(MyInfo myinfo) {
+myLikeListOn(MyInfo myinfo) {
   return Container(
-    margin: EdgeInsets.only(left: 10),
+    margin: EdgeInsets.only(left: 10, top: 20),
     child: Row(
       children: [
         Column(
@@ -140,7 +139,7 @@ class _empathyState extends State<empathy> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'FEED',
+          '공감하기',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -156,56 +155,36 @@ class _empathyState extends State<empathy> {
                   return Text("Loading");
                 }
                 List<MyInfo> usermodels = [];
-                for (var value in snapshot.data!.docs) {
-                  MyInfo usermodel =
-                      MyInfo.fromJson(value.data() as Map<String, dynamic>);
-
-                  usermodels.add(usermodel);
-                }
-                usermodels = usermodels.reversed.toList();
-
-                return ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: usermodels.length,
-                    itemBuilder: (context, index) {
-                      MyInfo usermodel = usermodels.elementAt(index);
-                      return Column(
-                        children: [
-                          FutureBuilder<dynamic>(
-                              future: _getLikemodel(like),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return Center(child: Text('오류가 발생했습니다.'));
-                                } else if (snapshot.data == null ||
-                                    snapshot.data == []) {
-                                  return Container();
-                                } else {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: EdgeInsets.only(left: 10),
-                                    height: 400,
-                                    child: ListView.builder(
-                                        itemCount: like.length,
-                                        itemBuilder: (context, index) {
-                                          List<dynamic> likeList =
-                                              snapshot.data;
-                                          return likeList == null
-                                              ? mycommentListOff()
-                                              : mycommentListOn(
-                                                  likeList[index]);
-                                        }),
-                                  );
-                                }
-                              }),
-                        ],
-                      );
-                    });
+                return Container(
+                    child: (FutureBuilder<dynamic>(
+                        future: _getLikemodel(like),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(child: Text('오류가 발생했습니다.'));
+                          } else if (snapshot.data == null ||
+                              snapshot.data == []) {
+                            return Container();
+                          } else {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(left: 10),
+                              height: 200,
+                              child: ListView.builder(
+                                  itemCount: like.length,
+                                  itemBuilder: (context, index) {
+                                    List<dynamic> Likelist = snapshot.data;
+                                    return Likelist == []
+                                        ? myLikeListOff()
+                                        : myLikeListOn(Likelist[index]);
+                                  }),
+                            );
+                          }
+                        })));
               })),
     );
   }
 
-  mycommentListOff() {
+  myLikeListOff() {
     return Container(
       child: Text('댓글이 없습니다'),
     );

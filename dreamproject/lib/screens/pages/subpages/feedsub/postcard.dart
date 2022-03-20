@@ -245,7 +245,7 @@ class _PostCardState extends State<PostCard> {
                         itemCount: postItem.image.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Image.network(postItem.image.elementAt(index),
-                              fit: BoxFit.cover);
+                              fit: BoxFit.fill);
                         })),
                 Container(
                     padding: EdgeInsets.only(top: 10),
@@ -280,8 +280,15 @@ class _PostCardState extends State<PostCard> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: (Text(
+                            postItem.post,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ))),
                       //작성하기 글 가져오기
-                      Text(postItem.post),
+
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -453,7 +460,7 @@ class _PostCardState extends State<PostCard> {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
                                     margin: EdgeInsets.only(left: 10),
-                                    height: 200,
+                                    height: 100,
                                     child: ListView.builder(
                                         itemCount: 1,
                                         itemBuilder: (context, index) {

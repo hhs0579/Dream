@@ -72,7 +72,7 @@ _getCommentmodel(List<dynamic> commentList) async {
 
 mycommentListOn(CommentItem commentItem) {
   return Container(
-    margin: EdgeInsets.only(left: 10),
+    margin: EdgeInsets.only(left: 10, top: 20),
     child: Row(
       children: [
         Column(
