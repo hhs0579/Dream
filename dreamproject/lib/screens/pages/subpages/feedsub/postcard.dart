@@ -288,7 +288,6 @@ class _PostCardState extends State<PostCard> {
                             overflow: TextOverflow.ellipsis,
                           ))),
                       //작성하기 글 가져오기
-
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -384,6 +383,7 @@ class _PostCardState extends State<PostCard> {
                               () => Comments(),
                               arguments: [postItem.commentList, postItem.key],
                             );
+                            setState(() {});
                           },
                           icon: Icon(
                             Icons.comment,
@@ -417,6 +417,7 @@ class _PostCardState extends State<PostCard> {
                               onPressed: () {
                                 Get.to(() => empathy(),
                                     arguments: postItem.like);
+                                setState(() {});
                               },
                               child: Text('공감한사람',
                                   style: TextStyle(
@@ -437,12 +438,11 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              resultarg.add(postItem.key);
-                              resultarg.add(postItem.commentList);
                               Get.to(() => Comments(), arguments: [
                                 postItem.commentList,
                                 postItem.key
                               ]);
+                              setState(() {});
                             },
                             child: Text('댓글 모두보기'),
                           )
