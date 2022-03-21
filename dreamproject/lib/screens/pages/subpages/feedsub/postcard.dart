@@ -245,7 +245,7 @@ class _PostCardState extends State<PostCard> {
                         itemCount: postItem.image.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Image.network(postItem.image.elementAt(index),
-                              fit: BoxFit.cover);
+                              fit: BoxFit.fill);
                         })),
                 Container(
                     padding: EdgeInsets.only(top: 10),
@@ -280,8 +280,14 @@ class _PostCardState extends State<PostCard> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: (Text(
+                            postItem.post,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ))),
                       //작성하기 글 가져오기
-                      Text(postItem.post),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -373,7 +379,11 @@ class _PostCardState extends State<PostCard> {
                         padding: EdgeInsets.only(left: 15),
                         child: IconButton(
                           onPressed: () {
-                            Get.to(() => Comments(), arguments: postItem.key);
+                            Get.to(
+                              () => Comments(),
+                              arguments: [postItem.commentList, postItem.key],
+                            );
+                            setState(() {});
                           },
                           icon: Icon(
                             Icons.comment,
@@ -406,7 +416,8 @@ class _PostCardState extends State<PostCard> {
                             TextButton(
                               onPressed: () {
                                 Get.to(() => empathy(),
-                                    arguments: postItem.key);
+                                    arguments: postItem.like);
+                                setState(() {});
                               },
                               child: Text('공감한사람',
                                   style: TextStyle(
@@ -427,9 +438,11 @@ class _PostCardState extends State<PostCard> {
                         Row(children: [
                           TextButton(
                             onPressed: () {
-                              resultarg.add(postItem.key);
-                              resultarg.add(postItem.commentList);
-                              Get.to(() => Comments(), arguments: resultarg);
+                              Get.to(() => Comments(), arguments: [
+                                postItem.commentList,
+                                postItem.key
+                              ]);
+                              setState(() {});
                             },
                             child: Text('댓글 모두보기'),
                           )
@@ -447,7 +460,7 @@ class _PostCardState extends State<PostCard> {
                                   return Container(
                                     width: MediaQuery.of(context).size.width,
                                     margin: EdgeInsets.only(left: 10),
-                                    height: 200,
+                                    height: 100,
                                     child: ListView.builder(
                                         itemCount: 1,
                                         itemBuilder: (context, index) {

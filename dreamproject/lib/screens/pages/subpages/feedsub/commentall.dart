@@ -18,8 +18,8 @@ class Comments extends StatefulWidget {
   _CommentsState createState() => _CommentsState();
 }
 
-String postKey = Get.arguments[0];
-List<dynamic> commentea = Get.arguments[1];
+List commentX = Get.arguments[0];
+String postkey = Get.arguments[1];
 
 final formKey = GlobalKey<FormState>();
 FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -51,15 +51,14 @@ void _prepareService() async {
 
 _getCommentmodel(List<dynamic> commentList) async {
   List<dynamic> resultcommentlist = [];
-  if (commentList.isEmpty) {
-    print(commentList);
+  if (commentX.isEmpty) {
     return null;
   } else {
-    for (var i = 0; i < commentList.length; i++) {
+    for (var i = 0; i < commentX.length; i++) {
       CommentItem resultcommentItem;
       await FirebaseFirestore.instance
           .collection('comments')
-          .doc(commentList[i])
+          .doc(commentX[i])
           .get()
           .then((snapshot) => {
                 resultcommentItem = CommentItem.fromJson(
@@ -73,7 +72,7 @@ _getCommentmodel(List<dynamic> commentList) async {
 
 mycommentListOn(CommentItem commentItem) {
   return Container(
-    margin: EdgeInsets.only(left: 10),
+    margin: EdgeInsets.only(left: 10, top: 20),
     child: Row(
       children: [
         Column(
@@ -126,61 +125,50 @@ class _CommentsState extends State<Comments> {
   @override
   Widget commentChild(data) {
     return Container(
-      child: StreamBuilder<QuerySnapshot>(
-          stream: post,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('오류 발생');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('로딩중');
-            }
-            List<CommentItem> commentItems = [];
-            List<PostItem> postItems = [];
-            for (var value in snapshot.data!.docs) {
-              PostItem postItem =
-                  PostItem.fromJson(value.data() as Map<String, dynamic>);
-              postItems.add(postItem);
-            }
+        child: StreamBuilder<QuerySnapshot>(
+            stream: post,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('오류 발생');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('로딩중');
+              }
+              List<CommentItem> commentItems = [];
+              List<PostItem> postItems = [];
+              for (var value in snapshot.data!.docs) {
+                PostItem postItem =
+                    PostItem.fromJson(value.data() as Map<String, dynamic>);
+                postItems.add(postItem);
+              }
 
-            return ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: postItems.length,
-                itemBuilder: (context, index) {
-                  PostItem postItem = postItems.elementAt(index);
-                  return Column(
-                    children: [
-                      FutureBuilder<dynamic>(
-                          future: _getCommentmodel(postItem.commentList),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Center(child: Text('오류가 발생했습니다.'));
-                            } else if (snapshot.data == null ||
-                                snapshot.data == []) {
-                              return Container();
-                            } else {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.only(left: 10),
-                                height: 400,
-                                child: ListView.builder(
-                                    itemCount: postItem.commentList.length,
-                                    itemBuilder: (context, index) {
-                                      List<dynamic> commentlist = snapshot.data;
-                                      return commentlist == null
-                                          ? mycommentListOff()
-                                          : mycommentListOn(commentlist[index]);
-                                    }),
-                              );
-                            }
-                          }),
-                    ],
-                  );
-                });
-          }),
-    );
+              return Container(
+                  child: (FutureBuilder<dynamic>(
+                      future: _getCommentmodel(commentX),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(child: Text('오류가 발생했습니다.'));
+                        } else if (snapshot.data == null ||
+                            snapshot.data == []) {
+                          return Container();
+                        } else {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.only(left: 10),
+                            height: 200,
+                            child: ListView.builder(
+                                itemCount: commentX.length,
+                                itemBuilder: (context, index) {
+                                  List<dynamic> commentlist = snapshot.data;
+                                  return commentlist == []
+                                      ? mycommentListOff()
+                                      : mycommentListOn(commentlist[index]);
+                                }),
+                          );
+                        }
+                      })));
+            }));
   }
 
   mycommentListOff() {
@@ -229,7 +217,7 @@ class _CommentsState extends State<Comments> {
               keys.add(key);
               fireStore
                   .collection('post')
-                  .doc(postKey)
+                  .doc(postkey)
                   .update({'commentList': FieldValue.arrayUnion(keys)});
               appdata.postItem.commentList.add(key);
               setState(() {

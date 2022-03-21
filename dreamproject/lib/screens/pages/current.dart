@@ -180,7 +180,6 @@ class _CurrentPageState extends State<CurrentPage> {
                         usermodels.add(usermodel);
                       }
                       usermodels = usermodels.reversed.toList();
-
                       return SizedBox(
                           height: MediaQuery.of(context).size.height,
                           child: ListView.builder(
