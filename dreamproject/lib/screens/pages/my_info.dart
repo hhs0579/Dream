@@ -673,11 +673,6 @@ class _MyInfoPageState extends State<MyInfoPage> {
               centerTitle: true,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
-              leading: IconButton(
-                  padding: EdgeInsets.only(left: 15),
-                  icon: Icon(Icons.receipt_long,
-                      color: Color(0xff3AAFFC), size: 30),
-                  onPressed: () {}),
               actions: <Widget>[
                 IconButton(
                     padding: EdgeInsets.only(right: 15),
