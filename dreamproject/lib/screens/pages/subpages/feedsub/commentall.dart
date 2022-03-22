@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/model/comment_item.dart';
 import 'package:dreamproject/model/postitem.dart';
+import 'package:dreamproject/screens/pages/feed.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -49,14 +50,14 @@ void _prepareService() async {
 
 _getCommentmodel(List<dynamic> commentList) async {
   List<dynamic> resultcommentlist = [];
-  if (commentX.isEmpty) {
+  if (commentList.isEmpty) {
     return null;
   } else {
-    for (var i = 0; i < commentX.length; i++) {
+    for (var i = 0; i < commentList.length; i++) {
       CommentItem resultcommentItem;
       await FirebaseFirestore.instance
           .collection('comments')
-          .doc(commentX[i])
+          .doc(commentList[i])
           .get()
           .then((snapshot) => {
                 resultcommentItem = CommentItem.fromJson(
@@ -116,17 +117,17 @@ mycommentListOn(CommentItem commentItem) {
 }
 
 List filedata = [];
-final Stream<QuerySnapshot> post =
-    FirebaseFirestore.instance.collection('post').snapshots();
+final Stream<DocumentSnapshot> post =
+    FirebaseFirestore.instance.collection('post').doc(postkey).snapshots();
 
 class _CommentsState extends State<Comments> {
   @override
   Widget commentChild(data) {
     return Container(
-        child: StreamBuilder<QuerySnapshot>(
+        child: StreamBuilder<DocumentSnapshot>(
             stream: post,
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text('오류 발생');
               }
@@ -135,12 +136,7 @@ class _CommentsState extends State<Comments> {
               }
               List<CommentItem> commentItems = [];
               List<PostItem> postItems = [];
-              for (var value in snapshot.data!.docs) {
-                PostItem postItem =
-                    PostItem.fromJson(value.data() as Map<String, dynamic>);
-                postItems.add(postItem);
-              }
-
+              var userDocument = snapshot.data;
               return Container(
                   child: (FutureBuilder<dynamic>(
                       future: _getCommentmodel(commentX),
@@ -182,6 +178,12 @@ class _CommentsState extends State<Comments> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0.0,
+        leading: IconButton(
+            icon: Icon(Icons.close, color: Color(0xff3AAFFC), size: 30),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Feed()));
+            }),
       ),
       body: Container(
         child: CommentBox(
@@ -192,6 +194,7 @@ class _CommentsState extends State<Comments> {
             if (formKey.currentState!.validate()) {
               print(commentController.text);
               setState(() {
+                commentX.add(key);
                 var value = {
                   'name': commentItem?.name,
                   'pic': commentItem?.profile,
