@@ -65,6 +65,7 @@ dependencies:
   comment_box: ^0.0.17
   platform: ^3.1.0
   timeago: ^3.2.1
+  kakao_flutter_sdk: ^1.1.0
 
 
 #encourage_image 패키지 설치
