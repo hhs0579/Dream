@@ -5,8 +5,7 @@ import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/withitem.dart';
 import 'package:dreamproject/repo/auth_service.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
+
 import 'package:dreamproject/screens/pages/subpages/currentsub/clublistpage.dart';
 
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class _CurrentPageState extends State<CurrentPage> {
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[true, false, false, false];
+  final isSelected = <bool>[true, false];
 
   @override
   final AuthService _auth = AuthService();
@@ -40,6 +39,7 @@ class _CurrentPageState extends State<CurrentPage> {
             backgroundImage: NetworkImage(image));
   }
 
+  @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _userStream = FirebaseFirestore.instance
         .collection('users')
@@ -88,15 +88,7 @@ class _CurrentPageState extends State<CurrentPage> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('분야별 현황'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('지역별 현황'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('    클럽    '),
+                          child: Text('\t\t클럽\t\t'),
                         ),
                       ],
                       onPressed: (index) {
@@ -111,18 +103,6 @@ class _CurrentPageState extends State<CurrentPage> {
                                     builder: (context) => CurrentPage()));
                           }
                           if (index == 1) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Category()));
-                          }
-                          if (index == 2) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Area()));
-                          }
-                          if (index == 3) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -210,7 +190,7 @@ class _CurrentPageState extends State<CurrentPage> {
                                                   children: [
                                                     _profileImage(
                                                         usermodel.image),
-                                                    SizedBox(width: 10),
+                                                    SizedBox(width: 15),
                                                     Text(usermodel.name,
                                                         style: TextStyle(
                                                             fontSize: 11,
@@ -223,7 +203,7 @@ class _CurrentPageState extends State<CurrentPage> {
                                                 child: Text(
                                                     usermodel.totaldonatepoint
                                                             .toString() +
-                                                        ' 원',
+                                                        ' point',
                                                     textAlign: TextAlign.right,
                                                     style: TextStyle(
                                                       fontSize: 11,

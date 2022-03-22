@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/model/club_model.dart';
 import 'package:dreamproject/screens/pages/current.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/area.dart';
-import 'package:dreamproject/screens/pages/subpages/currentsub/category.dart';
 
 import 'package:flutter/material.dart';
 
@@ -70,7 +68,7 @@ class _ClubListPageState extends State<ClubListPage> {
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  final isSelected = <bool>[false, false, false, true];
+  final isSelected = <bool>[false, true];
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _clubStream = FirebaseFirestore.instance
@@ -128,18 +126,6 @@ class _ClubListPageState extends State<ClubListPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Category()));
-                          }
-                          if (index == 2) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Area()));
-                          }
-                          if (index == 3) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
                                     builder: (context) => ClubListPage()));
                           }
                         });
@@ -148,14 +134,6 @@ class _ClubListPageState extends State<ClubListPage> {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text('함께하는 분'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('분야별 현황'),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('지역별 현황'),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.0),

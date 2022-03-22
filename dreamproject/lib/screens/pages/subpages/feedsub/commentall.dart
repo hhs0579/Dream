@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/data/appdata.dart';
 import 'package:dreamproject/model/comment_item.dart';
-import 'package:dreamproject/model/myinfo.dart';
 import 'package:dreamproject/model/postitem.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/commentbox.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:random_string/random_string.dart';
@@ -51,14 +49,14 @@ void _prepareService() async {
 
 _getCommentmodel(List<dynamic> commentList) async {
   List<dynamic> resultcommentlist = [];
-  if (commentList.isEmpty) {
+  if (commentX.isEmpty) {
     return null;
   } else {
-    for (var i = 0; i < commentList.length; i++) {
+    for (var i = 0; i < commentX.length; i++) {
       CommentItem resultcommentItem;
       await FirebaseFirestore.instance
           .collection('comments')
-          .doc(commentList[i])
+          .doc(commentX[i])
           .get()
           .then((snapshot) => {
                 resultcommentItem = CommentItem.fromJson(
@@ -118,12 +116,10 @@ mycommentListOn(CommentItem commentItem) {
 }
 
 List filedata = [];
+final Stream<QuerySnapshot> post =
+    FirebaseFirestore.instance.collection('post').snapshots();
 
 class _CommentsState extends State<Comments> {
-  final Stream<QuerySnapshot> post = FirebaseFirestore.instance
-      .collection('post')
-      .where('commentList', isEqualTo: commentX)
-      .snapshots();
   @override
   Widget commentChild(data) {
     return Container(
@@ -145,38 +141,31 @@ class _CommentsState extends State<Comments> {
                 postItems.add(postItem);
               }
 
-              return ListView.builder(
-                  itemCount: postItems.length,
-                  itemBuilder: (context, index) {
-                    PostItem postItem = postItems.elementAt(index);
-                    return Container(
-                        child: (FutureBuilder<dynamic>(
-                            future: _getCommentmodel(postItem.commentList),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Center(child: Text('오류가 발생했습니다.'));
-                              } else if (snapshot.data == null ||
-                                  snapshot.data == []) {
-                                return Container();
-                              } else {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.only(left: 10),
-                                  height: 200,
-                                  child: ListView.builder(
-                                      itemCount: postItem.commentList.length,
-                                      itemBuilder: (context, index) {
-                                        List<dynamic> commentlist =
-                                            snapshot.data;
-                                        return commentlist == []
-                                            ? mycommentListOff()
-                                            : mycommentListOn(
-                                                commentlist[index]);
-                                      }),
-                                );
-                              }
-                            })));
-                  });
+              return Container(
+                  child: (FutureBuilder<dynamic>(
+                      future: _getCommentmodel(commentX),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(child: Text('오류가 발생했습니다.'));
+                        } else if (snapshot.data == null ||
+                            snapshot.data == []) {
+                          return Container();
+                        } else {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.only(left: 10),
+                            height: 200,
+                            child: ListView.builder(
+                                itemCount: commentX.length,
+                                itemBuilder: (context, index) {
+                                  List<dynamic> commentlist = snapshot.data;
+                                  return commentlist == []
+                                      ? mycommentListOff()
+                                      : mycommentListOn(commentlist[index]);
+                                }),
+                          );
+                        }
+                      })));
             }));
   }
 
@@ -200,18 +189,17 @@ class _CommentsState extends State<Comments> {
           Image: appdata.myInfo.image,
           select: selected,
           sendButton: () async {
-            setState(() {
-              var value = {
-                'name': commentItem?.name,
-                'pic': commentItem?.profile,
-                'message': commentItem?.comment,
-                'select': commentItem?.select[0],
-              };
-              filedata.insert(0, value);
-            });
             if (formKey.currentState!.validate()) {
               print(commentController.text);
-
+              setState(() {
+                var value = {
+                  'name': commentItem?.name,
+                  'pic': commentItem?.profile,
+                  'message': commentItem?.comment,
+                  'select': commentItem?.select[0],
+                };
+                filedata.insert(0, value);
+              });
               final User? user = auth.currentUser;
               final uid = user?.uid;
 
