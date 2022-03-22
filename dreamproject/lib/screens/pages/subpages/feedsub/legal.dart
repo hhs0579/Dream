@@ -34,8 +34,7 @@ class _LegalState extends State<Legal> {
                 onTap: () {},
               ),
               ListTile(
-                title: Text('''카카오톡 플친
-전화 010-0000-0000''', textAlign: TextAlign.center),
+                title: Text('카카오톡 플친', textAlign: TextAlign.center),
                 onTap: () {},
               ),
             ],

@@ -51,14 +51,14 @@ void _prepareService() async {
 
 _getCommentmodel(List<dynamic> commentList) async {
   List<dynamic> resultcommentlist = [];
-  if (commentX.isEmpty) {
+  if (commentList.isEmpty) {
     return null;
   } else {
-    for (var i = 0; i < commentX.length; i++) {
+    for (var i = 0; i < commentList.length; i++) {
       CommentItem resultcommentItem;
       await FirebaseFirestore.instance
           .collection('comments')
-          .doc(commentX[i])
+          .doc(commentList[i])
           .get()
           .then((snapshot) => {
                 resultcommentItem = CommentItem.fromJson(
@@ -118,10 +118,12 @@ mycommentListOn(CommentItem commentItem) {
 }
 
 List filedata = [];
-final Stream<QuerySnapshot> post =
-    FirebaseFirestore.instance.collection('post').snapshots();
 
 class _CommentsState extends State<Comments> {
+  final Stream<QuerySnapshot> post = FirebaseFirestore.instance
+      .collection('post')
+      .where('commentList', isEqualTo: commentX)
+      .snapshots();
   @override
   Widget commentChild(data) {
     return Container(
@@ -143,31 +145,38 @@ class _CommentsState extends State<Comments> {
                 postItems.add(postItem);
               }
 
-              return Container(
-                  child: (FutureBuilder<dynamic>(
-                      future: _getCommentmodel(commentX),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(child: Text('오류가 발생했습니다.'));
-                        } else if (snapshot.data == null ||
-                            snapshot.data == []) {
-                          return Container();
-                        } else {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.only(left: 10),
-                            height: 200,
-                            child: ListView.builder(
-                                itemCount: commentX.length,
-                                itemBuilder: (context, index) {
-                                  List<dynamic> commentlist = snapshot.data;
-                                  return commentlist == []
-                                      ? mycommentListOff()
-                                      : mycommentListOn(commentlist[index]);
-                                }),
-                          );
-                        }
-                      })));
+              return ListView.builder(
+                  itemCount: postItems.length,
+                  itemBuilder: (context, index) {
+                    PostItem postItem = postItems.elementAt(index);
+                    return Container(
+                        child: (FutureBuilder<dynamic>(
+                            future: _getCommentmodel(postItem.commentList),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Center(child: Text('오류가 발생했습니다.'));
+                              } else if (snapshot.data == null ||
+                                  snapshot.data == []) {
+                                return Container();
+                              } else {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.only(left: 10),
+                                  height: 200,
+                                  child: ListView.builder(
+                                      itemCount: postItem.commentList.length,
+                                      itemBuilder: (context, index) {
+                                        List<dynamic> commentlist =
+                                            snapshot.data;
+                                        return commentlist == []
+                                            ? mycommentListOff()
+                                            : mycommentListOn(
+                                                commentlist[index]);
+                                      }),
+                                );
+                              }
+                            })));
+                  });
             }));
   }
 
@@ -191,17 +200,18 @@ class _CommentsState extends State<Comments> {
           Image: appdata.myInfo.image,
           select: selected,
           sendButton: () async {
+            setState(() {
+              var value = {
+                'name': commentItem?.name,
+                'pic': commentItem?.profile,
+                'message': commentItem?.comment,
+                'select': commentItem?.select[0],
+              };
+              filedata.insert(0, value);
+            });
             if (formKey.currentState!.validate()) {
               print(commentController.text);
-              setState(() {
-                var value = {
-                  'name': commentItem?.name,
-                  'pic': commentItem?.profile,
-                  'message': commentItem?.comment,
-                  'select': commentItem?.select[0],
-                };
-                filedata.insert(0, value);
-              });
+
               final User? user = auth.currentUser;
               final uid = user?.uid;
 

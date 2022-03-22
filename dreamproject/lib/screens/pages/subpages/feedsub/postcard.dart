@@ -379,6 +379,11 @@ class _PostCardState extends State<PostCard> {
                         padding: EdgeInsets.only(left: 15),
                         child: IconButton(
                           onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        super.widget));
                             Get.to(
                               () => Comments(),
                               arguments: [postItem.commentList, postItem.key],
@@ -415,6 +420,11 @@ class _PostCardState extends State<PostCard> {
                             ),
                             TextButton(
                               onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            super.widget));
                                 Get.to(() => empathy(),
                                     arguments: postItem.like);
                                 setState(() {});

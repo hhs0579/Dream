@@ -57,10 +57,6 @@ class _CurrentPageState extends State<CurrentPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          leading: IconButton(
-              icon:
-                  Icon(Icons.receipt_long, color: Color(0xff3AAFFC), size: 30),
-              onPressed: () {}),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.more_vert, color: Color(0xff3AAFFC), size: 30),
