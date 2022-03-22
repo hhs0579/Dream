@@ -37,15 +37,52 @@ class DonatePage extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  child:
-                      Image.asset('assets/imgs/a.png', width: 120, height: 120),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegularDonated()));
-                  },
+                Container(
+                  child: Stack(
+                    children: [
+                      InkWell(
+                        child: Image.asset('assets/imgs/cloud2.png',
+                            color: Color(0xff3AAFFC), width: 150, height: 120),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegularDonated()));
+                        },
+                      ),
+                      Positioned(
+                          top: 55,
+                          left: 45,
+                          child: Container(
+                            width: 60,
+                            child: Text("일시 후원",
+                                style: TextStyle(
+                                    fontSize: 15, color: Color(0xff3AAFFC))),
+                          ))
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                Container(
+                  child: Stack(
+                    children: [
+                      InkWell(
+                        child: Image.asset('assets/imgs/cloud2.png',
+                            color: Color(0xff3AAFFC), width: 150, height: 120),
+                        onTap: () {},
+                      ),
+                      Positioned(
+                          top: 48,
+                          left: 40,
+                          child: Container(
+                            width: 80,
+                            child: Text("후원 \n문의하기",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 14, color: Color(0xff3AAFFC))),
+                          ))
+                    ],
+                  ),
                 ),
               ],
             ),

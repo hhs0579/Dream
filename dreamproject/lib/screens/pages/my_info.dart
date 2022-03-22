@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 import 'subpages/infosub/fix_info.dart';
 
@@ -47,6 +48,16 @@ class _MyInfoPageState extends State<MyInfoPage> {
     resultURL = appdata.myInfo.image;
 
     super.initState();
+  }
+
+  void connectKakaoUrl() async {
+    Uri url = await TalkApi.instance.addChannelUrl('_ZeUTxl');
+    try {
+      await launchBrowserTab(url);
+    } catch (error) {
+      print("실패");
+      print(error);
+    }
   }
 
   _profileImage(context) {
@@ -756,8 +767,8 @@ class _MyInfoPageState extends State<MyInfoPage> {
                                   ],
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    Get.to(PointAdd());
+                                  onPressed: () async {
+                                    connectKakaoUrl();
                                   },
                                   child: Text(
                                     "포인트 충전하기",
