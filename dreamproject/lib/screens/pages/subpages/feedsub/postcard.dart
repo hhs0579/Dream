@@ -384,10 +384,12 @@ class _PostCardState extends State<PostCard> {
                                 MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         super.widget));
+
                             Get.to(
                               () => Comments(),
                               arguments: [postItem.commentList, postItem.key],
                             );
+
                             setState(() {});
                           },
                           icon: Icon(
