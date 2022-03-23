@@ -4,6 +4,7 @@ import 'package:dreamproject/classes/right_drawer.dart';
 import 'package:dreamproject/repo/auth_service.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/legal.dart';
 import 'package:dreamproject/screens/pages/subpages/feedsub/postcard.dart';
+import 'package:dreamproject/screens/pages/subpages/feedsub/write.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,7 +44,6 @@ class _FeedState extends State<Feed> {
             ),
             body: Container(child: PostCard())),
         Align(
-          //dddsdsfafdsa
           alignment: Alignment.bottomRight,
           child: Container(
             width: 60,
@@ -58,7 +58,7 @@ class _FeedState extends State<Feed> {
               radius: 50.0,
               onTap: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Legal()));
+                    context, MaterialPageRoute(builder: (context) => Write()));
               },
             ),
           ),
