@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _checkDatabase() {
-    _checkLocalInfo();
+    _checkLocalInfo(); 
   }
 
   void _checkLocalInfo() async {

@@ -41,7 +41,7 @@ class DonatePage extends StatelessWidget {
                   child: Stack(
                     children: [
                       InkWell(
-                        child: Image.asset('assets/imgs/cloud2.png',
+                        child: Image.asset('assets/imgs/done.png',
                             color: Color(0xff3AAFFC), width: 150, height: 120),
                         onTap: () {
                           Navigator.push(

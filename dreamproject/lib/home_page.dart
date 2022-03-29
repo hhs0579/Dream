@@ -40,7 +40,7 @@ class HomePage extends GetView<HomePageController> {
               Navigator(
                 key: controller.navigatorKey4,
                 onGenerateRoute: (routeSettings) {
-                  return MaterialPageRoute(builder: (context) => EmpathyPage());
+                  return MaterialPageRoute(builder: (context) => Feed());
                 },
               ),
               Navigator(
