@@ -57,7 +57,7 @@ class DonatePage extends StatelessWidget {
                             width: 60,
                             child: Text("일시 후원",
                                 style: TextStyle(
-                                    fontSize: 15, color: Color(0xff3AAFFC))),
+                                    fontSize: 14, color: Color(0xff3AAFFC))),
                           ))
                     ],
                   ),
