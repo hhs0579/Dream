@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _checkDatabase() {
-    _checkLocalInfo(); 
+    _checkLocalInfo();
   }
 
   void _checkLocalInfo() async {
@@ -56,10 +56,10 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Center(
           child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 48.0,
-        child: Image.asset('assets/imgs/cloud.png'),
-      )),
+            backgroundColor: Colors.transparent,
+            radius: 48.0,
+            child: Image.asset('assets/imgs/cloud.png'),
+          )),
     );
   }
 }
