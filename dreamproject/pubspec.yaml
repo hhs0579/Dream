@@ -36,7 +36,7 @@ dependencies:
   firebase_analytics: ^9.0.4
   firebase_auth: ^3.3.4
   geoflutterfire: ^3.0.1
-  cloud_firestore: ^2.3.0
+  cloud_firestore: ^3.1.11
   cupertino_icons: ^1.0.4
   extended_image: ^6.0.1
   logger: ^1.1.0
@@ -56,8 +56,8 @@ dependencies:
   fluttertoast: ^8.0.8
   rxdart: ^0.27.3
   firebase_storage: ^10.2.4
-  flutterfire_ui: ^0.1.0-dev.2
-  in_app_purchase: ^2.0.1
+  flutterfire_ui: ^0.4.0
+  in_app_purchase: ^3.0.2
   random_string: ^2.3.1
   firebase_messaging: ^11.2.5
   dotted_border: ^2.0.0+1
