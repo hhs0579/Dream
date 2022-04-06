@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreamproject/repo/image_helper.dart';
 import 'package:extended_image/extended_image.dart';
